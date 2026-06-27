@@ -9,6 +9,75 @@
   <meta property="og:title" content="Compass Claw — Your Website That Answers Every Call" />
   <meta property="og:description" content="An AI-powered website that answers your phone 24/7, books appointments, and never sends a customer to voicemail." />
   <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://compassclaw.com/" />
+
+  <!-- Structured data (SEO + AEO). NOTE: confirm telephone + add postal address if Ohio-based. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://compassclaw.com/#org",
+        "name": "Compass Claw",
+        "url": "https://compassclaw.com/",
+        "description": "AI Talking Websites and 24/7 AI voice receptionists for local businesses—answering calls, booking appointments, and capturing every lead.",
+        "telephone": "+1-800-555-1234",
+        "priceRange": "$$",
+        "areaServed": [
+          { "@type": "State", "name": "Ohio" },
+          { "@type": "City", "name": "Columbus" },
+          { "@type": "City", "name": "Cleveland" },
+          { "@type": "City", "name": "Cincinnati" },
+          { "@type": "City", "name": "Dayton" },
+          { "@type": "City", "name": "Toledo" },
+          { "@type": "City", "name": "Akron" }
+        ],
+        "knowsAbout": ["AI voice receptionist", "AI answering service", "missed call recovery", "appointment booking", "lead capture"],
+        "sameAs": []
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://compassclaw.com/#website",
+        "url": "https://compassclaw.com/",
+        "name": "Compass Claw",
+        "publisher": { "@id": "https://compassclaw.com/#org" }
+      },
+      {
+        "@type": "Service",
+        "name": "AI Talking Website (24/7 AI Voice Receptionist)",
+        "provider": { "@id": "https://compassclaw.com/#org" },
+        "areaServed": { "@type": "State", "name": "Ohio" },
+        "description": "A modern, AI-powered website that answers your phone 24/7, books appointments, answers FAQs, and qualifies leads so local businesses never miss a call."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Will it sound like a robot?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. It uses a natural, friendly voice and is trained on your business, so callers get real answers—not a phone tree. Most people don't realize it's AI." }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens to my current number?",
+            "acceptedAnswer": { "@type": "Answer", "text": "You keep it. We route calls so the AI answers when you can't—after hours, on a job, or already on the line—so you never miss a lead." }
+          },
+          {
+            "@type": "Question",
+            "name": "How long until I'm live?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Days, not months. We handle the setup—your website and AI receptionist, configured for your business and ready to take calls." }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need to be techy?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Not at all. We do the building and the heavy lifting. You get a text after every call and a simple dashboard—that's it." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
