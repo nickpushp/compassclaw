@@ -1,0 +1,12 @@
+# Local Claude Code tooling (not needed on the live site or in the repo)
+.claude/
+
+# OS / editor junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+.vscode/
+
+# FTP deploy sync-state is stored on the server, not here
+.ftp-deploy-sync-state.json

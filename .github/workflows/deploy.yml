@@ -1,0 +1,43 @@
+name: Deploy to Namecheap
+
+# Runs on every push to main, and lets you trigger a deploy manually from the Actions tab.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two deploys at once.
+concurrency:
+  group: namecheap-deploy
+  cancel-in-progress: true
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          # --- These come from GitHub repo secrets (see README) ---
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Secure FTP over TLS. If your host rejects it, change to: protocol: ftp
+          protocol: ftps
+          port: 21
+          # Local files to upload. The FTP account should point at your site's
+          # document root (public_html), so we upload to "./" on the server.
+          local-dir: ./
+          server-dir: ./
+          # Don't ship repo/tooling files to the live site.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.claude/**
+            **/node_modules/**
+            README.md
+            .gitignore
