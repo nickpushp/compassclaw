@@ -484,6 +484,17 @@ input[type="range"]::-moz-range-thumb {
   .footer-contact { flex-direction: row; align-items: center; }
 }
 
+/* ---------- Location pages ---------- */
+.breadcrumb { font-family: var(--font-mono); font-size: .78rem; color: var(--slate-500); padding: 18px 0 0; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { color: var(--slate-300); }
+.loc-hero { padding: 40px 0 16px; text-align: center; }
+.loc-hero h1 { font-size: clamp(1.9rem, 5.5vw, 3rem); }
+.loc-hero .loc-sub { color: var(--slate-400); font-size: clamp(1.02rem, 2.2vw, 1.2rem); max-width: 50ch; margin: 0 auto 24px; }
+.loc-prose { max-width: 760px; margin: 0 auto; }
+.loc-prose p { color: var(--slate-300); }
+.loc-nearby { font-family: var(--font-mono); font-size: .82rem; color: var(--slate-500); text-align: center; margin-top: 24px; }
+
 /* ---------- A11y ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
