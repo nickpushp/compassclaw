@@ -10,10 +10,3 @@ Desktop.ini
 
 # FTP deploy sync-state is stored on the server, not here
 .ftp-deploy-sync-state.json
-
-# Generated Ohio location pages (regenerated from scripts/gen_locations.py)
-# Tracked once real NAP is in place; ignored while using placeholder data.
-ai-receptionist/
-ai-receptionist-auto-body/
-ai-receptionist-home-services/
-ai-receptionist-real-estate/

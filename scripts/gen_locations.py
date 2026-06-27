@@ -17,33 +17,75 @@ import os, sys, html, json
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://compassclaw.com"
 
-# --- Business identity (TODO: replace placeholders with the real Ohio NAP) ---
+# --- Business identity (real NAP) ---
 BIZ = {
     "name": "Compass Claw",
-    "phone_display": "(800) 555-1234",
-    "phone_e164": "+1-800-555-1234",
-    "street": "123 Main St",          # TODO real address
-    "locality": "Columbus",            # TODO real city
+    "phone_display": "(740) 831-3443",
+    "phone_e164": "+1-740-831-3443",
+    "street": "420 Second Street",
+    "locality": "Portsmouth",
     "region": "OH",
-    "postal": "43004",                 # TODO real zip
+    "postal": "45662",
+    "lat": 38.7317,
+    "lon": -82.9977,
+    "gbp": "https://share.google/C8sZa1rz0fuIAz4Ll",
 }
 
-# --- Ohio cities (expandable). nearby = real neighboring towns for local relevance. ---
+# --- Ohio cities. metro=True cities also get the industry-specific variants.
+#     nearby/county are real for local relevance. ---
 CITIES = [
-    {"name": "Columbus",   "county": "Franklin",   "nearby": ["Dublin", "Westerville", "Hilliard", "Grove City"]},
-    {"name": "Cleveland",  "county": "Cuyahoga",    "nearby": ["Parma", "Lakewood", "Euclid", "Strongsville"]},
-    {"name": "Cincinnati", "county": "Hamilton",    "nearby": ["Norwood", "Mason", "West Chester", "Blue Ash"]},
-    {"name": "Dayton",     "county": "Montgomery",  "nearby": ["Kettering", "Beavercreek", "Huber Heights", "Centerville"]},
-    {"name": "Toledo",     "county": "Lucas",       "nearby": ["Sylvania", "Maumee", "Perrysburg", "Oregon"]},
-    {"name": "Akron",      "county": "Summit",      "nearby": ["Cuyahoga Falls", "Stow", "Barberton", "Tallmadge"]},
+    {"name": "Portsmouth",       "county": "Scioto",     "metro": True,  "nearby": ["Wheelersburg", "New Boston", "Lucasville", "South Webster"]},
+    {"name": "Columbus",         "county": "Franklin",   "metro": True,  "nearby": ["Dublin", "Westerville", "Hilliard", "Grove City"]},
+    {"name": "Cleveland",        "county": "Cuyahoga",   "metro": True,  "nearby": ["Parma", "Lakewood", "Euclid", "Strongsville"]},
+    {"name": "Cincinnati",       "county": "Hamilton",   "metro": True,  "nearby": ["Norwood", "Mason", "West Chester", "Blue Ash"]},
+    {"name": "Dayton",           "county": "Montgomery", "metro": True,  "nearby": ["Kettering", "Beavercreek", "Huber Heights", "Centerville"]},
+    {"name": "Toledo",           "county": "Lucas",      "metro": True,  "nearby": ["Sylvania", "Maumee", "Perrysburg", "Oregon"]},
+    {"name": "Akron",            "county": "Summit",     "metro": True,  "nearby": ["Cuyahoga Falls", "Stow", "Barberton", "Tallmadge"]},
+    {"name": "Canton",           "county": "Stark",      "metro": True,  "nearby": ["Massillon", "North Canton", "Alliance", "Louisville"]},
+    {"name": "Youngstown",       "county": "Mahoning",   "metro": True,  "nearby": ["Boardman", "Austintown", "Canfield", "Struthers"]},
+    {"name": "Springfield",      "county": "Clark",      "metro": True,  "nearby": ["Enon", "New Carlisle", "Northridge", "Springfield Township"]},
+    {"name": "Hamilton",         "county": "Butler",     "metro": True,  "nearby": ["Fairfield", "Middletown", "Oxford", "Trenton"]},
+    {"name": "Chillicothe",      "county": "Ross",       "metro": True,  "nearby": ["Waverly", "Frankfort", "Bainbridge", "Kingston"]},
+
+    {"name": "Lorain",           "county": "Lorain",     "metro": False, "nearby": ["Elyria", "Sheffield Lake", "Amherst", "Avon"]},
+    {"name": "Elyria",           "county": "Lorain",     "metro": False, "nearby": ["Lorain", "Avon", "North Ridgeville", "Grafton"]},
+    {"name": "Middletown",       "county": "Butler",     "metro": False, "nearby": ["Franklin", "Trenton", "Monroe", "Hamilton"]},
+    {"name": "Newark",           "county": "Licking",    "metro": False, "nearby": ["Heath", "Granville", "Pataskala", "Buckeye Lake"]},
+    {"name": "Mansfield",        "county": "Richland",   "metro": False, "nearby": ["Ontario", "Lexington", "Shelby", "Bellville"]},
+    {"name": "Mentor",           "county": "Lake",       "metro": False, "nearby": ["Willoughby", "Painesville", "Eastlake", "Kirtland"]},
+    {"name": "Findlay",          "county": "Hancock",    "metro": False, "nearby": ["Fostoria", "Arlington", "Carey", "McComb"]},
+    {"name": "Warren",           "county": "Trumbull",   "metro": False, "nearby": ["Niles", "Cortland", "Howland", "Champion"]},
+    {"name": "Lancaster",        "county": "Fairfield",  "metro": False, "nearby": ["Pickerington", "Baltimore", "Carroll", "Sugar Grove"]},
+    {"name": "Lima",             "county": "Allen",      "metro": False, "nearby": ["Elida", "Bath", "Shawnee", "Delphos"]},
+    {"name": "Marion",           "county": "Marion",     "metro": False, "nearby": ["Prospect", "Caledonia", "LaRue", "Marion Township"]},
+    {"name": "Delaware",         "county": "Delaware",   "metro": False, "nearby": ["Powell", "Sunbury", "Lewis Center", "Galena"]},
+    {"name": "Zanesville",       "county": "Muskingum",  "metro": False, "nearby": ["New Concord", "Roseville", "South Zanesville", "Dresden"]},
+    {"name": "Athens",           "county": "Athens",     "metro": False, "nearby": ["Nelsonville", "The Plains", "Albany", "Glouster"]},
+    {"name": "Brunswick",        "county": "Medina",     "metro": False, "nearby": ["Medina", "Strongsville", "Hinckley", "Valley City"]},
+    {"name": "Parma",            "county": "Cuyahoga",   "metro": False, "nearby": ["Brooklyn", "Seven Hills", "Parma Heights", "Independence"]},
+    {"name": "Kettering",        "county": "Montgomery", "metro": False, "nearby": ["Centerville", "Oakwood", "Beavercreek", "Moraine"]},
+    {"name": "Cuyahoga Falls",   "county": "Summit",     "metro": False, "nearby": ["Stow", "Munroe Falls", "Tallmadge", "Hudson"]},
+    {"name": "Dublin",           "county": "Franklin",   "metro": False, "nearby": ["Hilliard", "Powell", "Worthington", "Upper Arlington"]},
+    {"name": "Westerville",      "county": "Franklin",   "metro": False, "nearby": ["Gahanna", "Worthington", "New Albany", "Blacklick"]},
+    {"name": "Reynoldsburg",     "county": "Franklin",   "metro": False, "nearby": ["Pickerington", "Pataskala", "Blacklick", "Whitehall"]},
+    {"name": "Grove City",       "county": "Franklin",   "metro": False, "nearby": ["Hilliard", "Galloway", "Urbancrest", "Columbus"]},
+    {"name": "Fairfield",        "county": "Butler",     "metro": False, "nearby": ["Hamilton", "Forest Park", "Springdale", "West Chester"]},
+    {"name": "Beavercreek",      "county": "Greene",     "metro": False, "nearby": ["Fairborn", "Kettering", "Xenia", "Bellbrook"]},
+    {"name": "Strongsville",     "county": "Cuyahoga",   "metro": False, "nearby": ["Brunswick", "North Royalton", "Berea", "Middleburg Heights"]},
+    {"name": "Stow",             "county": "Summit",     "metro": False, "nearby": ["Cuyahoga Falls", "Hudson", "Munroe Falls", "Kent"]},
+    {"name": "Barberton",        "county": "Summit",     "metro": False, "nearby": ["Norton", "Akron", "Wadsworth", "Copley"]},
+    {"name": "Wooster",          "county": "Wayne",      "metro": False, "nearby": ["Orrville", "Rittman", "Apple Creek", "Smithville"]},
+    {"name": "Sandusky",         "county": "Erie",       "metro": False, "nearby": ["Huron", "Perkins", "Castalia", "Bay View"]},
+    {"name": "Gahanna",          "county": "Franklin",   "metro": False, "nearby": ["New Albany", "Westerville", "Blacklick", "Columbus"]},
 ]
 
-# --- Offerings: which service/industry angles to build, and per-page framing. ---
+# --- Offerings. metros_only=True restricts to metro cities (keeps the set focused). ---
 OFFERINGS = [
     {
         "slug": "ai-receptionist",
         "label": "AI Receptionist",
         "industry": None,
+        "metros_only": False,
         "h1": "AI Receptionist in {city}, Ohio",
         "intro": "If you run a local business in {city}, every missed call is a job handed to a competitor. Compass Claw gives you an AI receptionist that answers your phone 24/7—booking appointments, answering questions, and capturing every lead, even when you're on a job or closed for the night.",
     },
@@ -51,6 +93,7 @@ OFFERINGS = [
         "slug": "ai-receptionist-auto-body",
         "label": "AI Receptionist for Auto Body Shops",
         "industry": "auto body shop",
+        "metros_only": True,
         "h1": "AI Receptionist for Auto Body Shops in {city}, Ohio",
         "intro": "Estimate calls don't wait. When a {city} driver needs collision work, they call shop after shop until someone picks up. Compass Claw answers every call to your auto body shop 24/7, captures the estimate, and books the drop-off—so you stop losing jobs to voicemail.",
     },
@@ -58,6 +101,7 @@ OFFERINGS = [
         "slug": "ai-receptionist-home-services",
         "label": "AI Receptionist for Home Services",
         "industry": "home services company",
+        "metros_only": True,
         "h1": "AI Receptionist for Plumbers, HVAC & Roofers in {city}, Ohio",
         "intro": "Burst pipe at 11pm? No-heat call in January? {city} homeowners call until someone answers. Compass Claw makes sure that's you—your AI receptionist takes the call, qualifies the emergency, and books the job around the clock.",
     },
@@ -65,6 +109,7 @@ OFFERINGS = [
         "slug": "ai-receptionist-real-estate",
         "label": "AI Receptionist for Real Estate",
         "industry": "real estate professional",
+        "metros_only": True,
         "h1": "AI Receptionist for Real Estate Agents in {city}, Ohio",
         "intro": "A hot buyer who hits your voicemail is calling the next agent before you hear the message. Compass Claw answers and qualifies your {city} leads 24/7, so you never lose a deal to a missed call again.",
     },
@@ -244,8 +289,15 @@ def build_schema(ctx, off):
             "address": {"@type": "PostalAddress", "streetAddress": BIZ["street"],
                         "addressLocality": BIZ["locality"], "addressRegion": BIZ["region"],
                         "postalCode": BIZ["postal"], "addressCountry": "US"},
+            "geo": {"@type": "GeoCoordinates", "latitude": BIZ["lat"], "longitude": BIZ["lon"]},
+            "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "00:00", "closes": "23:59",
+            },
             "areaServed": [{"@type": "City", "name": ctx["city"]}] +
                           [{"@type": "City", "name": n} for n in ctx["nearby_list"]],
+            "sameAs": [BIZ["gbp"]],
             "description": ctx["meta_desc"],
         },
         {"@type": "Service", "name": f'{off["label"]} in {ctx["city"]}, Ohio',
@@ -302,19 +354,104 @@ def write_sitemap(urls):
         f.write(body)
 
 
+LOCATIONS_PAGE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ohio Service Areas | Compass Claw AI Receptionist</title>
+  <meta name="description" content="Compass Claw provides 24/7 AI receptionists and AI Talking Websites to local businesses across Ohio. Find your city." />
+  <link rel="canonical" href="{site}/locations/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="bg-void" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="/" class="brand" aria-label="Compass Claw home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.2 7.8 14.1 14.1 7.8 16.2 9.9 9.9 16.2 7.8" fill="currentColor" stroke="none"></polygon></svg></span>
+        <span class="brand-name">Compass<span class="brand-accent">Claw</span></span>
+      </a>
+      <nav class="header-actions">
+        <a href="tel:{phone_e164}" class="header-phone"><span>{phone_display}</span></a>
+        <a href="/#calculator" class="btn btn-primary btn-sm header-cta">Get a Free Demo</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="loc-hero">
+      <div class="container">
+        <span class="eyebrow"><span class="live-dot"></span> Ohio Service Areas</span>
+        <h1>AI Receptionists for <span class="gradient-text">Ohio Businesses</span></h1>
+        <p class="loc-sub">We answer the phones for local businesses across the state, 24/7. Find your city below.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container loc-prose">
+        {groups}
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>&copy; <span id="year"></span> Compass Claw &middot; {street}, {locality}, {region} {postal} &middot; {phone_display}</span>
+      <span><a href="/">Home</a></span>
+    </div>
+  </footer>
+  <script src="/script.js" defer></script>
+</body>
+</html>
+"""
+
+
+def write_locations_index(pages):
+    """pages: list of (offering_label, city_name, url)"""
+    by_off = {}
+    for label, city, url in pages:
+        by_off.setdefault(label, []).append((city, url))
+    groups = []
+    for label in [o["label"] for o in OFFERINGS]:
+        if label not in by_off:
+            continue
+        links = "\n          ".join(
+            f'<li><a href="{url}">{html.escape(label)} in {html.escape(city)}, OH</a></li>'
+            for city, url in sorted(by_off[label])
+        )
+        groups.append(f'<h2>{html.escape(label)}</h2>\n        <ul class="loc-list">\n          {links}\n        </ul>')
+    page = LOCATIONS_PAGE.format(
+        site=SITE, groups="\n        ".join(groups),
+        phone_display=BIZ["phone_display"], phone_e164=BIZ["phone_e164"],
+        street=BIZ["street"], locality=BIZ["locality"], region=BIZ["region"], postal=BIZ["postal"],
+    )
+    out_dir = os.path.join(ROOT, "locations")
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(page)
+
+
 def main():
     only = None
     if "--only" in sys.argv:
         only = sys.argv[sys.argv.index("--only") + 1].lower()
     urls = []
+    pages = []
     for city in CITIES:
         if only and city_slug(city["name"]) != only:
             continue
         for off in OFFERINGS:
-            urls.append(render(city, off))
-    if not only:  # only rewrite sitemap on a full run
-        write_sitemap(urls)
-    print(f"Generated {len(urls)} page(s).")
+            if off["metros_only"] and not city.get("metro"):
+                continue
+            url = render(city, off)
+            urls.append(url)
+            pages.append((off["label"], city["name"], url))
+    if not only:  # full run: rebuild sitemap + locations index
+        write_locations_index(pages)
+        write_sitemap([SITE + "/locations/"] + urls)
+    print(f"Generated {len(urls)} location page(s)" + ("" if only else " + locations index."))
     for u in urls:
         print("  ", u)
 
