@@ -10,6 +10,16 @@
   var fmt = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
 
   /* ============================================================
+     LEAD DELIVERY — emails you every calculator submission.
+     1. Go to https://web3forms.com, enter your email, copy the Access Key.
+     2. Paste it below (replace the placeholder). That's it.
+     Leads then arrive in your inbox with all the calculator details.
+     (To route into GoHighLevel instead, swap the fetch URL in the
+     submit handler for your GHL inbound webhook URL.)
+     ============================================================ */
+  var WEB3FORMS_KEY = "REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY";
+
+  /* ============================================================
      ROI calculator + lead funnel
      ============================================================ */
   (function calculator() {
@@ -146,13 +156,41 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!validateStep()) return;
-      var data = Object.assign({}, state, {
-        name: form.querySelector('input[name="name"]').value.trim(),
-        email: form.querySelector('input[name="email"]').value.trim(),
-        zip: form.querySelector('input[name="zip"]').value.trim()
-      });
-      // TODO: wire to CRM / webhook / email service. For now, log it.
-      console.log("Compass Claw lead:", data);
+      var name = form.querySelector('input[name="name"]').value.trim();
+      var email = form.querySelector('input[name="email"]').value.trim();
+      var zip = form.querySelector('input[name="zip"]').value.trim();
+
+      // Recompute the headline numbers so they're included in the email.
+      var missedCalls = state.calls * (state.missedPct / 100);
+      var lossMonth = missedCalls * CONVERSION * state.jobValue;
+
+      var lead = {
+        name: name,
+        email: email,
+        zip_or_area: zip,
+        industry: state.industry,
+        monthly_calls: state.calls,
+        percent_missed: state.missedPct + "%",
+        avg_job_value: fmt(state.jobValue),
+        estimated_monthly_loss: fmt(lossMonth),
+        estimated_yearly_loss: fmt(lossMonth * 12),
+        source_page: window.location.pathname
+      };
+
+      // Email the lead (no backend needed) via Web3Forms.
+      if (WEB3FORMS_KEY && WEB3FORMS_KEY.indexOf("REPLACE_WITH") === -1) {
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(Object.assign({
+            access_key: WEB3FORMS_KEY,
+            subject: "New Compass Claw lead: " + name + " (" + (state.industry || "lead") + ")",
+            from_name: "Compass Claw Website"
+          }, lead))
+        }).catch(function (err) { console.warn("Lead send failed:", err); });
+      } else {
+        console.log("Compass Claw lead (add WEB3FORMS_KEY to email these):", lead);
+      }
 
       form.querySelectorAll(".calc-step").forEach(function (s) { s.classList.remove("active"); });
       document.querySelector(".calc-nav") && (function () {})();
