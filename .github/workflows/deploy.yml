@@ -39,6 +39,26 @@ jobs:
             **/.github/**
             **/.claude/**
             **/node_modules/**
+            **/scripts/**
             README.md
             DEPLOYMENT.md
             .gitignore
+
+      - name: Ping IndexNow (instant indexing for Bing & AI engines)
+        run: |
+          python3 - <<'PY'
+          import re, json, urllib.request
+          urls = re.findall(r"<loc>([^<]+)</loc>", open("sitemap.xml", encoding="utf-8").read())
+          payload = {
+              "host": "compassclaw.com",
+              "key": "5195e1f47ab57102901d47401abebec2",
+              "keyLocation": "https://compassclaw.com/5195e1f47ab57102901d47401abebec2.txt",
+              "urlList": urls,
+          }
+          req = urllib.request.Request("https://api.indexnow.org/indexnow",
+              data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"})
+          try:
+              print("IndexNow:", urllib.request.urlopen(req, timeout=30).status, "for", len(urls), "urls")
+          except Exception as e:
+              print("IndexNow ping skipped:", e)
+          PY

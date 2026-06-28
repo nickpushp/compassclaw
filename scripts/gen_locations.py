@@ -213,6 +213,102 @@ SERVICES = [
 ]
 
 
+# --- Blog / resources (answer-first content for SEO + AEO citations) ---
+# Each body paragraph is a plain string; a leading "## " makes it a subhead.
+ARTICLES = [
+    {
+        "slug": "how-much-do-missed-calls-cost",
+        "title": "How Much Are Missed Calls Costing Your Business?",
+        "dek": "A simple way to put a real dollar figure on the calls you're not answering.",
+        "body": [
+            "Most local businesses miss 25–30% of their inbound calls—lunch breaks, after hours, holidays, or simply being on a job. And here's the part that hurts: studies consistently show that around 80% of callers who reach voicemail hang up and call a competitor instead of leaving a message.",
+            "## The quick math",
+            "To estimate your loss, multiply four numbers: monthly calls × percent missed × your booking rate × average job value. A shop getting 300 calls a month, missing 30%, that books 1 in 4 answered calls at a $500 average job, is leaving roughly $11,250 on the table every month—about $135,000 a year.",
+            "## Why missed calls hurt more than bad reviews",
+            "A missed call is an invisible loss. You never see the customer, never know the job existed, and never get a chance to win them back. It's the cheapest revenue leak to fix because the demand already exists—someone wanted to give you money and couldn't reach you.",
+            "## How to stop the leak",
+            "You have three options: hire more front-desk staff (expensive), use a traditional answering service (takes messages, doesn't book), or use an AI receptionist that answers 24/7 and books the job on the spot. The last one is why we built the AI Talking Website—it picks up every call in under one ring, day or night.",
+        ],
+        "faqs": [
+            ("What percentage of calls do small businesses miss?", "Industry data puts it around 25–30% on average once you count after-hours, lunch, holidays, and being busy with other customers."),
+            ("Do people leave a voicemail if I miss their call?", "Usually not—about 80% of callers who hit voicemail hang up and call the next business instead."),
+        ],
+    },
+    {
+        "slug": "ai-receptionist-vs-answering-service",
+        "title": "AI Receptionist vs. Answering Service: Which Is Right for You?",
+        "dek": "Both answer your phone. Only one actually books the job.",
+        "body": [
+            "If you're tired of missing calls, you've probably looked at a traditional answering service. Here's how it compares to an AI receptionist—and why the difference matters for a local business.",
+            "## Traditional answering services",
+            "A live operator picks up and takes a message. That's better than voicemail, but the operator usually can't see your calendar, doesn't know your services, and can't book a job—so you still have to call the person back, often after they've already hired someone else. Costs typically run $300–$1,000+ a month.",
+            "## AI receptionists",
+            "An AI receptionist is trained on your business. It answers in a natural voice 24/7, quotes your common questions, qualifies the lead, and books the appointment straight onto your calendar—then texts you a summary. It doesn't take breaks, doesn't call in sick, and handles multiple calls at once.",
+            "## The bottom line",
+            "If you just need messages, an answering service works. If you want booked jobs without lifting a finger, an AI receptionist wins on speed, cost, and conversion. That's the model behind the Compass Claw AI Talking Website.",
+        ],
+        "faqs": [
+            ("Is an AI receptionist cheaper than an answering service?", "Usually yes, and it does more—booking jobs and answering questions instead of just taking messages."),
+            ("Can an AI receptionist book appointments?", "Yes. It connects to your calendar and books the job during the call, then texts you a summary."),
+        ],
+    },
+    {
+        "slug": "do-ai-receptionists-sound-human",
+        "title": "Do AI Receptionists Really Sound Human?",
+        "dek": "Short answer: yes—and most callers can't tell.",
+        "body": [
+            "The biggest worry owners have about an AI receptionist is that it'll sound like a clunky robot menu and annoy their customers. Modern AI voice technology has moved well past that.",
+            "## What's changed",
+            "Today's AI receptionists use natural-sounding voices with real conversational flow—they handle interruptions, answer follow-up questions, and speak in full sentences trained on your business. In practice, most callers assume they're talking to a friendly front-desk employee.",
+            "## It's not a phone tree",
+            "This is the key distinction. A phone tree makes people press 1, press 2, and wait. A good AI receptionist just talks—\"Hi, thanks for calling, how can I help?\"—and gets the caller booked. No menus, no hold music.",
+            "## See for yourself",
+            "The best way to judge is to hear it answer a call for your own business. That's exactly what the free demo does—we set it up for your shop so you can call in and listen.",
+        ],
+        "faqs": [
+            ("Will my customers know it's AI?", "Most won't. It uses a natural voice and answers real questions, so it feels like talking to a helpful employee."),
+            ("Can it answer questions specific to my business?", "Yes—it's trained on your services, hours, pricing, and FAQs."),
+        ],
+    },
+    {
+        "slug": "never-miss-a-call-after-hours",
+        "title": "How to Never Miss a Customer Call After Hours",
+        "dek": "Nights, weekends, and holidays are when you're losing the most jobs.",
+        "body": [
+            "For a lot of local businesses—plumbers, HVAC, roofers, auto body—the most valuable calls come at the worst times: a 9pm emergency, a Saturday quote, a holiday no-heat call. If those go to voicemail, they go to a competitor.",
+            "## Why after-hours calls are gold",
+            "After-hours callers are usually high-intent—something broke and they need help now. They're also less price-sensitive in an emergency. Being the business that actually answers at 9pm can be worth thousands a month.",
+            "## Three ways to cover after-hours",
+            "You can forward calls to your cell (and burn out), pay for an overnight answering service (messages only), or use an AI receptionist that answers and books 24/7 with no extra labor. The AI option means you sleep while it captures the job.",
+            "## Set it and forget it",
+            "With an AI Talking Website, your after-hours coverage is automatic. Every call gets answered in your business's voice, the job gets booked, and you get a text summary waiting for you in the morning.",
+        ],
+        "faqs": [
+            ("How do I stop missing calls at night?", "Route after-hours calls to a 24/7 AI receptionist that answers and books jobs, so nothing goes to voicemail."),
+            ("Are after-hours calls worth answering?", "Often they're your highest-intent, highest-value calls—people with an urgent problem ready to hire."),
+        ],
+    },
+    {
+        "slug": "what-is-an-ai-talking-website",
+        "title": "What Is an AI Talking Website?",
+        "dek": "A modern website with an AI receptionist built in—so your site answers the phone.",
+        "body": [
+            "An AI Talking Website is a fast, modern business website that comes with an AI receptionist built in. Instead of a brochure that just sits there, your website actively answers your phone, talks to customers, and books jobs 24/7.",
+            "## How it works",
+            "Visitors get a fast, mobile-friendly site that's built to convert. When someone calls your number, the AI picks up in under one ring, answers their questions in a natural voice, qualifies the lead, and books the appointment onto your calendar—then texts you the details.",
+            "## Who it's for",
+            "It's built for local businesses where the phone is the lifeline—auto body shops, home services, real estate, and any owner who's too busy doing the work to answer every call.",
+            "## What it replaces",
+            "It replaces a dated website, a part-time receptionist, and a message-only answering service—all at once. Most businesses are live in days, not months.",
+        ],
+        "faqs": [
+            ("What does an AI Talking Website do?", "It's a modern website with a built-in AI receptionist that answers your phone 24/7, books appointments, and captures every lead."),
+            ("How long does it take to set up?", "Most businesses are live in days. Compass Claw handles the build and configuration for you."),
+        ],
+    },
+]
+
+
 def city_slug(name): return name.lower().replace(" ", "-")
 
 def nearby_phrase(n):
@@ -258,6 +354,7 @@ def header_html():
       <nav class="header-nav">
         <a href="/services/">Services</a>
         <a href="/locations/">Service Areas</a>
+        <a href="/resources/">Resources</a>
       </nav>
       <nav class="header-actions">
         <a href="tel:{BIZ['phone_e164']}" class="header-phone"><span>{BIZ['phone_display']}</span></a>
@@ -299,6 +396,12 @@ HEAD = '''<!DOCTYPE html>
   <meta property="og:title" content="{title}" />
   <meta property="og:description" content="{meta_desc}" />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="{canonical}" />
+  <meta property="og:image" content="https://compassclaw.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://compassclaw.com/og-image.png" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <script type="application/ld+json">
 {schema}
   </script>
@@ -600,9 +703,119 @@ def locations_hub(pages):
     return canonical
 
 
+def article_body_html(body):
+    out = []
+    for p in body:
+        if p.startswith("## "):
+            out.append(f"<h2>{html.escape(p[3:])}</h2>")
+        else:
+            out.append(f"<p>{html.escape(p)}</p>")
+    return "\n        ".join(out)
+
+
+def article_page(a):
+    canonical = f'{SITE}/resources/{a["slug"]}/'
+    ctx = {}
+    faq_entities = [{"@type": "Question", "name": q,
+                     "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in a["faqs"]]
+    schema = json.dumps({"@context": "https://schema.org", "@graph": [
+        {"@type": "Article", "headline": a["title"], "description": a["dek"],
+         "author": {"@id": SITE + "/#org"}, "publisher": {"@id": SITE + "/#org"},
+         "mainEntityOfPage": canonical, "image": SITE + "/og-image.png"},
+        {"@type": "FAQPage", "mainEntity": faq_entities},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Resources", "item": SITE + "/resources/"},
+            {"@type": "ListItem", "position": 3, "name": a["title"], "item": canonical}]},
+    ]}, indent=2)
+    faqs_html = "\n          ".join(
+        f'<div class="faq-item glass"><button class="faq-q" aria-expanded="false">{html.escape(q)}{CHEV}</button>'
+        f'<div class="faq-a"><div class="faq-a-inner">{html.escape(ans)}</div></div></div>'
+        for q, ans in a["faqs"])
+    body = f'''  {header_html()}
+  <main>
+    <div class="container"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/resources/">Resources</a> / <span>{html.escape(a["title"])}</span></nav></div>
+    <article class="section">
+      <div class="container loc-prose">
+        <span class="eyebrow"><span class="live-dot"></span> Guide</span>
+        <h1>{html.escape(a["title"])}</h1>
+        <p class="loc-sub" style="text-align:left;margin:0 0 24px;">{html.escape(a["dek"])}</p>
+        {article_body_html(a["body"])}
+        <div class="final-card glass" style="margin-top:36px;text-align:center;">
+          <h2>See your own numbers in 60 seconds</h2>
+          <p>Use the free calculator to see what missed calls cost you—then get a demo built for your business.</p>
+          <a href="/#calculator" class="btn btn-primary btn-lg">Get my free demo</a>
+        </div>
+      </div>
+    </article>
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head"><span class="eyebrow">FAQ</span><h2>Quick answers</h2></div>
+        <div class="faq-wrap">
+          {faqs_html}
+        </div>
+      </div>
+    </section>
+  </main>
+  {footer_html("Helpful guides for local business owners.")}
+  <script src="/script.js" defer></script>
+</body>
+</html>
+'''
+    page = HEAD.format(title=f'{a["title"]} | Compass Claw', meta_desc=a["dek"], canonical=canonical, schema=schema) + body
+    out_dir = os.path.join(ROOT, "resources", a["slug"])
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(page)
+    return canonical
+
+
+def resources_hub():
+    canonical = f"{SITE}/resources/"
+    cards = "\n        ".join(
+        f'''<a class="svc-card glass" href="/resources/{a["slug"]}/">
+          <span class="svc-tag">Guide</span>
+          <h3>{html.escape(a["title"])}</h3>
+          <p>{html.escape(a["dek"])}</p>
+          <span class="svc-go">Read →</span>
+        </a>''' for a in ARTICLES)
+    schema = json.dumps({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
+        {"@type": "ListItem", "position": 2, "name": "Resources", "item": canonical}]}, indent=2)
+    body = f'''  {header_html()}
+  <main>
+    <div class="container"><nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> / <span>Resources</span></nav></div>
+    <section class="loc-hero">
+      <div class="container">
+        <span class="eyebrow"><span class="live-dot"></span> Resources</span>
+        <h1>Guides for <span class="gradient-text">local business owners.</span></h1>
+        <p class="loc-sub">Straight answers on missed calls, AI receptionists, and getting more booked jobs.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container"><div class="svc-grid">
+        {cards}
+      </div></div>
+    </section>
+  </main>
+  {footer_html("Helpful guides for local business owners.")}
+  <script src="/script.js" defer></script>
+</body>
+</html>
+'''
+    page = HEAD.format(title="Resources | Compass Claw — Guides for Local Business",
+                       meta_desc="Guides on missed calls, AI receptionists, and booking more jobs for local businesses.",
+                       canonical=canonical, schema=schema) + body
+    out_dir = os.path.join(ROOT, "resources")
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(page)
+    return canonical
+
+
 def write_sitemap(urls):
     seen, ordered = set(), []
-    for u in [SITE + "/", SITE + "/services/", SITE + "/locations/"] + urls:
+    for u in [SITE + "/", SITE + "/services/", SITE + "/locations/", SITE + "/resources/"] + urls:
         if u not in seen:
             seen.add(u); ordered.append(u)
     items = "\n".join(f"  <url>\n    <loc>{u}</loc>\n    <changefreq>weekly</changefreq>\n  </url>" for u in ordered)
@@ -622,7 +835,11 @@ def write_llms():
     lines += ["", "## Key pages",
               f"- [Home]({SITE}/): AI Talking Website + free missed-revenue calculator",
               f"- [Services]({SITE}/services/)",
-              f"- [Ohio service areas]({SITE}/locations/)", ""]
+              f"- [Ohio service areas]({SITE}/locations/)",
+              f"- [Resources]({SITE}/resources/)", "", "## Guides"]
+    for a in ARTICLES:
+        lines.append(f"- [{a['title']}]({SITE}/resources/{a['slug']}/): {a['dek']}")
+    lines.append("")
     with open(os.path.join(ROOT, "llms.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 
@@ -647,6 +864,9 @@ def main():
     if not only:
         urls.append(services_hub())
         urls.append(locations_hub(pages))
+        for a in ARTICLES:
+            urls.append(article_page(a))
+        urls.append(resources_hub())
         write_sitemap(urls)
         write_llms()
     print(f"Generated {len(urls)} page(s)" + ("" if only else " + hubs, sitemap, llms.txt"))

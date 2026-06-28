@@ -17,7 +17,7 @@
      (To route into GoHighLevel instead, swap the fetch URL in the
      submit handler for your GHL inbound webhook URL.)
      ============================================================ */
-  var WEB3FORMS_KEY = "REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY";
+  var WEB3FORMS_KEY = "a9f96f4d-fc74-46ba-8968-99665b5fe623";
 
   /* ============================================================
      ROI calculator + lead funnel
