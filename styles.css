@@ -169,6 +169,27 @@ a { color: inherit; text-decoration: none; }
 }
 .header-phone:hover { color: var(--accent-2); }
 .header-cta { display: none; }
+.header-nav { display: none; gap: 22px; margin-left: auto; margin-right: 22px; }
+.header-nav a { font-weight: 600; font-size: .95rem; color: var(--slate-300); }
+.header-nav a:hover { color: var(--accent); }
+
+/* Services grid (hub) */
+.svc-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.svc-card { position: relative; padding: 26px 24px; transition: transform .2s ease, border-color .2s ease; }
+.svc-card:hover { transform: translateY(-4px); border-color: var(--line-accent); }
+.svc-card h3 { font-size: 1.25rem; }
+.svc-card p { color: var(--slate-400); margin: 0 0 14px; font-size: .96rem; }
+.svc-tag { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-2); }
+.svc-go { font-weight: 600; color: var(--accent); font-size: .92rem; }
+
+/* Footer internal-link hub */
+.footer-links { display: grid; gap: 26px; grid-template-columns: 1fr; padding: 8px 0 30px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.footer-links h4 { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); margin: 0 0 12px; }
+.footer-links ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.footer-links a { color: var(--slate-400); font-size: .9rem; }
+.footer-links a:hover { color: var(--accent); }
+.footer-links-more { margin: 12px 0 0; font-size: .9rem; }
+.footer-links-more a { color: var(--accent); font-weight: 600; }
 
 /* ---------- Section scaffolding ---------- */
 .section { padding: 72px 0; position: relative; }
@@ -467,6 +488,8 @@ input[type="range"]::-moz-range-thumb {
    ============================================================ */
 @media (min-width: 600px) {
   .header-cta { display: inline-flex; }
+  .svc-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-links { grid-template-columns: 1fr 1.4fr; }
   .trust-inner { grid-template-columns: repeat(4, 1fr); }
   .who-grid { grid-template-columns: repeat(3, 1fr); }
   .result-grid { grid-template-columns: repeat(3, 1fr); }
@@ -478,6 +501,8 @@ input[type="range"]::-moz-range-thumb {
 }
 @media (min-width: 900px) {
   .section { padding: 96px 0; }
+  .header-nav { display: flex; }
+  .svc-grid { grid-template-columns: repeat(3, 1fr); }
   .demo-grid { grid-template-columns: 1fr 1fr; }
   .founder-grid { grid-template-columns: .9fr 1.1fr; }
   .carousel-arrow { display: flex; }
