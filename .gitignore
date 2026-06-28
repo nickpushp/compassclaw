@@ -10,3 +10,4 @@ Desktop.ini
 
 # FTP deploy sync-state is stored on the server, not here
 .ftp-deploy-sync-state.json
+live_sitemap.xml
