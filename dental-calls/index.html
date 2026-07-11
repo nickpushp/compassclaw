@@ -182,9 +182,9 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
 
 <div class="wrap">
   <div class="head">
-    <span class="eye">Where your calls live</span>
-    <h1>Every call answered. <span class="ser">Every</span> patient captured.</h1>
-    <p id="headSub">Your AI front desk answers every call, day or night, and books consultations straight onto your schedule. Here's what it's captured.</p>
+    <span class="eye">Intake Operations Command</span>
+    <h1>Live Patient Acquisition &amp; Routing <span class="ser">Telemetry</span></h1>
+    <p id="headSub">Automated Front-Desk Optimization Matrix</p>
   </div>
 
   <div class="kpis" id="kpis"></div>
@@ -202,18 +202,18 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
 
     <div class="side-stack">
       <div class="card">
-        <div class="card-h"><h2>Call outcomes</h2></div>
+        <div class="card-h"><h2>Distribution Metrics</h2></div>
         <div class="donut-wrap">
           <div class="donut" id="donut"><div class="ctr"><b id="donutTotal">0</b><span>calls</span></div></div>
           <div class="legend" id="legend"></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-h"><h2>When calls come in</h2></div>
+        <div class="card-h"><h2>Temporal Volume Metrics</h2></div>
         <div class="hours">
           <div class="bars" id="bars"></div>
           <div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>11p</span></div>
-          <div class="note"><span class="sw"></span> <span><b>After-hours calls</b> a human would've missed — caught automatically.</span></div>
+          <div class="note"><span class="sw"></span> <span><b>Unattended Operational Capacity Secured</b> (20:00 - 08:00)</span></div>
         </div>
       </div>
     </div>
@@ -222,7 +222,6 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
 
 <footer>
   <div class="wrap foot-in">
-    <div>Powered by <a href="https://compassclaw.com" target="_blank" rel="noopener">Compass Claw</a></div>
   </div>
 </footer>
 
@@ -293,11 +292,11 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
   const spark='<svg class="spark" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,32 L12,28 L24,30 L36,22 L48,24 L60,15 L72,18 L84,9 L100,6" fill="none" stroke="var(--amber)" stroke-width="2" opacity="0.7"/></svg>';
 
   const kpis=[
-    {cls:"kpi hero-k", label:"Calls answered", icon:'<path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/>', value:answered, sub:'<b>100%</b> pickup rate — zero missed', spark:true},
-    {cls:"kpi", label:C.jobWordPl.charAt(0).toUpperCase()+C.jobWordPl.slice(1)+" booked", icon:'<path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v13a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 15H5V9h14v10zM7 11h5v5H7z"/>', value:bookedCalls, sub:'straight onto the calendar'},
-    {cls:"kpi", label:"Revenue recovered", icon:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>', value:money(revenue), sub:'at ~'+money(C.avgTicket)+'/'+C.jobWord, mono:true},
-    {cls:"kpi", label:"After-hours calls caught", icon:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.8 1.2L11 14V7z"/>', value:afterHrs, sub:'nights & weekends covered'},
-    {cls:"kpi", label:"Avg. call handled in", icon:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.8 1.2L11 14V7z"/>', value:mm+"m "+ss+"s", sub:'no hold music, no queue'}
+    {cls:"kpi hero-k", label:"Inbound Volume", icon:'<path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/>', value:answered, sub:'<b>100%</b> capture rate · 0 dropped', spark:true},
+    {cls:"kpi", label:"Automated Conversions", icon:'<path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v13a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 15H5V9h14v10zM7 11h5v5H7z"/>', value:bookedCalls, sub:'routed to live scheduling'},
+    {cls:"kpi", label:"Recovered Pipeline Value", icon:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>', value:money(revenue), sub:'@ '+money(C.avgTicket)+'/'+C.jobWord+' mean', mono:true},
+    {cls:"kpi", label:"After-Hours Intercepts", icon:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.8 1.2L11 14V7z"/>', value:afterHrs, sub:'20:00–08:00 + weekend coverage'},
+    {cls:"kpi", label:"Mean Handle Time (MHT)", icon:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.8 1.2L11 14V7z"/>', value:mm+"m "+ss+"s", sub:'zero queue latency'}
   ];
   $('kpis').innerHTML=kpis.map(k=>
     '<div class="'+k.cls+'">'+(k.spark?spark:'')+
@@ -311,7 +310,7 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
 
   // ---- insight strip ----
   $('insight').innerHTML='<div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>'+
-    '<div class="tx">Your AI caught <b>'+afterHrs+' calls after hours</b> this month — '+money(Math.round(afterHrs*C.bookRate)*C.avgTicket)+'+ in work that would\'ve gone to voicemail (and probably the practice down the street).</div>';
+    '<div class="tx"><b>OPERATIONAL AUDIT:</b> '+afterHrs+' after-hours inbound exceptions routed to autonomous scheduling. Net pipeline extraction: '+money(Math.round(afterHrs*C.bookRate)*C.avgTicket)+' min. estimated value based on '+money(C.avgTicket)+'/'+C.jobWord+' mean.</div>';
 
   // ---- feed (most recent 16) ----
   const dispMap={}; C.dispositions.forEach(d=>dispMap[d.key]=d);
