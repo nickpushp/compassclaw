@@ -35,36 +35,35 @@
 <script>
 /* ====================== CONFIG — EDIT PER PROSPECT ====================== */
 const CONFIG = {
-  bizName:   "Ironclad Towing & Recovery",
-  short:     "Ironclad",
-  trade:     "towing",
-  city:      "Columbus, OH",
-  agentName: "Ironclad AI Receptionist",
-  avgTicket: 165,          // $ avg job value — drives "revenue recovered"
-  bookRate:  0.34,         // share of calls that become booked jobs
+  bizName:   "Motufau Cosmetic & Implant Dentistry",
+  short:     "Motufau Dental",
+  trade:     "dental",
+  city:      "your city",
+  agentName: "Ava - AI Front Desk",
+  avgTicket: 2800,
+  bookRate:  0.42,
   window:    "Last 30 days",
 
-  // words tuned per trade (towing shown). For dental etc. swap these.
-  jobWord:   "job",        // "job" / "appointment" / "consult"
-  jobWordPl: "jobs",
-  bookedVerb:"dispatched", // "dispatched" / "booked"
+  jobWord:   "consult",
+  jobWordPl: "consults",
+  bookedVerb:"booked",
   dispositions: [
-    {key:"booked",   label:"Job booked",      color:"#4ade80"},
-    {key:"afterhrs", label:"After-hours save", color:"#ff7a18"},
-    {key:"quote",    label:"Quote / pricing",  color:"#60a5fa"},
-    {key:"question", label:"General question",  color:"#a78bfa"},
-    {key:"spam",     label:"Spam / robocall",  color:"#6b6f79"}
+    {key:"booked",   label:"Consult booked",   color:"#5ccf9e"},
+    {key:"afterhrs", label:"After-hours booking", color:"#d4af5a"},
+    {key:"quote",    label:"Pricing / financing", color:"#60a5fa"},
+    {key:"question", label:"Treatment question",  color:"#a78bfa"},
+    {key:"spam",     label:"Spam / robocall",   color:"#6b6f79"}
   ],
-  serviceTypes: ["Tow request","Lockout","Jump start","Flat tire","Winch-out","Accident recovery","Fuel delivery"],
-  callerCity: ["Columbus","Dublin","Westerville","Hilliard","Grove City","Gahanna","Reynoldsburg","Worthington"],
+  serviceTypes: ["Implant consult","Veneers inquiry","Invisalign","Smile makeover","Teeth whitening","New patient","Emergency visit","All-on-4"],
+  callerCity: ["New patient","Returning","Referral","Website","Google","Instagram"],
 
-  retellConnected: false   // flip true when live key wired -> changes badge
+  retellConnected: false
 };
 /* ============================ END CONFIG =============================== */
 </script>
 <style>
 :root{
-  --amber:#ff7a18; --amber-soft:#ffab5e; --ink:#08090c; --ink-2:#0d0f14; --ink-3:#11141b;
+  --amber:#d4af5a; --amber-soft:#e7cd94; --ink:#08090c; --ink-2:#0d0f14; --ink-3:#11141b;
   --paper:#f3efe7; --line:rgba(243,239,231,0.14); --line-2:rgba(243,239,231,0.07);
   --muted:#8b8f99; --muted-2:#61656f; --good:#4ade80; --blue:#60a5fa; --purp:#a78bfa;
   --fdisplay:"Bricolage Grotesque",system-ui,sans-serif;
@@ -184,8 +183,8 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
 <div class="wrap">
   <div class="head">
     <span class="eye">Where your calls live</span>
-    <h1>Every call answered. <span class="ser">Nothing</span> slips through.</h1>
-    <p id="headSub">Your AI receptionist picks up every call, day or night, handles it, and books the job straight onto your calendar. Here's what it's caught.</p>
+    <h1>Every call answered. <span class="ser">Every</span> patient captured.</h1>
+    <p id="headSub">Your AI front desk answers every call, day or night, and books consultations straight onto your schedule. Here's what it's captured.</p>
   </div>
 
   <div class="kpis" id="kpis"></div>
@@ -312,7 +311,7 @@ footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
 
   // ---- insight strip ----
   $('insight').innerHTML='<div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>'+
-    '<div class="tx">Your AI caught <b>'+afterHrs+' calls after hours</b> this month — '+money(Math.round(afterHrs*C.bookRate)*C.avgTicket)+'+ in work that would\'ve gone to voicemail (and probably the next '+C.trade+' company).</div>';
+    '<div class="tx">Your AI caught <b>'+afterHrs+' calls after hours</b> this month — '+money(Math.round(afterHrs*C.bookRate)*C.avgTicket)+'+ in work that would\'ve gone to voicemail (and probably the practice down the street).</div>';
 
   // ---- feed (most recent 16) ----
   const dispMap={}; C.dispositions.forEach(d=>dispMap[d.key]=d);
