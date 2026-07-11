@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to Compass Claw — Let's Build Your AI</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Welcome aboard. A few quick details and we'll build your AI receptionist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#ff8a1e; --accent-2:#ffb469; --accent-rgb:255 138 30;
+  --void:#070b14; --panel:rgba(255,255,255,0.04); --panel-2:rgba(255,255,255,0.06);
+  --line:rgba(255,255,255,0.10); --line-accent:rgb(var(--accent-rgb)/0.30);
+  --white:#f4f7fb; --muted:#9aa6b8; --good:#34d399; --bad:#f87171;
+  --radius:20px; --radius-lg:28px; --radius-sm:12px;
+  --font-sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Space Grotesk",var(--font-sans);
+  --maxw:640px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--void);color:var(--white);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;line-height:1.55}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(1100px 650px at 18% 8%, rgb(var(--accent-rgb)/0.20), transparent 55%),
+    radial-gradient(900px 600px at 85% 25%, rgb(var(--accent-rgb)/0.10), transparent 60%),
+    var(--void);
+  padding:32px 20px 64px;
+}
+.wrap{max-width:var(--maxw);margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgb(var(--accent-rgb)/0.8);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 6px rgb(var(--accent-rgb)/0.7)}50%{opacity:.55;box-shadow:0 0 14px rgb(var(--accent-rgb)/1)}}
+.brand-name{font-family:var(--font-display);font-size:1.3rem;letter-spacing:-0.02em}
+.brand-accent{color:var(--accent)}
+.hero{text-align:center;margin-bottom:32px}
+.eyebrow{display:inline-block;font-family:var(--font-display);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);background:rgb(var(--accent-rgb)/0.10);border:1px solid var(--line-accent);padding:6px 14px;border-radius:999px;margin-bottom:18px}
+h1{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.08;letter-spacing:-0.03em;margin-bottom:14px}
+h1 .grad{background:linear-gradient(120deg,#fff 0%,var(--accent-2) 60%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto}
+.steps{display:flex;gap:8px;justify-content:center;margin:22px 0 30px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.82rem}
+.step b{color:var(--white);font-weight:600}
+.step .n{width:22px;height:22px;border-radius:50%;background:rgb(var(--accent-rgb)/0.14);border:1px solid var(--line-accent);color:var(--accent);display:grid;place-items:center;font-size:.72rem;font-weight:700;font-family:var(--font-display)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 26px;backdrop-filter:blur(8px)}
+.field{margin-bottom:20px}
+.field:last-of-type{margin-bottom:0}
+label{display:block;font-weight:600;font-size:.95rem;margin-bottom:7px}
+label .req{color:var(--accent);margin-left:2px}
+.hint{color:var(--muted);font-size:.82rem;margin-bottom:9px;margin-top:-3px}
+input[type=text],input[type=email],input[type=tel],textarea,select{
+  width:100%;background:rgba(0,0,0,0.25);border:1px solid var(--line);border-radius:var(--radius-sm);
+  color:var(--white);font-family:var(--font-sans);font-size:1rem;padding:13px 14px;transition:border-color .15s,box-shadow .15s;
+}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgb(var(--accent-rgb)/0.18)}
+textarea{min-height:88px;resize:vertical}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ff8a1e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:38px}
+.radio-group{display:flex;flex-direction:column;gap:9px}
+.radio{display:flex;align-items:center;gap:11px;background:rgba(0,0,0,0.2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.radio:hover{border-color:var(--line-accent)}
+.radio input{accent-color:var(--accent);width:18px;height:18px;flex:none}
+.radio.sel{border-color:var(--accent);background:rgb(var(--accent-rgb)/0.08)}
+.btn{width:100%;margin-top:8px;font-family:var(--font-display);font-weight:600;font-size:1.08rem;color:#1a1206;border:none;cursor:pointer;padding:16px;border-radius:var(--radius);background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 8px 30px rgb(var(--accent-rgb)/0.30);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgb(var(--accent-rgb)/0.45)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.err{color:var(--bad);font-size:.82rem;margin-top:6px;display:none}
+.field.invalid .err{display:block}
+.field.invalid input,.field.invalid textarea{border-color:var(--bad)}
+.footnote{text-align:center;color:var(--muted);font-size:.82rem;margin-top:18px}
+.footnote a{color:var(--accent-2);text-decoration:none}
+/* success */
+.success{display:none;text-align:center;padding:20px 0}
+.success.show{display:block;animation:fadein .5s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.check{width:76px;height:76px;border-radius:50%;background:rgb(var(--accent-rgb)/0.12);border:2px solid var(--accent);display:grid;place-items:center;margin:0 auto 22px}
+.check svg{width:38px;height:38px;stroke:var(--accent);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.success h2{font-family:var(--font-display);font-size:1.7rem;margin-bottom:12px}
+.success p{color:var(--muted);max-width:440px;margin:0 auto 10px}
+.success .big{color:var(--white);font-size:1.05rem}
+.tl{max-width:400px;margin:26px auto 0;text-align:left;display:flex;flex-direction:column;gap:12px}
+.tl-item{display:flex;gap:12px;align-items:flex-start}
+.tl-item .n{width:26px;height:26px;flex:none;border-radius:50%;background:rgb(var(--accent-rgb)/0.14);border:1px solid var(--line-accent);color:var(--accent);display:grid;place-items:center;font-size:.8rem;font-weight:700;font-family:var(--font-display)}
+.tl-item b{display:block;font-size:.95rem}
+.tl-item span{color:var(--muted);font-size:.85rem}
+.call{margin-top:26px}
+.call a{color:var(--accent);font-family:var(--font-display);font-weight:600;text-decoration:none;font-size:1.1rem}
+.hp{position:absolute;left:-9999px;top:-9999px}
+@media(max-width:480px){.card{padding:22px 18px}.steps{gap:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span class="dot"></span><span class="brand-name">Compass<span class="brand-accent">Claw</span></span></div>
+
+  <div id="formView">
+    <div class="hero">
+      <span class="eyebrow">You're in — welcome aboard</span>
+      <h1>Let's build <span class="grad">your AI receptionist</span></h1>
+      <p class="sub">A few quick details and we'll start building. Most answers are one line — takes about 3 minutes.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><b>Tell us about you</b></div>
+      <div class="step"><span class="n">2</span>We build it</div>
+      <div class="step"><span class="n">3</span>You go live</div>
+    </div>
+
+    <form id="onboard" class="card" novalidate>
+      <div class="field">
+        <label>Business name<span class="req">*</span></label>
+        <input type="text" name="entry.927679412" required>
+        <div class="err">Please add your business name.</div>
+      </div>
+      <div class="field">
+        <label>Your name<span class="req">*</span></label>
+        <div class="hint">Owner or main contact.</div>
+        <input type="text" name="entry.970408748" required>
+        <div class="err">Please add your name.</div>
+      </div>
+      <div class="field">
+        <label>Best email<span class="req">*</span></label>
+        <input type="email" name="entry.876988894" required>
+        <div class="err">Please add a valid email.</div>
+      </div>
+      <div class="field">
+        <label>Best phone<span class="req">*</span></label>
+        <div class="hint">Where we reach you to review the build.</div>
+        <input type="tel" name="entry.330722094" required>
+        <div class="err">Please add a phone number.</div>
+      </div>
+      <div class="field">
+        <label>What kind of business?<span class="req">*</span></label>
+        <div class="hint">Your trade or industry — e.g. auto body, HVAC, plumbing.</div>
+        <input type="text" name="entry.107266500" required>
+        <div class="err">Please tell us your trade.</div>
+      </div>
+      <div class="field">
+        <label>Business phone the AI should answer<span class="req">*</span></label>
+        <div class="hint">The number callers dial now. We forward it to your AI.</div>
+        <input type="tel" name="entry.2081079011" required>
+        <div class="err">Please add your business number.</div>
+      </div>
+      <div class="field">
+        <label>Business hours<span class="req">*</span></label>
+        <div class="hint">When are you open? Note if you run 24/7 or emergency service.</div>
+        <textarea name="entry.856339245" required></textarea>
+        <div class="err">Please add your hours.</div>
+      </div>
+      <div class="field">
+        <label>Top services + rough pricing<span class="req">*</span></label>
+        <div class="hint">This is what the AI quotes callers. Ballpark is fine.</div>
+        <textarea name="entry.1374844992" required></textarea>
+        <div class="err">Please list a few services.</div>
+      </div>
+      <div class="field">
+        <label>When a caller wants to book, what should the AI do?<span class="req">*</span></label>
+        <div class="radio-group" id="bookGroup">
+          <label class="radio"><input type="radio" name="entry.1770369477" value="Book straight into my calendar" required><span>Book straight into my calendar</span></label>
+          <label class="radio"><input type="radio" name="entry.1770369477" value="Take a message and I call back"><span>Take a message and I call back</span></label>
+          <label class="radio"><input type="radio" name="entry.1770369477" value="Send them a booking link / text"><span>Send them a booking link / text</span></label>
+          <label class="radio"><input type="radio" name="entry.1770369477" value="Transfer to me if I'm available"><span>Transfer to me if I'm available</span></label>
+        </div>
+        <div class="err">Please pick one.</div>
+      </div>
+      <div class="field">
+        <label>Service area</label>
+        <div class="hint">Cities or zip codes you cover. Optional.</div>
+        <input type="text" name="entry.21696674">
+      </div>
+      <div class="field">
+        <label>Anything the AI should ALWAYS say or ask?</label>
+        <div class="hint">e.g. "mention our 10% first-time discount." Optional.</div>
+        <textarea name="entry.161145898"></textarea>
+      </div>
+      <div class="field">
+        <label>Anything the AI should NEVER say or do?</label>
+        <textarea name="entry.1945262895"></textarea>
+      </div>
+      <div class="field">
+        <label>Current website?</label>
+        <div class="hint">Paste the link, or leave blank if none.</div>
+        <input type="text" name="entry.1862412835">
+      </div>
+      <div class="field">
+        <label>Anything else we should know?</label>
+        <textarea name="entry.1455137627"></textarea>
+      </div>
+      <!-- honeypot -->
+      <input class="hp" type="text" name="hp_website" tabindex="-1" autocomplete="off">
+      <button type="submit" class="btn" id="submitBtn">Start building my AI →</button>
+      <div class="footnote">Questions right now? Call <a href="tel:+17408313443">(740) 831-3443</a></div>
+    </form>
+  </div>
+
+  <div id="successView" class="success card">
+    <div class="check"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h2>You're all set!</h2>
+    <p class="big">We've got everything we need — your AI receptionist build starts now.</p>
+    <div class="tl">
+      <div class="tl-item"><span class="n">1</span><div><b>We build your agent</b><span>Custom call flow, your services, your hours.</span></div></div>
+      <div class="tl-item"><span class="n">2</span><div><b>You review it live</b><span>We call you to listen together and fine-tune.</span></div></div>
+      <div class="tl-item"><span class="n">3</span><div><b>Go live</b><span>We forward your number — every call answered, 24/7.</span></div></div>
+    </div>
+    <div class="call">Want to skip the line? Call <a href="tel:+17408313443">(740) 831-3443</a></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var FORM_ACTION="https://docs.google.com/forms/d/e/1FAIpQLSflwDcbTc1-Ririq7GWv7seXDs4DGcdgs0o-MqBqdko5QXLCw/formResponse";
+  var form=document.getElementById('onboard');
+  var btn=document.getElementById('submitBtn');
+
+  // radio visual selection
+  document.querySelectorAll('#bookGroup .radio').forEach(function(r){
+    r.addEventListener('click',function(){
+      document.querySelectorAll('#bookGroup .radio').forEach(function(x){x.classList.remove('sel')});
+      r.classList.add('sel');
+    });
+  });
+
+  function markInvalid(field,bad){ field.classList.toggle('invalid',bad); }
+
+  function validate(){
+    var ok=true;
+    form.querySelectorAll('.field').forEach(function(f){
+      var inp=f.querySelector('input[required],textarea[required]');
+      var radios=f.querySelectorAll('input[type=radio][required]');
+      if(inp){
+        var bad=!inp.value.trim();
+        if(inp.type==='email' && inp.value.trim()){ bad=!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(inp.value.trim()); }
+        markInvalid(f,bad); if(bad) ok=false;
+      }
+    });
+    // booking radio
+    var bookField=document.querySelector('#bookGroup').closest('.field');
+    var picked=document.querySelector('input[name="entry.1770369477"]:checked');
+    markInvalid(bookField,!picked); if(!picked) ok=false;
+    return ok;
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    // honeypot: silent success without sending
+    if(form.querySelector('[name=hp_website]').value){ showSuccess(); return; }
+    if(!validate()){
+      var first=form.querySelector('.field.invalid');
+      if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    btn.disabled=true; btn.textContent='Building your setup…';
+    // Fire the POST to Google Forms via hidden iframe (no-CORS, fire-and-forget)
+    var fd=new FormData(form);
+    fd.delete('hp_website');
+    var body=new URLSearchParams();
+    fd.forEach(function(v,k){ body.append(k,v); });
+    fetch(FORM_ACTION,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
+      .then(showSuccess).catch(showSuccess);
+    // safety: show success even if network hangs (no-cors resolves opaque anyway)
+    setTimeout(showSuccess,1500);
+  });
+
+  var shown=false;
+  function showSuccess(){
+    if(shown) return; shown=true;
+    document.getElementById('formView').style.display='none';
+    var s=document.getElementById('successView'); s.classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+})();
+</script>
+</body>
+</html>
