@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- =================================================================
+     COMPASS CLAW — DEMO TEMPLATE  (reskin per prospect in 60 sec)
+     Edit ONLY the CONFIG block below. Everything else auto-fills.
+     ================================================================= -->
+<title>Demo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script>
+/* ====================== CONFIG — EDIT THESE ====================== */
+const CONFIG = {
+  bizName:   "Ironclad Towing & Recovery",
+  trade:     "towing",                 // lowercase, used in copy
+  tagline:   "24/7 Towing & Roadside Recovery",
+  city:      "Columbus, OH",
+  phone:     "(740) 831-3443",          // demo number (your line). Client's real # wired after they buy.
+  hero:      "Stranded? We're already on the way.",
+  heroSub:   "Fast, reliable towing and roadside recovery across {CITY} — day or night. One call and help is rolling.",
+  services:  [
+    {icon:"tow",   name:"Emergency Towing",     desc:"Light & medium-duty, anywhere in the metro. Fast dispatch, upfront pricing."},
+    {icon:"key",   name:"Lockouts & Jumpstarts", desc:"Locked out or dead battery? We're rolling in minutes, not hours."},
+    {icon:"fuel",  name:"Fuel & Tire Service",   desc:"Out of gas or flat on the shoulder? We come to you and get you moving."},
+    {icon:"winch", name:"Winch-Outs & Recovery", desc:"Stuck in a ditch, mud, or snow? Professional recovery, no vehicle left behind."}
+  ],
+  reviewName: "Marcus T.",
+  reviewText: "Blew a tire on I-70 at midnight. Called, they answered on the first ring and had a truck to me in 20 minutes. Lifesavers.",
+  // The AI answer bubble shown in the phone mockup:
+  aiGreeting: "Thanks for calling {BIZ}, this is your virtual dispatcher. Where are you located and what's going on with your vehicle?",
+  // Compass Claw close link (Stripe) — used by the "Get Started" button:
+  stripeLink: "https://buy.stripe.com/14AdR87dseXmbsK3GHgjC00"
+};
+/* ================= END CONFIG (stop editing here) ================ */
+</script>
+<style>
+:root{
+  --accent:#ff8a1e; --accent-2:#ffb469; --accent-rgb:255 138 30;
+  --void:#070b14; --panel:rgba(255,255,255,0.04); --panel-2:rgba(255,255,255,0.06);
+  --line:rgba(255,255,255,0.10); --line-accent:rgb(var(--accent-rgb)/0.30);
+  --white:#f4f7fb; --muted:#9aa6b8; --good:#34d399;
+  --radius:20px; --radius-lg:28px; --radius-sm:12px;
+  --font-sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Space Grotesk",var(--font-sans);
+  --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--white);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+a{color:inherit;text-decoration:none}
+/* nav */
+nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(12px);background:rgba(7,11,20,0.72);border-bottom:1px solid var(--line)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--font-display);font-weight:700;font-size:1.2rem;letter-spacing:-0.02em;display:flex;align-items:center;gap:9px}
+.logo .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgb(var(--accent-rgb)/0.8)}
+.nav-call{font-family:var(--font-display);font-weight:600;font-size:.98rem;color:var(--white);border:1px solid var(--line-accent);background:rgb(var(--accent-rgb)/0.08);padding:9px 16px;border-radius:999px;display:flex;align-items:center;gap:8px;transition:.15s}
+.nav-call:hover{background:rgb(var(--accent-rgb)/0.16)}
+.nav-call svg{width:15px;height:15px;fill:var(--accent)}
+/* hero */
+.hero{position:relative;padding:76px 0 64px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(1100px 620px at 20% 0%, rgb(var(--accent-rgb)/0.20), transparent 55%),
+  radial-gradient(820px 560px at 90% 20%, rgb(var(--accent-rgb)/0.10), transparent 60%);z-index:-1}
+.hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:44px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:rgb(var(--accent-rgb)/0.10);border:1px solid var(--line-accent);padding:7px 14px;border-radius:999px;margin-bottom:20px}
+.eyebrow .live{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+h1{font-family:var(--font-display);font-size:clamp(2.1rem,5.4vw,3.5rem);line-height:1.04;letter-spacing:-0.03em;margin-bottom:18px}
+h1 .grad{background:linear-gradient(120deg,#fff 0%,var(--accent-2) 55%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p.lead{color:var(--muted);font-size:1.15rem;max-width:520px;margin-bottom:30px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn-primary{font-family:var(--font-display);font-weight:600;font-size:1.08rem;color:#1a1206;padding:15px 26px;border-radius:var(--radius);background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 8px 30px rgb(var(--accent-rgb)/0.32);display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:none;transition:.14s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 42px rgb(var(--accent-rgb)/0.46)}
+.btn-primary svg{width:19px;height:19px;fill:#1a1206}
+.btn-ghost{font-family:var(--font-display);font-weight:600;font-size:1rem;padding:14px 22px;border-radius:var(--radius);border:1px solid var(--line);color:var(--white);transition:.14s}
+.btn-ghost:hover{border-color:var(--line-accent);background:rgb(var(--accent-rgb)/0.06)}
+/* phone mockup */
+.phone{justify-self:center;width:270px;height:540px;background:linear-gradient(160deg,#12161f,#0a0e16);border:2px solid rgba(255,255,255,0.14);border-radius:38px;padding:16px 14px;box-shadow:0 30px 80px rgba(0,0,0,0.55), 0 0 0 8px rgba(255,255,255,0.02);position:relative;flex:none}
+.phone .notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:110px;height:22px;background:#05070c;border-radius:0 0 14px 14px;z-index:2}
+.screen{height:100%;background:radial-gradient(circle at 50% 0%, #141a26, #090c13);border-radius:26px;padding:44px 14px 18px;display:flex;flex-direction:column;overflow:hidden}
+.call-status{text-align:center;color:var(--good);font-size:.76rem;font-family:var(--font-display);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:7px}
+.call-status .live{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 7px var(--good);animation:pulse 1.5s infinite}
+.call-biz{text-align:center;font-family:var(--font-display);font-weight:600;font-size:1.02rem;margin-bottom:2px}
+.call-sub{text-align:center;color:var(--muted);font-size:.72rem;margin-bottom:16px}
+.bubbles{flex:1;display:flex;flex-direction:column;gap:10px;justify-content:flex-end;padding-bottom:10px}
+.bubble{max-width:82%;padding:10px 13px;border-radius:16px;font-size:.82rem;line-height:1.4;animation:rise .5s ease both}
+.bubble.ai{align-self:flex-start;background:rgb(var(--accent-rgb)/0.14);border:1px solid var(--line-accent);border-bottom-left-radius:5px}
+.bubble.caller{align-self:flex-end;background:rgba(255,255,255,0.08);border:1px solid var(--line);border-bottom-right-radius:5px;color:var(--muted)}
+.bubble.d2{animation-delay:1.2s;opacity:0}
+.bubble.d3{animation-delay:2.4s;opacity:0}
+.bubble.d4{animation-delay:3.6s;opacity:0}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wave{display:flex;align-items:center;justify-content:center;gap:3px;height:26px;margin-top:6px}
+.wave span{width:3px;background:var(--accent);border-radius:2px;animation:wv 1s infinite ease-in-out}
+.wave span:nth-child(1){height:8px;animation-delay:0s}.wave span:nth-child(2){height:16px;animation-delay:.1s}.wave span:nth-child(3){height:24px;animation-delay:.2s}.wave span:nth-child(4){height:14px;animation-delay:.3s}.wave span:nth-child(5){height:20px;animation-delay:.4s}.wave span:nth-child(6){height:10px;animation-delay:.5s}.wave span:nth-child(7){height:18px;animation-delay:.6s}
+@keyframes wv{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+/* trust strip */
+.trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel);padding:20px 0}
+.trust-in{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;align-items:center;color:var(--muted);font-size:.92rem}
+.trust-in b{color:var(--white)}
+.trust .item{display:flex;align-items:center;gap:9px}
+.trust svg{width:18px;height:18px;fill:var(--accent)}
+/* sections */
+section.blk{padding:70px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 46px}
+.sec-head h2{font-family:var(--font-display);font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-0.02em;margin-bottom:12px}
+.sec-head p{color:var(--muted);font-size:1.05rem}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.svc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;transition:.16s}
+.svc:hover{border-color:var(--line-accent);transform:translateY(-3px)}
+.svc .ic{width:48px;height:48px;border-radius:13px;background:rgb(var(--accent-rgb)/0.12);border:1px solid var(--line-accent);display:grid;place-items:center;margin-bottom:16px}
+.svc .ic svg{width:24px;height:24px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.svc h3{font-family:var(--font-display);font-size:1.18rem;margin-bottom:8px}
+.svc p{color:var(--muted);font-size:.94rem}
+/* review */
+.review{max-width:760px;margin:0 auto;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:44px 34px}
+.stars{color:var(--accent);font-size:1.3rem;letter-spacing:3px;margin-bottom:18px}
+.review .quote{font-size:1.3rem;line-height:1.5;font-weight:500;margin-bottom:18px}
+.review .who{color:var(--muted);font-family:var(--font-display)}
+/* final cta */
+.final{position:relative;text-align:center;padding:80px 0}
+.final::before{content:"";position:absolute;inset:0;background:radial-gradient(760px 380px at 50% 40%, rgb(var(--accent-rgb)/0.16), transparent 62%);z-index:-1}
+.final h2{font-family:var(--font-display);font-size:clamp(1.9rem,4.5vw,2.8rem);letter-spacing:-0.02em;margin-bottom:16px}
+.final p{color:var(--muted);font-size:1.12rem;max-width:520px;margin:0 auto 30px}
+/* footer */
+footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:var(--muted);font-size:.86rem}
+footer .cc{color:var(--accent-2);font-family:var(--font-display)}
+/* floating call widget */
+.fab{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;align-items:center;gap:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#1a1206;border:none;border-radius:999px;padding:0;cursor:pointer;box-shadow:0 10px 34px rgb(var(--accent-rgb)/0.5);font-family:var(--font-display);font-weight:700;overflow:hidden;transition:.2s}
+.fab .ring{width:60px;height:60px;display:grid;place-items:center;flex:none}
+.fab .ring svg{width:26px;height:26px;fill:#1a1206;animation:shake 2.4s infinite}
+@keyframes shake{0%,88%,100%{transform:rotate(0)}90%{transform:rotate(-14deg)}94%{transform:rotate(14deg)}98%{transform:rotate(0)}}
+.fab .lbl{max-width:0;white-space:nowrap;font-size:1rem;padding-right:0;transition:.28s;opacity:0}
+.fab:hover .lbl{max-width:200px;padding-right:22px;opacity:1}
+.fab::after{content:"";position:absolute;inset:0;border-radius:999px;box-shadow:0 0 0 0 rgb(var(--accent-rgb)/0.5);animation:halo 2.2s infinite}
+@keyframes halo{0%{box-shadow:0 0 0 0 rgb(var(--accent-rgb)/0.5)}70%{box-shadow:0 0 0 18px rgb(var(--accent-rgb)/0)}100%{box-shadow:0 0 0 0 rgb(var(--accent-rgb)/0)}}
+/* desktop call modal */
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(3,5,10,0.72);backdrop-filter:blur(6px);padding:20px}
+.modal.show{display:flex}
+.modal-card{background:linear-gradient(160deg,#12161f,#0a0e16);border:1px solid var(--line-accent);border-radius:var(--radius-lg);padding:38px 32px;max-width:380px;width:100%;text-align:center;position:relative;animation:rise .35s ease}
+.modal-card .x{position:absolute;top:14px;right:16px;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+.modal-card .ic{width:66px;height:66px;border-radius:50%;background:rgb(var(--accent-rgb)/0.14);border:2px solid var(--accent);display:grid;place-items:center;margin:0 auto 18px}
+.modal-card .ic svg{width:30px;height:30px;fill:var(--accent)}
+.modal-card h3{font-family:var(--font-display);font-size:1.35rem;margin-bottom:6px}
+.modal-card p{color:var(--muted);font-size:.95rem;margin-bottom:20px}
+.modal-num{font-family:var(--font-display);font-weight:700;font-size:1.9rem;color:var(--accent);margin-bottom:20px;letter-spacing:.01em}
+.modal-card .btn-primary{width:100%;justify-content:center}
+@media(max-width:860px){
+  .hero-grid{grid-template-columns:1fr;gap:36px}
+  .phone{order:-1;transform:scale(.92)}
+  .hero p.lead{margin-left:auto;margin-right:auto}
+  .cta-row{justify-content:center}
+  .hero{text-align:center}
+  .eyebrow{margin-left:auto;margin-right:auto}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="logo"><span class="dot"></span><span id="navBiz">Business</span></div>
+    <a class="nav-call" id="navCall" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="navPhone">Call</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="live"></span> <span id="ebText">AI Receptionist · Live 24/7</span></span>
+      <h1 id="heroH1">Headline</h1>
+      <p class="lead" id="heroSub">Sub</p>
+      <div class="cta-row">
+        <a class="btn-primary" id="heroCall" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="heroCallLbl">Call Now</span></a>
+        <a class="btn-ghost" href="#services">Our Services</a>
+      </div>
+    </div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="call-status"><span class="live"></span> Call in progress</div>
+        <div class="call-biz" id="phoneBiz">Business</div>
+        <div class="call-sub">AI Virtual Dispatcher</div>
+        <div class="bubbles">
+          <div class="bubble ai" id="b1">Greeting</div>
+          <div class="bubble caller d2">Yeah, I've got a flat on the highway, north side.</div>
+          <div class="bubble ai d3">Got it — I'm dispatching a truck to the north I-70 corridor now. Can I get your name and a callback number?</div>
+          <div class="bubble caller d4">It's Dave, 614-555-0182.</div>
+        </div>
+        <div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="trust">
+  <div class="trust-in">
+    <div class="item"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.4-6.3-4.6L5.7 21 8 13.8 2 9.4h7.6z"/></svg> <span><b>Every call answered</b> — 24/7</span></div>
+    <div class="item"><svg viewBox="0 0 24 24"><path d="M12 1a11 11 0 100 22 11 11 0 000-22zm-1 15l-4-4 1.4-1.4L11 13.2l5.6-5.6L18 9z"/></svg> <span><b>Never miss a job</b> to voicemail</span></div>
+    <div class="item"><svg viewBox="0 0 24 24"><path d="M12 1a11 11 0 100 22 11 11 0 000-22zm1 12H7v-2h4V6h2z"/></svg> <span><b>Books straight</b> to your schedule</span></div>
+  </div>
+</div>
+
+<section class="blk" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>What we handle</h2>
+      <p id="svcLead">Whatever you need, we're one call away.</p>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="wrap">
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <div class="quote" id="revText">Review</div>
+      <div class="who" id="revWho">— Name</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2 id="finalH">Need help right now?</h2>
+    <p id="finalP">Our AI answers instantly, any hour. Tap to call and we'll take care of the rest.</p>
+    <a class="btn-primary" id="finalCall" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="finalCallLbl">Call Now</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div id="footBiz">Business</div>
+    <div style="margin-top:8px">Powered by <a class="cc" href="https://compassclaw.com" target="_blank" rel="noopener">Compass Claw</a> — the AI Talking Website</div>
+    <!-- CLOSE BUTTON (visible on demo, use during the pitch to take payment) -->
+    <div style="margin-top:22px">
+      <a class="btn-primary" id="closeBtn" href="#" target="_blank" rel="noopener" style="font-size:.95rem;padding:12px 22px">Get Started →</a>
+    </div>
+  </div>
+</footer>
+
+<!-- floating call widget -->
+<button class="fab" id="fab" aria-label="Call now">
+  <span class="lbl" id="fabLbl">Talk to our AI</span>
+  <span class="ring"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg></span>
+</button>
+
+<!-- desktop call modal -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <span class="x" id="modalX">×</span>
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg></div>
+    <h3>Talk to our AI receptionist</h3>
+    <p>Give it a call — it answers instantly, 24/7.</p>
+    <div class="modal-num" id="modalNum">(000) 000-0000</div>
+    <a class="btn-primary" id="modalCall" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg> Call Now</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const C=CONFIG;
+  const tel="tel:"+C.phone.replace(/[^0-9+]/g,'');
+  const fill=(id,txt)=>{const e=document.getElementById(id); if(e) e.textContent=txt;};
+  const sub=(s)=>s.replace(/\{CITY\}/g,C.city).replace(/\{BIZ\}/g,C.bizName);
+
+  document.title = C.bizName+" — "+C.tagline;
+  fill('navBiz',C.bizName); fill('navPhone',C.phone);
+  fill('ebText','AI Receptionist · Live 24/7');
+  fill('heroH1',C.hero); document.getElementById('heroH1').innerHTML='<span class="grad">'+C.hero+'</span>';
+  fill('heroSub',sub(C.heroSub));
+  fill('phoneBiz',C.bizName);
+  fill('b1',sub(C.aiGreeting));
+  fill('svcLead','Whatever you need in '+C.city+', we\'re one call away.');
+  fill('revText','“'+C.reviewText+'”'); fill('revWho','— '+C.reviewName);
+  fill('footBiz',C.bizName+' · '+C.city);
+  fill('modalNum',C.phone);
+  fill('finalCallLbl','Call '+C.phone);
+  fill('heroCallLbl','Call '+C.phone);
+
+  // services
+  const icons={
+    tow:'<path d="M3 13h11v5H3z"/><path d="M14 15h4l3-3v3h-2"/><circle cx="6.5" cy="18.5" r="1.8"/><circle cx="17.5" cy="18.5" r="1.8"/><path d="M3 13l2-4h7l2 4"/>',
+    key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M17 6l2 2M15 8l2 2"/>',
+    fuel:'<path d="M4 20V5a2 2 0 012-2h6a2 2 0 012 2v15M3 20h12"/><path d="M14 9h2a2 2 0 012 2v5a2 2 0 002 2 2 2 0 002-2v-8l-3-3"/>',
+    winch:'<path d="M3 7h8v6H3zM11 10h5l3 3M5 17a2 2 0 100 .01M14 17a2 2 0 100 .01"/><path d="M7 7V4h10v6"/>'
+  };
+  const grid=document.getElementById('svcGrid');
+  C.services.forEach(s=>{
+    const d=document.createElement('div'); d.className='svc';
+    d.innerHTML='<div class="ic"><svg viewBox="0 0 24 24">'+(icons[s.icon]||icons.tow)+'</svg></div><h3>'+s.name+'</h3><p>'+s.desc+'</p>';
+    grid.appendChild(d);
+  });
+
+  // call behavior: mobile dials; desktop opens modal
+  const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  function callAction(e){
+    if(isMobile){ window.location.href=tel; }
+    else{ e && e.preventDefault(); document.getElementById('modal').classList.add('show'); }
+  }
+  ['navCall','heroCall','finalCall','fab'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.setAttribute('href',tel);
+    el.addEventListener('click',callAction);
+  });
+  document.getElementById('modalCall').setAttribute('href',tel);
+  document.getElementById('modalX').addEventListener('click',()=>document.getElementById('modal').classList.remove('show'));
+  document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')document.getElementById('modal').classList.remove('show')});
+
+  // close/get-started button -> Stripe
+  document.getElementById('closeBtn').setAttribute('href',C.stripeLink);
+})();
+</script>
+</body>
+</html>
