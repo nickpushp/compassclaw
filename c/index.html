@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- =================================================================
+     COMPASS CLAW — "WHERE THE CALLS LIVE"  (client call dashboard)
+     Demo flow beat #3: demo call → their website → THIS.
+     Shows every call the AI receptionist answered + outcomes + booked jobs.
+
+     >>> SIMULATED NOW / LIVE LATER <<<
+     All numbers below are generated in JS from a believable model.
+     Every field maps 1:1 to Retell's real API so going live = swapping
+     the generator for a fetch. Retell mapping noted inline:
+       call.call_id                -> row id
+       call.from_number            -> caller
+       call.start_timestamp        -> time
+       call.duration_ms            -> length
+       call.call_analysis
+         .user_sentiment           -> sentiment
+         .call_successful          -> answered/handled
+         .custom_analysis_data
+            .disposition           -> outcome (booked/quote/question/spam)
+            .appointment_booked    -> booked flag
+            .service_type          -> job type
+       call.recording_url          -> "listen" link
+     Pull via GET https://api.retellai.com/v2/list-calls (Bearer key),
+     or push each call in real time via Retell webhook -> your endpoint.
+     ================================================================= -->
+<title>Loading…</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --amber:#d4af5a; --amber-soft:#e7cd94; --ink:#08090c; --ink-2:#0d0f14; --ink-3:#11141b;
+  --paper:#f3efe7; --line:rgba(243,239,231,0.14); --line-2:rgba(243,239,231,0.07);
+  --muted:#8b8f99; --muted-2:#61656f; --good:#4ade80; --blue:#60a5fa; --purp:#a78bfa;
+  --fdisplay:"Bricolage Grotesque",system-ui,sans-serif;
+  --fbody:"Inter",system-ui,sans-serif;
+  --fmono:"JetBrains Mono",ui-monospace,monospace;
+  --fserif:"Instrument Serif",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--paper);font-family:var(--fbody);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+::selection{background:var(--amber);color:var(--ink)}
+/* topbar */
+.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(8,9,12,0.8);border-bottom:1px solid var(--line-2)}
+.top-in{max-width:1240px;margin:0 auto;padding:15px 24px;display:flex;align-items:center;gap:16px}
+.brand{font-family:var(--fdisplay);font-weight:700;font-size:1.1rem;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px}
+.brand .mk{width:20px;height:20px;border:1.5px solid var(--amber);border-radius:5px;position:relative;flex:none}
+.brand .mk::after{content:"";position:absolute;inset:4px;background:var(--amber);border-radius:2px}
+.brand small{display:block;font-family:var(--fbody);font-weight:400;font-size:.72rem;color:var(--muted-2);letter-spacing:0}
+.status{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:.8rem;color:var(--muted);font-family:var(--fmono)}
+.status .dot{width:8px;height:8px;border-radius:50%;background:var(--good);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.55)}70%{box-shadow:0 0 0 7px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.win-pill{font-size:.76rem;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:6px 13px;font-family:var(--fmono)}
+/* header */
+.head{padding:34px 0 6px}
+.head .eye{font-family:var(--fbody);font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-soft);margin-bottom:12px}
+.head h1{font-family:var(--fdisplay);font-weight:700;font-size:clamp(2rem,4.4vw,3rem);letter-spacing:-0.03em;line-height:1.02}
+.head h1 .ser{font-family:var(--fserif);font-style:italic;font-weight:400;color:var(--amber)}
+.head p{color:var(--muted);margin-top:12px;max-width:640px;font-size:1.02rem}
+/* kpi grid */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:30px 0}
+.kpi{background:linear-gradient(180deg,var(--ink-2),var(--ink));border:1px solid var(--line-2);border-radius:16px;padding:22px 22px 20px;position:relative;overflow:hidden}
+.kpi.hero-k{grid-column:span 2;background:linear-gradient(135deg,rgba(255,122,24,0.14),rgba(255,122,24,0.02))}
+.kpi .kl{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.kpi .kl svg{width:16px;height:16px;fill:var(--amber);opacity:.9}
+.kpi .kv{font-family:var(--fdisplay);font-weight:700;font-size:clamp(1.9rem,3.6vw,2.7rem);letter-spacing:-0.02em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi.hero-k .kv{font-size:clamp(2.4rem,5vw,3.6rem);color:var(--amber)}
+.kpi .ksub{font-size:.82rem;color:var(--muted-2);margin-top:9px}
+.kpi .ksub b{color:var(--good);font-weight:600}
+.kpi .spark{position:absolute;right:0;bottom:0;width:100%;height:44px;opacity:.5}
+@media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}.kpi.hero-k{grid-column:span 2}}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}.kpi.hero-k{grid-column:span 1}}
+/* layout split */
+.split{display:grid;grid-template-columns:1.55fr 1fr;gap:20px;margin-bottom:26px}
+@media(max-width:960px){.split{grid-template-columns:1fr}}
+.card{background:var(--ink-2);border:1px solid var(--line-2);border-radius:16px;overflow:hidden}
+.card-h{padding:18px 22px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:12px}
+.card-h h2{font-family:var(--fdisplay);font-weight:600;font-size:1.08rem;letter-spacing:-0.01em}
+.card-h .live-tag{margin-left:auto;font-family:var(--fmono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--good);display:flex;align-items:center;gap:6px}
+.card-h .live-tag .d{width:7px;height:7px;border-radius:50%;background:var(--good);animation:pulse 1.8s infinite}
+/* feed */
+.feed{max-height:520px;overflow-y:auto}
+.call{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 22px;border-bottom:1px solid var(--line-2);transition:.15s}
+.call:hover{background:rgba(255,255,255,0.02)}
+.call:last-child{border-bottom:none}
+.call .av{width:38px;height:38px;border-radius:10px;background:var(--ink-3);display:grid;place-items:center;font-family:var(--fmono);font-size:.82rem;color:var(--amber-soft);border:1px solid var(--line-2)}
+.call .who{min-width:0}
+.call .who .n{font-weight:600;font-size:.94rem;display:flex;align-items:center;gap:8px}
+.call .who .m{font-size:.8rem;color:var(--muted);font-family:var(--fmono);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.call .right{text-align:right;white-space:nowrap}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:600;padding:4px 10px;border-radius:999px;font-family:var(--fmono)}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.booked{color:var(--good);background:rgba(74,222,128,0.1)}
+.tag.afterhrs{color:var(--amber);background:rgba(255,122,24,0.1)}
+.tag.quote{color:var(--blue);background:rgba(96,165,250,0.1)}
+.tag.question{color:var(--purp);background:rgba(167,139,250,0.1)}
+.tag.spam{color:var(--muted);background:rgba(139,143,153,0.09)}
+.call .right .t{font-size:.76rem;color:var(--muted-2);font-family:var(--fmono);margin-top:5px}
+.call .right .listen{font-size:.72rem;color:var(--amber-soft);margin-top:4px;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.call .right .listen svg{width:11px;height:11px;fill:var(--amber-soft)}
+/* right column pieces */
+.side-stack{display:flex;flex-direction:column;gap:20px}
+.donut-wrap{padding:22px;display:flex;gap:22px;align-items:center}
+.donut{flex:none;position:relative;width:132px;height:132px}
+.donut .ctr{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.donut .ctr b{font-family:var(--fdisplay);font-weight:700;font-size:1.5rem;line-height:1}
+.donut .ctr span{font-size:.68rem;color:var(--muted);display:block;margin-top:2px}
+.legend{flex:1;display:flex;flex-direction:column;gap:10px}
+.legend .lg{display:flex;align-items:center;gap:9px;font-size:.86rem}
+.legend .lg .sw{width:11px;height:11px;border-radius:3px;flex:none}
+.legend .lg .lv{margin-left:auto;font-family:var(--fmono);font-weight:500;color:var(--paper)}
+.legend .lg .lp{font-family:var(--fmono);font-size:.76rem;color:var(--muted-2);width:42px;text-align:right}
+/* hours bar chart */
+.hours{padding:20px 22px 24px}
+.hours .bars{display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:8px}
+.hours .bar{flex:1;background:linear-gradient(180deg,var(--amber),rgba(255,122,24,0.25));border-radius:4px 4px 0 0;position:relative;min-height:4px;transition:.6s cubic-bezier(.2,.8,.2,1)}
+.hours .bar.night{background:linear-gradient(180deg,var(--blue),rgba(96,165,250,0.2))}
+.hours .axis{display:flex;justify-content:space-between;font-size:.66rem;color:var(--muted-2);font-family:var(--fmono);margin-top:8px}
+.hours .note{margin-top:14px;font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.hours .note b{color:var(--blue)}
+.hours .note .sw{width:11px;height:11px;border-radius:3px;background:var(--blue);flex:none}
+/* insight strip */
+.insight{background:linear-gradient(135deg,rgba(74,222,128,0.1),rgba(74,222,128,0.02));border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:22px 24px;display:flex;align-items:center;gap:18px;margin-bottom:26px}
+.insight .ic{width:46px;height:46px;border-radius:12px;background:rgba(74,222,128,0.14);display:grid;place-items:center;flex:none}
+.insight .ic svg{width:24px;height:24px;fill:var(--good)}
+.insight .tx{font-size:1.02rem}
+.insight .tx b{font-family:var(--fdisplay);font-weight:700;color:var(--good)}
+/* footer */
+footer{border-top:1px solid var(--line-2);padding:28px 0 40px;margin-top:20px}
+.foot-in{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;font-size:.84rem;color:var(--muted-2)}
+.foot-in a{color:var(--amber-soft);text-decoration:none}
+.sim-note{font-family:var(--fmono);font-size:.72rem;color:var(--muted-2);border:1px dashed var(--line);border-radius:8px;padding:6px 12px}
+.feed::-webkit-scrollbar{width:8px}.feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<script src="/presets.js"></script>
+<script>
+/* ====== UNIVERSAL CALLS DASHBOARD RENDERER ======
+   Same prospect params as /d. Renders a personalized command center.
+   Params: b=biz c=city t=trade tk=avgTicket
+================================================= */
+(function(){
+  const q=new URLSearchParams(location.search);
+  const P=(window.CC_PRESETS||{});
+  const tradeKey=(q.get('t')||'generic').toLowerCase();
+  const T=(P.trades&&P.trades[tradeKey])||P.trades.generic;
+  const pal=(P._palettes&&P._palettes[T.palette])||P._palettes.amber;
+  const biz=q.get('b')||T.label+" Co.";
+  const short=biz.length>22?biz.split(/[\s—-]/).slice(0,2).join(' '):biz;
+  window.__PAL=pal;
+  window.CONFIG={
+    bizName:biz, short:short, trade:tradeKey, city:q.get('c')||"your area",
+    agentName:(q.get('ai')||"Ava")+" — AI Front Desk",
+    avgTicket:parseInt(q.get('tk'),10)||T.avgTicket,
+    bookRate:T.bookRate, window:"Last 30 days",
+    jobWord:T.jobWord, jobWordPl:T.jobWordPl, bookedVerb:T.verb,
+    dispositions:T.dispositions, serviceTypes:T.serviceTypes,
+    callerCity:["New caller","Returning","Referral","Website","Google","Instagram"],
+    retellConnected:false
+  };
+  // recolor accent live
+  var r=document.documentElement;
+  r.style.setProperty('--amber',pal.a); r.style.setProperty('--amber-soft',pal.a2);
+})();
+</script>
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand"><span class="mk"></span> <div><span id="brandName">Business</span><small id="brandSub">AI Receptionist · Call Dashboard</small></div></div>
+    <span class="win-pill" id="winPill">Last 30 days</span>
+    <div class="status"><span class="dot"></span> <span id="statusTxt">Live · answering now</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="head">
+    <span class="eye">Intake Operations Command</span>
+    <h1>Live Acquisition &amp; Routing <span class="ser">Telemetry</span></h1>
+    <p id="headSub">Automated Front-Desk Optimization Matrix</p>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="insight" id="insight"></div>
+
+  <div class="split">
+    <div class="card">
+      <div class="card-h">
+        <h2>Recent calls</h2>
+        <span class="live-tag"><span class="d"></span> Live feed</span>
+      </div>
+      <div class="feed" id="feed"></div>
+    </div>
+
+    <div class="side-stack">
+      <div class="card">
+        <div class="card-h"><h2>Distribution Metrics</h2></div>
+        <div class="donut-wrap">
+          <div class="donut" id="donut"><div class="ctr"><b id="donutTotal">0</b><span>calls</span></div></div>
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>Temporal Volume Metrics</h2></div>
+        <div class="hours">
+          <div class="bars" id="bars"></div>
+          <div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>11p</span></div>
+          <div class="note"><span class="sw"></span> <span><b>Unattended Operational Capacity Secured</b> (20:00 - 08:00)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot-in">
+  </div>
+</footer>
+
+<script>
+(function(){
+  const C=window.CONFIG;
+  const $=id=>document.getElementById(id);
+  const set=(id,t)=>{const e=$(id);if(e)e.textContent=t;};
+  document.title=C.bizName+" — Call Dashboard";
+  set('brandName',C.bizName);
+  set('winPill',C.window);
+
+  // ---- seeded RNG so the demo is stable within a session but realistic ----
+  let seed=0; for(const ch of C.bizName) seed=(seed*31+ch.charCodeAt(0))>>>0;
+  function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+  const ri=(a,b)=>Math.floor(a+rnd()*(b-a+1));
+  const pick=arr=>arr[Math.floor(rnd()*arr.length)];
+
+  // ---- generate ~30 days of calls (maps to Retell list-calls) ----
+  const DAYS=30;
+  const perDayBase=ri(9,14);
+  let calls=[];
+  const firstNames=["Marcus","Renee","Gary","Dave","Tanya","Luis","Priya","Chad","Nina","Owen","Bev","Kyle","Sara","Deon","Holly","Rick","Mona","Trey","Jill","Sam","Vince","Cara"];
+  const now=Date.now();
+  for(let d=0; d<DAYS; d++){
+    const dayCalls=Math.max(4, perDayBase + ri(-3,4));
+    for(let i=0;i<dayCalls;i++){
+      // hour distribution: business hours heavy, but a real after-hours tail
+      let hr; const roll=rnd();
+      if(roll<0.60) hr=ri(8,18);           // daytime
+      else if(roll<0.82) hr=ri(18,23);     // evening
+      else hr=(ri(0,7));                    // overnight (the money story)
+      const isNight = (hr<7 || hr>=19);
+      // disposition
+      let disp; const r2=rnd();
+      if(r2<0.05) disp="spam";
+      else if(isNight && rnd()<0.5) disp="afterhrs";
+      else if(r2<0.05+C.bookRate) disp="booked";
+      else if(rnd()<0.4) disp="quote";
+      else disp="question";
+      // afterhrs that convert still count toward booked jobs value
+      const booked = (disp==="booked") || (disp==="afterhrs" && rnd()<0.7);
+      const ts = now - (d*86400000) - ((23-hr)*3600000) - ri(0,3599)*1000;
+      calls.push({
+        id:"call_"+(seed=(seed*48271)>>>0).toString(16).slice(0,10),
+        name:pick(firstNames),
+        area:pick(C.callerCity),
+        num:"("+ri(200,989)+") "+ri(200,899)+"-"+String(ri(0,9999)).padStart(4,'0'),
+        hr, ts, disp, booked,
+        svc:pick(C.serviceTypes),
+        durSec: disp==="spam"?ri(6,20):ri(48,240),
+        sentiment: disp==="spam"?"neutral":(rnd()<0.8?"positive":"neutral")
+      });
+    }
+  }
+  calls.sort((a,b)=>b.ts-a.ts);
+
+  // ---- aggregate KPIs ----
+  const total=calls.length;
+  const answered=calls.length; // AI answers 100% — that's the pitch
+  const bookedCalls=calls.filter(c=>c.booked).length;
+  const afterHrs=calls.filter(c=>c.hr<7||c.hr>=19).length;
+  const revenue=bookedCalls*C.avgTicket;
+  const avgDur=Math.round(calls.reduce((s,c)=>s+c.durSec,0)/total);
+  const mm=Math.floor(avgDur/60), ss=avgDur%60;
+
+  const money=v=>"$"+v.toLocaleString('en-US');
+  const spark='<svg class="spark" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,32 L12,28 L24,30 L36,22 L48,24 L60,15 L72,18 L84,9 L100,6" fill="none" stroke="var(--amber)" stroke-width="2" opacity="0.7"/></svg>';
+
+  const kpis=[
+    {cls:"kpi hero-k", label:"Inbound Volume", icon:'<path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/>', value:answered, sub:'<b>100%</b> capture rate · 0 dropped', spark:true},
+    {cls:"kpi", label:"Automated Conversions", icon:'<path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v13a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 15H5V9h14v10zM7 11h5v5H7z"/>', value:bookedCalls, sub:'routed to live scheduling'},
+    {cls:"kpi", label:"Recovered Pipeline Value", icon:'<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>', value:money(revenue), sub:'@ '+money(C.avgTicket)+'/'+C.jobWord+' mean', mono:true},
+    {cls:"kpi", label:"After-Hours Intercepts", icon:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.8 1.2L11 14V7z"/>', value:afterHrs, sub:'20:00–08:00 + weekend coverage'},
+    {cls:"kpi", label:"Mean Handle Time (MHT)", icon:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.8 1.2L11 14V7z"/>', value:mm+"m "+ss+"s", sub:'zero queue latency'}
+  ];
+  $('kpis').innerHTML=kpis.map(k=>
+    '<div class="'+k.cls+'">'+(k.spark?spark:'')+
+    '<div class="kl"><svg viewBox="0 0 24 24" fill="'+(k.icon.includes('stroke')?'none':'')+'">'+k.icon+'</svg>'+k.label+'</div>'+
+    '<div class="kv"'+(k.mono?' style="font-variant-numeric:tabular-nums"':'')+'>'+k.value+'</div>'+
+    '<div class="ksub">'+k.sub+'</div></div>'
+  ).join('');
+
+  // fix stroke icons (revenue/clock use stroke)
+  document.querySelectorAll('.kl svg').forEach(s=>{const p=s.querySelector('path');if(p&&p.getAttribute('d').startsWith('M12 1v22')){s.setAttribute('fill','none');p.setAttribute('stroke','var(--amber)');p.setAttribute('stroke-width','2');p.setAttribute('stroke-linecap','round');}});
+
+  // ---- insight strip ----
+  $('insight').innerHTML='<div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>'+
+    '<div class="tx"><b>OPERATIONAL AUDIT:</b> '+afterHrs+' after-hours inbound exceptions routed to autonomous scheduling. Net pipeline extraction: '+money(Math.round(afterHrs*C.bookRate)*C.avgTicket)+' min. estimated value based on '+money(C.avgTicket)+'/'+C.jobWord+' mean.</div>';
+
+  // ---- feed (most recent 16) ----
+  const dispMap={}; C.dispositions.forEach(d=>dispMap[d.key]=d);
+  function fmtTime(ts){const d=new Date(ts);const now2=new Date();const sameDay=d.toDateString()===now2.toDateString();
+    const yst=new Date(now2-86400000).toDateString()===d.toDateString();
+    const hh=d.getHours(),m=String(d.getMinutes()).padStart(2,'0');
+    const ap=hh>=12?'pm':'am',h12=((hh+11)%12)+1;
+    const t=h12+':'+m+ap;
+    return sameDay?('Today '+t):(yst?('Yesterday '+t):((d.getMonth()+1)+'/'+d.getDate()+' '+t));}
+  $('feed').innerHTML=calls.slice(0,16).map(c=>{
+    const dm=dispMap[c.disp]||{label:c.disp};
+    const label = c.disp==="booked"?(C.jobWord.charAt(0).toUpperCase()+C.jobWord.slice(1)+" "+C.bookedVerb):dm.label;
+    const svc = c.disp==="spam"?"Robocall — auto-screened":c.svc+(c.hr<7||c.hr>=19?" · after hours":"");
+    return '<div class="call"><div class="av">'+c.name.charAt(0)+c.area.charAt(0)+'</div>'+
+      '<div class="who"><div class="n">'+c.name+' · '+c.area+'</div><div class="m">'+c.num+' &nbsp;·&nbsp; '+svc+'</div></div>'+
+      '<div class="right"><span class="tag '+c.disp+'">'+label+'</span>'+
+      '<div class="t">'+fmtTime(c.ts)+'</div>'+
+      (c.disp!=="spam"?'<div class="listen"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>recording</div>':'')+
+      '</div></div>';
+  }).join('');
+
+  // ---- donut (outcomes) ----
+  const counts={}; C.dispositions.forEach(d=>counts[d.key]=0);
+  calls.forEach(c=>counts[c.disp]=(counts[c.disp]||0)+1);
+  set('donutTotal',total);
+  let acc=0; const segs=[];
+  C.dispositions.forEach(d=>{const v=counts[d.key]||0;const frac=v/total;const from=acc*360;const to=(acc+frac)*360;acc+=frac;if(v>0)segs.push(d.color+' '+from.toFixed(1)+'deg '+to.toFixed(1)+'deg');});
+  $('donut').style.background='conic-gradient('+segs.join(',')+')';
+  $('donut').style.borderRadius='50%';
+  const hole=document.createElement('div');hole.style.cssText='position:absolute;inset:16px;background:var(--ink-2);border-radius:50%';
+  $('donut').insertBefore(hole,$('donut').firstChild);
+  $('legend').innerHTML=C.dispositions.map(d=>{const v=counts[d.key]||0;const p=Math.round(v/total*100);
+    return '<div class="lg"><span class="sw" style="background:'+d.color+'"></span>'+d.label+'<span class="lv">'+v+'</span><span class="lp">'+p+'%</span></div>';}).join('');
+
+  // ---- hours chart ----
+  const byHour=new Array(24).fill(0);
+  calls.forEach(c=>byHour[c.hr]++);
+  const maxH=Math.max(...byHour);
+  $('bars').innerHTML=byHour.map((v,h)=>{const night=(h<7||h>=19);const ht=Math.max(4,Math.round(v/maxH*116));
+    return '<div class="bar'+(night?' night':'')+'" style="height:4px" data-h="'+ht+'" title="'+v+' calls at '+h+':00"></div>';}).join('');
+  requestAnimationFrame(()=>{setTimeout(()=>{document.querySelectorAll('#bars .bar').forEach(b=>b.style.height=b.dataset.h+'px');},60);});
+
+  // ---- retell-connected badge ----
+})();
+</script>
+</body>
+</html>

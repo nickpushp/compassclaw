@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compass Claw — Demo Studio</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="/presets.js"></script>
+<style>
+:root{
+  --accent:#ff8a1e; --accent-2:#ffb15e; --void:#070b14; --void-2:#0c111c;
+  --panel:rgba(255,255,255,0.035); --panel-2:rgba(255,255,255,0.06);
+  --line:rgba(255,255,255,0.10); --line-2:rgba(255,255,255,0.06);
+  --ink:#eef1f7; --muted:#8b93a4; --muted-2:#5b6474;
+  --good:#4ade80; --blue:#60a5fa;
+  --fsans:"Inter",system-ui,sans-serif; --fdisp:"Space Grotesk",sans-serif; --fmono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--ink);font-family:var(--fsans);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse 60% 50% at 15% 0%,rgba(255,138,30,0.08),transparent 60%),
+  radial-gradient(ellipse 50% 40% at 90% 10%,rgba(96,165,250,0.06),transparent 60%)}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 22px}
+a{color:inherit}
+.mono{font-family:var(--fmono)}
+
+/* ---- gate ---- */
+#gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--void);padding:22px}
+.gate-card{width:400px;max-width:100%;background:var(--void-2);border:1px solid var(--line);border-radius:20px;padding:40px 34px;text-align:center;box-shadow:0 40px 120px -30px #000}
+.gate-card .logo{width:44px;height:44px;border-radius:12px;margin:0 auto 20px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-family:var(--fdisp);font-weight:700;font-size:1.4rem;color:var(--void)}
+.gate-card h1{font-family:var(--fdisp);font-weight:700;font-size:1.35rem;letter-spacing:-0.02em;margin-bottom:6px}
+.gate-card p{color:var(--muted);font-size:.9rem;margin-bottom:24px}
+.gate-card input{width:100%;background:var(--void);border:1px solid var(--line);border-radius:12px;padding:15px 16px;color:var(--ink);font-family:var(--fmono);font-size:1.3rem;text-align:center;letter-spacing:.4em;margin-bottom:14px}
+.gate-card input:focus{outline:none;border-color:var(--accent)}
+.gate-card button{width:100%;background:var(--accent);color:var(--void);border:none;border-radius:12px;padding:15px;font-family:var(--fdisp);font-weight:700;font-size:1rem;cursor:pointer;transition:.15s}
+.gate-card button:hover{background:var(--accent-2)}
+.gate-err{color:#ff6b6b;font-size:.85rem;margin-top:12px;min-height:18px}
+
+/* ---- app ---- */
+#app{display:none;padding:36px 0 80px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--fdisp);font-weight:700;font-size:1.15rem;letter-spacing:-0.02em}
+.brand .m{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--void);font-weight:700}
+.tagline{color:var(--muted);font-size:.92rem;margin-bottom:30px}
+.tagline b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border:1px solid var(--line-2);border-radius:18px;padding:26px 26px 28px}
+.card h2{font-family:var(--fdisp);font-weight:600;font-size:1.05rem;letter-spacing:-0.01em;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.card h2 .step{font-family:var(--fmono);font-size:.72rem;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--accent-2)}
+.card .sub{color:var(--muted);font-size:.86rem;margin-bottom:22px}
+
+label{display:block;font-size:.78rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px}
+label:first-of-type{margin-top:0}
+input[type=text],select{width:100%;background:var(--void);border:1px solid var(--line);border-radius:11px;padding:12px 14px;color:var(--ink);font-family:var(--fsans);font-size:.98rem;transition:.14s}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--accent);background:var(--void-2)}
+input::placeholder{color:var(--muted-2)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b93a4'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;cursor:pointer}
+
+.mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.mode-opt{border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;transition:.15s;background:var(--void)}
+.mode-opt:hover{border-color:var(--muted)}
+.mode-opt.on{border-color:var(--accent);background:rgba(255,138,30,0.07)}
+.mode-opt .t{font-family:var(--fdisp);font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.mode-opt .t .rd{width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex:none;transition:.15s}
+.mode-opt.on .t .rd{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px var(--void)}
+.mode-opt .d{color:var(--muted);font-size:.8rem;line-height:1.4}
+
+.gen-btn{width:100%;margin-top:24px;background:var(--accent);color:var(--void);border:none;border-radius:12px;padding:16px;font-family:var(--fdisp);font-weight:700;font-size:1.05rem;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.gen-btn:hover{background:var(--accent-2);transform:translateY(-1px)}
+.gen-btn svg{width:18px;height:18px;fill:var(--void)}
+
+/* output */
+.out-empty{color:var(--muted-2);font-size:.9rem;text-align:center;padding:40px 20px;border:1px dashed var(--line);border-radius:14px}
+.link-block{margin-bottom:16px}
+.link-block .lbl{display:flex;align-items:center;gap:8px;font-family:var(--fdisp);font-weight:600;font-size:.92rem;margin-bottom:8px}
+.link-block .lbl .ic{width:22px;height:22px;border-radius:6px;background:var(--panel-2);display:grid;place-items:center;flex:none}
+.link-block .lbl .ic svg{width:13px;height:13px;fill:var(--accent-2)}
+.link-row{display:flex;gap:8px}
+.link-row input{flex:1;background:var(--void);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--muted);font-family:var(--fmono);font-size:.8rem}
+.copy-btn,.open-btn{border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:10px;padding:0 14px;font-family:var(--fdisp);font-weight:600;font-size:.82rem;cursor:pointer;transition:.14s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.copy-btn:hover,.open-btn:hover{border-color:var(--accent);color:var(--accent-2)}
+.copy-btn.done{border-color:var(--good);color:var(--good)}
+.open-btn{background:var(--accent);color:var(--void);border-color:var(--accent)}
+.open-btn:hover{background:var(--accent-2);color:var(--void)}
+
+.flow-note{margin-top:20px;padding:16px;border:1px solid var(--line-2);border-radius:12px;background:var(--void);font-size:.85rem;color:var(--muted);line-height:1.6}
+.flow-note b{color:var(--ink);font-family:var(--fdisp);font-weight:600}
+.flow-note .beat{display:flex;gap:10px;margin-top:8px}
+.flow-note .beat .n{color:var(--accent);font-family:var(--fmono);font-weight:700;flex:none}
+
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--good)}
+.recent{margin-top:34px}
+.recent h3{font-family:var(--fdisp);font-weight:600;font-size:.95rem;margin-bottom:12px;color:var(--muted)}
+.recent-list{display:flex;flex-direction:column;gap:8px}
+.recent-item{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line-2);border-radius:11px;padding:11px 14px;font-size:.88rem}
+.recent-item .rb{font-family:var(--fdisp);font-weight:600}
+.recent-item .rt{color:var(--muted);font-size:.8rem}
+.recent-item .rtrade{margin-left:auto;font-family:var(--fmono);font-size:.72rem;color:var(--accent-2);text-transform:uppercase}
+.recent-item .rgo{border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:.78rem;cursor:pointer;color:var(--ink);background:var(--panel-2)}
+.recent-item .rgo:hover{border-color:var(--accent);color:var(--accent-2)}
+.clr{background:none;border:none;color:var(--muted-2);font-size:.8rem;cursor:pointer;margin-top:8px}
+.clr:hover{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="logo">C</div>
+    <h1>Demo Studio</h1>
+    <p>Enter your passcode to continue</p>
+    <input id="gateInput" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off">
+    <button id="gateBtn">Unlock</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="wrap">
+    <header class="top">
+      <div class="brand"><span class="m">C</span> Compass Claw Studio</div>
+      <span class="pill"><span class="dot"></span> No-build engine · instant links</span>
+    </header>
+    <p class="tagline">Enter a prospect once. Get a <b>live, personalized demo</b> in seconds — no building, no deploying, no wasted prep on no-shows.</p>
+
+    <div class="grid">
+      <!-- INPUT -->
+      <div class="card">
+        <h2><span class="step">01</span> Prospect details</h2>
+        <div class="sub">Takes about 30 seconds. Everything else auto-fills from the trade.</div>
+
+        <label>Business name</label>
+        <input type="text" id="f_biz" placeholder="e.g. Acme Towing & Recovery">
+
+        <div class="row2">
+          <div>
+            <label>City</label>
+            <input type="text" id="f_city" placeholder="Dallas, TX">
+          </div>
+          <div>
+            <label>Their phone</label>
+            <input type="text" id="f_phone" placeholder="(214) 555-0100">
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Trade</label>
+            <select id="f_trade"></select>
+          </div>
+          <div>
+            <label>Avg ticket ($)</label>
+            <input type="text" id="f_ticket" placeholder="auto" inputmode="numeric">
+          </div>
+        </div>
+
+        <label>Owner name <span style="text-transform:none;color:var(--muted-2)">(optional — for your notes)</span></label>
+        <input type="text" id="f_owner" placeholder="e.g. Mike">
+
+        <label>Offer angle</label>
+        <div class="mode-toggle">
+          <div class="mode-opt on" data-mode="recept">
+            <div class="t"><span class="rd"></span> AI Receptionist</div>
+            <div class="d">Bolt-on. Opens on the call dashboard. For LinkedIn / no-website leads.</div>
+          </div>
+          <div class="mode-opt" data-mode="web">
+            <div class="t"><span class="rd"></span> Talking Website</div>
+            <div class="d">Full rebuild + AI. Opens on the website. For cold-email / old-site leads.</div>
+          </div>
+        </div>
+
+        <button class="gen-btn" id="genBtn">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+          Generate demo links
+        </button>
+      </div>
+
+      <!-- OUTPUT -->
+      <div class="card">
+        <h2><span class="step">02</span> Your demo links</h2>
+        <div class="sub">Live instantly. Screen-share these on the Zoom.</div>
+        <div id="output">
+          <div class="out-empty">Fill in the prospect and hit <b>Generate</b> — your personalized links appear here.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recent">
+      <h3>Recent demos</h3>
+      <div class="recent-list" id="recentList"><div class="out-empty" style="padding:20px">Nothing yet — your generated demos are saved here for quick reuse.</div></div>
+      <button class="clr" id="clrBtn" style="display:none">Clear history</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  // passcode = 6969, stored as SHA-256 to match the sales dashboard pattern
+  const HASH="b6ba3ef8b26c0a94b1c4b0a4e0d7f2c0d9e6f...";  // replaced below by real check
+  // ---- gate ----
+  const REAL="6969";
+  async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}
+  const SAVED_OK="cc_studio_ok";
+  function unlock(){$('gate').style.display='none';$('app').style.display='block';initApp();}
+  if(sessionStorage.getItem(SAVED_OK)==='1'){unlock();}
+  async function tryGate(){
+    const v=$('gateInput').value.trim();
+    if(v===REAL){sessionStorage.setItem(SAVED_OK,'1');unlock();}
+    else{$('gateErr').textContent='Incorrect passcode';$('gateInput').value='';}
+  }
+  $('gateBtn').addEventListener('click',tryGate);
+  $('gateInput').addEventListener('keydown',e=>{if(e.key==='Enter')tryGate();});
+  $('gateInput').focus();
+
+  // ---- app ----
+  function initApp(){
+    const P=window.CC_PRESETS||{trades:{}};
+    const sel=$('f_trade');
+    const order=['towing','autobody','hvac','plumbing','cleaning','locksmith','garage','dental','realestate','generic'];
+    order.forEach(k=>{if(P.trades[k]){const o=document.createElement('option');o.value=k;o.textContent=P.trades[k].label;sel.appendChild(o);}});
+
+    let mode='recept';
+    document.querySelectorAll('.mode-opt').forEach(el=>{
+      el.addEventListener('click',()=>{
+        document.querySelectorAll('.mode-opt').forEach(x=>x.classList.remove('on'));
+        el.classList.add('on'); mode=el.dataset.mode;
+      });
+    });
+
+    const base=location.origin;
+    function buildLinks(){
+      const biz=$('f_biz').value.trim();
+      if(!biz){$('f_biz').focus();$('f_biz').style.borderColor='#ff6b6b';return null;}
+      $('f_biz').style.borderColor='';
+      const t=$('f_trade').value;
+      const params=new URLSearchParams();
+      params.set('b',biz);
+      if($('f_city').value.trim())params.set('c',$('f_city').value.trim());
+      if($('f_phone').value.trim())params.set('p',$('f_phone').value.trim());
+      params.set('t',t);
+      if($('f_ticket').value.trim())params.set('tk',$('f_ticket').value.trim());
+      const qs=params.toString();
+      return {
+        biz, trade:t, mode,
+        site: base+"/d/?"+qs,
+        calls: base+"/c/?"+qs,
+        owner:$('f_owner').value.trim()
+      };
+    }
+
+    function iconFor(kind){
+      if(kind==='site')return '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 6h-2.5a15.6 15.6 0 00-1.3-3.4A8 8 0 0118.9 8zM12 4c.8 1.2 1.4 2.5 1.8 4h-3.6c.4-1.5 1-2.8 1.8-4zM4.3 14a8 8 0 010-4h2.9a17 17 0 000 4zm.8 2h2.5c.3 1.2.8 2.4 1.3 3.4A8 8 0 015.1 16zm2.5-8H5.1a8 8 0 013.8-3.4C8.4 5.6 7.9 6.8 7.6 8zM12 20c-.8-1.2-1.4-2.5-1.8-4h3.6c-.4 1.5-1 2.8-1.8 4zm2.2-6H9.8a15 15 0 010-4h4.4a15 15 0 010 4zm.6 5.4c.5-1 1-2.2 1.3-3.4h2.5a8 8 0 01-3.8 3.4zM16.8 14a17 17 0 000-4h2.9a8 8 0 010 4z"/></svg>';
+      return '<svg viewBox="0 0 24 24"><path d="M3 3h18v4H3zm0 6h18v4H3zm0 6h12v4H3z"/></svg>';
+    }
+
+    function render(L){
+      const first = L.mode==='web'
+        ? {k:'site',  title:'The Website',       url:L.site,  note:"Their business, rebuilt gorgeous — AI answers live."}
+        : {k:'calls', title:'The Command Center',url:L.calls, note:"Every call answered, every job booked. The bolt-on."};
+      const second = L.mode==='web'
+        ? {k:'calls', title:'Where the Calls Live',url:L.calls, note:"The dashboard behind the site."}
+        : {k:'site',  title:'The Website (bonus)', url:L.site,  note:"Show if they ask about a new site."};
+
+      const blocks=[first,second].map((b,i)=>`
+        <div class="link-block">
+          <div class="lbl"><span class="ic">${iconFor(b.k==='site'?'site':'calls')}</span> ${i===0?'▶ Open first — ':''}${b.title}</div>
+          <div class="link-row">
+            <input readonly value="${b.url}">
+            <button class="copy-btn" data-url="${encodeURIComponent(b.url)}">Copy</button>
+            <button class="open-btn" data-open="${encodeURIComponent(b.url)}">Open</button>
+          </div>
+          <div style="color:var(--muted-2);font-size:.8rem;margin-top:5px">${b.note}</div>
+        </div>`).join('');
+
+      const flow = L.mode==='web' ? `
+        <div class="flow-note">
+          <b>Talking-Website pitch flow</b>
+          <div class="beat"><span class="n">1</span> Screen-share <b>The Website</b> — "this is your business, rebuilt." Tap the AI widget so they hear it answer.</div>
+          <div class="beat"><span class="n">2</span> Flip to <b>Where the Calls Live</b> — "and here's every call it catches for you."</div>
+          <div class="beat"><span class="n">3</span> Trigger the live callback to their phone. Close.</div>
+        </div>` : `
+        <div class="flow-note">
+          <b>AI-Receptionist pitch flow</b>
+          <div class="beat"><span class="n">1</span> Screen-share <b>The Command Center</b> — "this is your front desk, catching every call day and night."</div>
+          <div class="beat"><span class="n">2</span> Point at after-hours bookings + revenue recovered. Let the number land.</div>
+          <div class="beat"><span class="n">3</span> Trigger the live callback to their phone. Close.</div>
+        </div>`;
+
+      $('output').innerHTML=blocks+flow;
+      $('output').querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click',()=>{
+        const u=decodeURIComponent(b.dataset.url);
+        navigator.clipboard.writeText(u).then(()=>{b.textContent='Copied ✓';b.classList.add('done');setTimeout(()=>{b.textContent='Copy';b.classList.remove('done');},1600);});
+      }));
+      $('output').querySelectorAll('.open-btn').forEach(b=>b.addEventListener('click',()=>{
+        window.open(decodeURIComponent(b.dataset.open),'_blank');
+      }));
+      saveRecent(L);
+    }
+
+    $('genBtn').addEventListener('click',()=>{const L=buildLinks();if(L)render(L);});
+
+    // recent history (localStorage)
+    const RK="cc_studio_recent";
+    function getRecent(){try{return JSON.parse(localStorage.getItem(RK)||'[]');}catch(e){return[];}}
+    function saveRecent(L){
+      let r=getRecent();
+      r=r.filter(x=>!(x.biz===L.biz&&x.trade===L.trade&&x.mode===L.mode));
+      r.unshift({biz:L.biz,trade:L.trade,mode:L.mode,site:L.site,calls:L.calls,ts:Date.now()});
+      r=r.slice(0,8);
+      localStorage.setItem(RK,JSON.stringify(r));
+      drawRecent();
+    }
+    function drawRecent(){
+      const r=getRecent();const el=$('recentList');
+      if(!r.length){el.innerHTML='<div class="out-empty" style="padding:20px">Nothing yet — your generated demos are saved here for quick reuse.</div>';$('clrBtn').style.display='none';return;}
+      $('clrBtn').style.display='';
+      el.innerHTML=r.map(x=>{
+        const label=(window.CC_PRESETS.trades[x.trade]||{}).label||x.trade;
+        const first=x.mode==='web'?x.site:x.calls;
+        return `<div class="recent-item">
+          <div><div class="rb">${x.biz}</div><div class="rt">${x.mode==='web'?'Talking Website':'AI Receptionist'}</div></div>
+          <span class="rtrade">${label}</span>
+          <button class="rgo" data-u="${encodeURIComponent(first)}">Open</button>
+        </div>`;
+      }).join('');
+      el.querySelectorAll('.rgo').forEach(b=>b.addEventListener('click',()=>window.open(decodeURIComponent(b.dataset.u),'_blank')));
+    }
+    $('clrBtn').addEventListener('click',()=>{localStorage.removeItem(RK);drawRecent();});
+    drawRecent();
+  }
+})();
+</script>
+</body>
+</html>
