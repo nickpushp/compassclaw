@@ -1,0 +1,10 @@
+# Block direct web access to the secrets file. LiteSpeed honors this.
+<Files "config.php">
+    Require all denied
+</Files>
+
+# Belt-and-suspenders for older Apache/LiteSpeed auth directives.
+<FilesMatch "config\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
