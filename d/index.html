@@ -48,6 +48,7 @@
       {big:"Upfront", label:"Clear pricing before we start"},
       {big:"5-star", label:"Trusted by your neighbors"}
     ],
+    svcIcon:T.svcIcon, copy:T.copy||{},
     services:T.services,
     steps:[
       {n:"01",h:"Call or tap to talk",p:"Reach us any time — every call is answered instantly, and we'll take care of you on the spot."},
@@ -270,9 +271,9 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
       <p class="lead" id="heroSub">Sub</p>
       <div class="cta-row">
         <button class="btn btn-talk" id="heroTalk"><span class="wave"><i></i><i></i><i></i><i></i></span><span id="heroTalkLbl">Talk to our team</span></button>
-        <button class="btn btn-line" id="heroCall">Book a consultation</button>
+        <button class="btn btn-line" id="heroCall">Request service</button>
       </div>
-      <div class="hero-note"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.75 1.23L11 14V7z"/></svg> New-patient consults <b id="respTime">same day</b> · every call answered</div>
+      <div class="hero-note"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.75 1.23L11 14V7z"/></svg> <span id="heroNotePre">Same-day service</span> <b id="respTime">same day</b> · every call answered</div>
     </div>
   </div>
 </header>
@@ -283,7 +284,7 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">What we do</span>
-      <h2>Advanced dentistry, <span class="ser">beautifully done.</span></h2>
+      <h2 id="servicesH">Advanced dentistry, <span class="ser">beautifully done.</span></h2>
     </div>
     <div class="svc-grid" id="svcGrid"></div>
   </div>
@@ -293,7 +294,7 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">How it works</span>
-      <h2>Your new smile in <span class="ser">three steps</span>.</h2>
+      <h2 id="howH">Your new smile in <span class="ser">three steps</span>.</h2>
     </div>
     <div class="steps" id="stepsGrid"></div>
   </div>
@@ -306,7 +307,7 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
         <span class="eyebrow">Who you're calling</span>
         <h2 id="teamH">Team</h2>
         <p id="teamP">Blurb</p>
-        <span class="team-badge"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg> Trusted by thousands of patients</span>
+        <span class="team-badge"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg> <span id="teamBadge">Trusted by thousands of patients</span></span>
       </div>
       <div class="team-photo" id="teamPhoto"></div>
     </div>
@@ -316,8 +317,8 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
 <section class="blk" id="reviews" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow">What patients say</span>
-      <h2>Real patients. Real <span class="ser">transformations.</span></h2>
+      <span class="eyebrow" id="reviewsEye">What patients say</span>
+      <h2 id="reviewsH">Real patients. Real <span class="ser">transformations.</span></h2>
     </div>
     <div class="rev-grid" id="revGrid"></div>
   </div>
@@ -347,7 +348,7 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
 
 <section class="final">
   <div class="wrap in">
-    <h2>Ready for the smile <span class="ser">you deserve?</span></h2>
+    <h2 id="finalH">Ready for the smile <span class="ser">you deserve?</span></h2>
     <p id="finalP">Book your consultation today. Our team answers every call — so getting started is effortless.</p>
     <button class="btn btn-talk" id="finalTalk"><span class="wave"><i></i><i></i><i></i><i></i></span><span id="finalTalkLbl">Talk to our team</span></button>
     <div><a class="phone-big" id="phoneBig" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="phoneBigNum">(000) 000-0000</span></a></div>
@@ -396,14 +397,25 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
   const $=id=>document.getElementById(id);
   const set=(id,t)=>{const e=$(id);if(e)e.textContent=t;};
 
-  document.title=C.bizName+" — Cosmetic & Implant Dentistry";
-  set('brandName',C.bizName); set('navPhone',"Book now");
+  const CP=C.copy||{};
+  document.title=C.bizName+(CP.titleSuffix?" — "+CP.titleSuffix:"");
+  set('brandName',C.bizName); set('navPhone',CP.navCta||"Call now");
+  // per-trade section copy
+  set('heroNotePre',CP.heroNotePre||''); 
+  { const hc=$('heroCall'); if(hc&&CP.heroCallBtn) hc.textContent=CP.heroCallBtn; }
+  { const el=$('servicesH'); if(el&&CP.servicesH) el.innerHTML=CP.servicesH; }
+  { const el=$('howH'); if(el&&CP.howH) el.innerHTML=CP.howH; }
+  { const el=$('teamBadge'); if(el&&CP.teamBadge) el.textContent=CP.teamBadge; }
+  { const el=$('reviewsEye'); if(el&&CP.reviewsEye) el.textContent=CP.reviewsEye; }
+  { const el=$('reviewsH'); if(el&&CP.reviewsH) el.innerHTML=CP.reviewsH; }
+  { const el=$('finalH'); if(el&&CP.finalH) el.innerHTML=CP.finalH; }
   set('heroKicker',C.heroKicker);
   $('heroH1').innerHTML=C.headMain1+' <span class="ser">'+C.headAccent+'</span> '+C.headMain2;
   set('heroSub',C.heroSub);
   set('respTime',C.respTime);
   set('rateNum',C.rateNum||'5.0'); set('rateCount',C.rateCount||'· Trusted locally');
   set('teamH',C.teamHeadline); set('teamP',C.teamBlurb);
+  if(CP.finalP){ set('finalP',CP.finalP); }
   set('phoneBigNum',C.phone);
   $('areasH').innerHTML=C.areasHeadline||'Everything under one roof.';
   set('areasNote',C.areasNote||'');
@@ -418,7 +430,7 @@ footer{border-top:1px solid var(--line-2);padding:40px 0}
   if(C.img.team){var tp=$('teamPhoto');var im2=new Image();im2.onload=function(){tp.style.backgroundImage="url('"+C.img.team+"')";};im2.onerror=function(){tp.style.background="linear-gradient(160deg,"+(window.__PAL?window.__PAL.a:'#d4af5a')+"33,#0d0f14)";};im2.src=C.img.team;}else{$('teamPhoto').style.background="linear-gradient(160deg,"+(window.__PAL?window.__PAL.a:'#d4af5a')+"33,#0d0f14)";}
 
   C.trust.forEach(t=>{const d=document.createElement('div');d.className='cell';d.innerHTML='<div class="big">'+t.big+'</div><div class="lbl">'+t.label+'</div>';$('trustGrid').appendChild(d);});
-  const svcIcon='<svg viewBox="0 0 24 24"><path d="M12 2c-3 0-5 1.8-5 4.6 0 1.6.5 3 .9 4.6.5 2 .8 4 1 6.1.1 1.3.4 2.7 1.5 2.7s1.2-1.6 1.3-2.8c.1-.9.5-1.5 1.3-1.5s1.2.6 1.3 1.5c.1 1.2.2 2.8 1.3 2.8s1.4-1.4 1.5-2.7c.2-2.1.5-4.1 1-6.1.4-1.6.9-3 .9-4.6C17 3.8 15 2 12 2z"/></svg>';
+  const svcIcon='<svg viewBox="0 0 24 24"><path d="'+(C.svcIcon||"M12 2c-3 0-5 1.8-5 4.6 0 1.6.5 3 .9 4.6.5 2 .8 4 1 6.1.1 1.3.4 2.7 1.5 2.7s1.2-1.6 1.3-2.8c.1-.9.5-1.5 1.3-1.5s1.2.6 1.3 1.5c.1 1.2.2 2.8 1.3 2.8s1.4-1.4 1.5-2.7c.2-2.1.5-4.1 1-6.1.4-1.6.9-3 .9-4.6C17 3.8 15 2 12 2z")+'"/></svg>';
   C.services.forEach(s=>{const d=document.createElement('div');d.className='svc';d.innerHTML='<div class="ic">'+svcIcon+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p>';$('svcGrid').appendChild(d);});
   C.steps.forEach(s=>{const d=document.createElement('div');d.className='step';d.innerHTML='<div class="n">'+s.n+'</div><h3>'+s.h+'</h3><p>'+s.p+'</p>';$('stepsGrid').appendChild(d);});
   C.reviews.forEach(r=>{

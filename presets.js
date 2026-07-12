@@ -387,3 +387,48 @@ window.CC_PRESETS = {
     }
   }
 };
+/* ============================================================
+   TRADE KIT v1 — per-trade service icons + section copy.
+   Appended (non-destructive) so every trade renders fully
+   kitted instead of inheriting dental leftovers.
+   ============================================================ */
+(function(){
+  var P=window.CC_PRESETS; if(!P||!P.trades) return;
+  var T=P.trades;
+
+  // --- service-tile icons (single 24x24 path, filled via CSS) ---
+  var IC={
+    car:      "M4 12l1.6-5.2A2 2 0 0 1 7.5 5.4h9a2 2 0 0 1 1.9 1.4L20 12h.5a1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1H19a2.2 2.2 0 0 1-4.4 0H9.4A2.2 2.2 0 0 1 5 17.5H3.5a1 1 0 0 1-1-1V13a1 1 0 0 1 1-1H4zm3-1h10l-1.1-3.6a.6.6 0 0 0-.6-.4h-6.6a.6.6 0 0 0-.6.4L7 11z",
+    droplet:  "M12 3s6.5 6.6 6.5 11a6.5 6.5 0 0 1-13 0C5.5 9.6 12 3 12 3z",
+    thermo:   "M13 14.8V5.5a2.5 2.5 0 0 0-5 0v9.3a4.5 4.5 0 1 0 5 0z",
+    key:      "M12.8 3a5.2 5.2 0 0 0-4.9 7L3 14.9V19h4l1.2-1.2H10v-2h2l1-1a5.2 5.2 0 1 0-.2-11.8zM16.7 7a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 0 1 3.2 0z",
+    home:     "M3.5 11.5L12 4l8.5 7.5h-2.3V20h-4.4v-5.3H10.2V20H5.8v-8.5H3.5z",
+    sparkle:  "M12 2l2.3 6.9L21 11l-6.7 2.1L12 20l-2.3-6.9L3 11l6.7-2.1z",
+    wrench:   "M20.7 5.6a4.6 4.6 0 0 1-5.9 5.9L6 20.3l-2.3-2.3 8.8-8.8a4.6 4.6 0 0 1 5.9-5.9L16 5.6l2.4 2.4 2.3-2.4z",
+    tooth:    "M12 2c-3 0-5 1.8-5 4.6 0 1.6.5 3 .9 4.6.5 2 .8 4 1 6.1.1 1.3.4 2.7 1.5 2.7s1.2-1.6 1.3-2.8c.1-.9.5-1.5 1.3-1.5s1.2.6 1.3 1.5c.1 1.2.2 2.8 1.3 2.8s1.4-1.4 1.5-2.7c.2-2.1.5-4.1 1-6.1.4-1.6.9-3 .9-4.6C17 3.8 15 2 12 2z"
+  };
+  var ICON_BY_TRADE={
+    towing:IC.car, autobody:IC.car, hvac:IC.thermo, plumbing:IC.droplet,
+    cleaning:IC.sparkle, locksmith:IC.key, garage:IC.home, dental:IC.tooth,
+    realestate:IC.home, generic:IC.wrench
+  };
+
+  // --- per-trade section copy ---
+  var COPY={
+    towing:{titleSuffix:"24/7 Towing & Roadside",navCta:"Call now",heroCallBtn:"Request a tow",heroNotePre:"Roadside help",servicesH:'Roadside help, <span class="ser">any hour.</span>',howH:'Back on the road in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of drivers",reviewsEye:"What drivers say",reviewsH:'Real drivers. Real <span class="ser">rescues.</span>',finalH:'Stuck? <span class="ser">We\u2019re on the way.</span>',finalP:"Call now \u2014 every call is answered live, and a truck is dispatched fast."},
+    autobody:{titleSuffix:"Collision & Auto Body Repair",navCta:"Call now",heroCallBtn:"Get an estimate",heroNotePre:"Free estimates",servicesH:'Collision repair, <span class="ser">done right.</span>',howH:'Your car restored in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of drivers",reviewsEye:"What customers say",reviewsH:'Real customers. Real <span class="ser">results.</span>',finalH:'Ready to make it <span class="ser">like new?</span>',finalP:"Get your estimate today \u2014 every call answered live, fast turnaround."},
+    hvac:{titleSuffix:"Heating & Air Conditioning",navCta:"Call now",heroCallBtn:"Schedule service",heroNotePre:"Same-day service",servicesH:'Comfort you can <span class="ser">count on.</span>',howH:'Comfort restored in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of homeowners",reviewsEye:"What homeowners say",reviewsH:'Real homeowners. Real <span class="ser">comfort.</span>',finalH:'Too hot? Too cold? <span class="ser">We fix it.</span>',finalP:"Schedule today \u2014 every call answered live, fast dispatch."},
+    plumbing:{titleSuffix:"Licensed Plumbing & Repair",navCta:"Call now",heroCallBtn:"Schedule service",heroNotePre:"Same-day service",servicesH:'Plumbing done <span class="ser">right.</span>',howH:'Fixed for good in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of homeowners",reviewsEye:"What homeowners say",reviewsH:'Real homeowners. Real <span class="ser">fixes.</span>',finalH:'Leak? Clog? <span class="ser">Handled.</span>',finalP:"Call now \u2014 every call answered live, upfront pricing before we start."},
+    cleaning:{titleSuffix:"Professional Cleaning Services",navCta:"Call now",heroCallBtn:"Get a quote",heroNotePre:"Free quotes",servicesH:'A spotless space, <span class="ser">every time.</span>',howH:'A cleaner space in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of clients",reviewsEye:"What clients say",reviewsH:'Real clients. Real <span class="ser">shine.</span>',finalH:'Ready for a <span class="ser">spotless space?</span>',finalP:"Get your quote today \u2014 every call answered live, satisfaction guaranteed."},
+    locksmith:{titleSuffix:"24/7 Locksmith Services",navCta:"Call now",heroCallBtn:"Request service",heroNotePre:"Fast arrival",servicesH:'Locked out? <span class="ser">We\u2019ve got you.</span>',howH:'Back inside in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of locals",reviewsEye:"What customers say",reviewsH:'Real customers. Real <span class="ser">rescues.</span>',finalH:'Locked out? <span class="ser">We\u2019re on the way.</span>',finalP:"Call now \u2014 every call answered live, fast mobile service."},
+    garage:{titleSuffix:"Garage Door Repair & Install",navCta:"Call now",heroCallBtn:"Schedule service",heroNotePre:"Same-day service",servicesH:'Garage doors, <span class="ser">done right.</span>',howH:'Fixed fast in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of homeowners",reviewsEye:"What homeowners say",reviewsH:'Real homeowners. Real <span class="ser">results.</span>',finalH:'Door stuck? <span class="ser">We fix it fast.</span>',finalP:"Schedule today \u2014 every call answered live, fast dispatch."},
+    dental:{titleSuffix:"Cosmetic & Implant Dentistry",navCta:"Book now",heroCallBtn:"Book a consultation",heroNotePre:"New-patient consults",servicesH:'Advanced dentistry, <span class="ser">beautifully done.</span>',howH:'Your new smile in <span class="ser">three steps</span>.',teamBadge:"Trusted by thousands of patients",reviewsEye:"What patients say",reviewsH:'Real patients. Real <span class="ser">transformations.</span>',finalH:'Ready for the smile <span class="ser">you deserve?</span>',finalP:"Book your consultation today. Our team answers every call \u2014 so getting started is effortless."},
+    realestate:{titleSuffix:"Real Estate & Home Sales",navCta:"Call now",heroCallBtn:"Book a showing",heroNotePre:"Free consults",servicesH:'Your move, <span class="ser">handled.</span>',howH:'Your next home in <span class="ser">three steps</span>.',teamBadge:"Trusted by hundreds of families",reviewsEye:"What clients say",reviewsH:'Real clients. Real <span class="ser">moves.</span>',finalH:'Ready to make <span class="ser">your move?</span>',finalP:"Call today \u2014 every call answered live, no pressure."},
+    generic:{titleSuffix:"Professional Services",navCta:"Call now",heroCallBtn:"Request service",heroNotePre:"Same-day service",servicesH:'Service done <span class="ser">right.</span>',howH:'Taken care of in <span class="ser">three steps</span>.',teamBadge:"Trusted by your neighbors",reviewsEye:"What customers say",reviewsH:'Real customers. Real <span class="ser">results.</span>',finalH:'Ready to <span class="ser">get started?</span>',finalP:"Call now \u2014 every call answered live, upfront and easy."}
+  };
+
+  for(var k in T){
+    if(!T[k].svcIcon) T[k].svcIcon = ICON_BY_TRADE[k] || IC.wrench;
+    T[k].copy = Object.assign({}, COPY.generic, COPY[k]||{}, T[k].copy||{});
+  }
+})();
