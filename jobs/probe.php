@@ -1,0 +1,1 @@
+<?php echo "PHP_OK ".phpversion()." DIR=".__DIR__; ?>
