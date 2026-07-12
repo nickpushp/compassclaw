@@ -251,10 +251,33 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       const qs=params.toString();
       return {
         biz, trade:t, mode,
+        city:$('f_city').value.trim(),
+        phone:$('f_phone').value.trim(),
+        ticket:$('f_ticket').value.trim(),
         site: base+"/d/?"+qs,
         calls: base+"/c/?"+qs,
         owner:$('f_owner').value.trim()
       };
+    }
+
+    // Silent demo logging -> master sheet "Demos Sent" tab (via Apps Script webhook).
+    // Non-blocking, best-effort: a log failure never affects demo generation.
+    const LOG_WEBHOOK=""; // paste the Apps Script /exec URL here to enable logging
+    function logDemo(L){
+      if(!LOG_WEBHOOK)return;
+      try{
+        fetch(LOG_WEBHOOK,{
+          method:'POST',
+          mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body:JSON.stringify({
+            biz:L.biz, trade:(window.CC_PRESETS.trades[L.trade]||{}).label||L.trade,
+            city:L.city, phone:L.phone, ticket:L.ticket, owner:L.owner,
+            site:L.site, calls:L.calls,
+            status:'Sent', notes:(L.mode==='web'?'Talking Website':'AI Receptionist')
+          })
+        }).catch(()=>{});
+      }catch(e){}
     }
 
     function iconFor(kind){
@@ -304,6 +327,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         window.open(decodeURIComponent(b.dataset.open),'_blank');
       }));
       saveRecent(L);
+      logDemo(L);
     }
 
     $('genBtn').addEventListener('click',()=>{const L=buildLinks();if(L)render(L);});
