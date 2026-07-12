@@ -32,7 +32,7 @@ if (!is_array($req)) out(['ok' => false, 'error' => 'Invalid request']);
 $id     = trim((string)($req['id'] ?? ''));
 $status = trim((string)($req['status'] ?? ''));
 
-$ALLOWED = ['New', 'Applied', 'Interviewing', 'Passed', 'Rejected'];
+$ALLOWED = ['New', 'Applied', 'Not Interested', 'Interviewing', 'Offer', 'Rejected', 'Passed'];
 if ($id === '' || !in_array($status, $ALLOWED, true)) {
     out(['ok' => false, 'error' => 'Bad id or status']);
 }
