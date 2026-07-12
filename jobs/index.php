@@ -258,14 +258,18 @@ async function callProxy(task, job){
   return res.json();
 }
 
-function aiPanel(containerId, label){
+function aiPanel(containerId, label, withPdf){
   const c = document.getElementById(containerId);
+  const pdfBtn = withPdf
+    ? `<button class="btn ghost" onclick="downloadPdf('${containerId}_ta')">Download PDF</button>`
+    : '';
   c.innerHTML = `<div class="block">
     <h4>${label}</h4>
     <textarea id="${containerId}_ta"></textarea>
     <div class="ai-tools">
       <button class="btn ghost" onclick="copyTa('${containerId}_ta')">Copy</button>
-      <button class="btn ghost" onclick="downloadTa('${containerId}_ta','${label}')">Download</button>
+      <button class="btn ghost" onclick="downloadTa('${containerId}_ta','${label}')">Download .txt</button>
+      ${pdfBtn}
       <span class="ai-model" id="${containerId}_model"></span>
     </div>
   </div>`;
@@ -280,7 +284,7 @@ async function genCover(i){
     const r = await callProxy('cover_letter', JOBS[i]);
     if(!r.ok){ c.innerHTML = `<div class="err">${esc(r.error||'AI temporarily busy — try again in a moment')}</div>`; }
     else{
-      aiPanel('aiCover','Cover Letter');
+      aiPanel('aiCover','Cover Letter', false);
       document.getElementById('aiCover_ta').value = r.content;
       document.getElementById('aiCover_model').textContent = `via ${r.provider} · ${r.model_used}`;
     }
@@ -292,13 +296,15 @@ async function genResume(i){
   const btn = document.getElementById('btnResume');
   const c = document.getElementById('aiResume');
   btn.disabled = true; const old = btn.textContent; btn.textContent = 'Tailoring…';
-  c.innerHTML = `<div class="hint">Tailoring your summary + skills…</div>`;
+  c.innerHTML = `<div class="hint">Tailoring your full resume to this role…</div>`;
   try{
     const r = await callProxy('tailor_resume', JOBS[i]);
     if(!r.ok){ c.innerHTML = `<div class="err">${esc(r.error||'AI temporarily busy — try again in a moment')}</div>`; }
     else{
-      aiPanel('aiResume','Tailored Resume Summary');
-      document.getElementById('aiResume_ta').value = r.content;
+      aiPanel('aiResume','Tailored Resume', true);
+      const ta = document.getElementById('aiResume_ta');
+      ta.value = r.content;
+      ta.style.minHeight = '520px';
       document.getElementById('aiResume_model').textContent = `via ${r.provider} · ${r.model_used}`;
     }
   }catch(e){ c.innerHTML = `<div class="err">Network hiccup — try again in a moment.</div>`; }
@@ -316,6 +322,57 @@ function downloadTa(id,label){
   a.href = URL.createObjectURL(blob);
   a.download = label.replace(/\s+/g,'_')+'.txt';
   a.click();
+}
+
+// Render the resume text into a clean, ATS-friendly print window and invoke
+// the browser's native "Save as PDF". No external libraries.
+function downloadPdf(id){
+  const ta = document.getElementById(id); if(!ta) return;
+  const text = ta.value || '';
+  const lines = text.split('\n');
+  const SECTIONS = ['PROFESSIONAL SUMMARY','CORE SKILLS','PROFESSIONAL EXPERIENCE','EDUCATION','CERTIFICATIONS'];
+  let html = '';
+  let i = 0;
+  // Line 0 = name, then contact line, then title (uppercase).
+  const name = esc(lines[i++]||'');
+  const contact = esc(lines[i++]||'');
+  const title = esc(lines[i++]||'');
+  html += `<h1>${name}</h1>`;
+  if(contact) html += `<div class="contact">${contact}</div>`;
+  if(title) html += `<div class="title">${title}</div>`;
+  for(; i<lines.length; i++){
+    const ln = lines[i];
+    const t = ln.trim();
+    if(t==='') { continue; }
+    if(SECTIONS.includes(t)){ html += `<h2>${esc(t)}</h2>`; continue; }
+    if(t.startsWith('- ')){ html += `<div class="bullet">${esc(t.slice(2))}</div>`; continue; }
+    // Job title lines vs meta lines: meta lines contain " | " and a year.
+    if(/\|/.test(t) && /(19|20)\d{2}|Present/.test(t)){ html += `<div class="meta">${esc(t)}</div>`; continue; }
+    if(t.startsWith('Key Skills:')){ html += `<div class="keyskills">${esc(t)}</div>`; continue; }
+    if(/^[A-Za-z &]+:/.test(t) && t.length<60){ html += `<div class="skillgrp">${esc(t)}</div>`; continue; }
+    html += `<div class="role">${esc(t)}</div>`;
+  }
+  const doc = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Nicholas_Pertuset_Resume</title>
+  <style>
+    @page{margin:0.6in}
+    *{box-sizing:border-box}
+    body{font-family:Georgia,'Times New Roman',serif; color:#111; line-height:1.4; font-size:11pt; margin:0}
+    h1{font-size:20pt; margin:0 0 2px; letter-spacing:.5px}
+    .contact{font-size:9.5pt; color:#333; margin-bottom:2px}
+    .title{font-size:11pt; font-weight:bold; text-transform:uppercase; letter-spacing:1px; color:#444; margin-bottom:10px}
+    h2{font-size:11pt; text-transform:uppercase; letter-spacing:1px; border-bottom:1.5px solid #111; padding-bottom:2px; margin:14px 0 6px}
+    .role{font-weight:bold; font-size:11pt; margin-top:8px}
+    .meta{font-style:italic; font-size:10pt; color:#333; margin-bottom:3px}
+    .bullet{margin:0 0 2px 16px; text-indent:-10px}
+    .bullet:before{content:"• "; }
+    .keyskills{font-weight:bold; margin-bottom:4px}
+    .skillgrp{margin-bottom:2px; font-size:10.5pt}
+  </style></head><body>${html}
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`;
+  const w = window.open('', '_blank');
+  if(!w){ alert('Allow pop-ups to save the PDF.'); return; }
+  w.document.open(); w.document.write(doc); w.document.close();
 }
 
 renderList();
