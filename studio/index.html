@@ -262,7 +262,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
     // Silent demo logging -> master sheet "Demos Sent" tab (via Apps Script webhook).
     // Non-blocking, best-effort: a log failure never affects demo generation.
-    const LOG_WEBHOOK=""; // paste the Apps Script /exec URL here to enable logging
+    const LOG_WEBHOOK="https://script.google.com/macros/s/AKfycbzcaDqeod5EFtBEVy1jajlVwpUxPooVKlh2AXq5pNGadofIerF6ikBHjyavT71s26vkvA/exec"; // Apps Script /exec URL — demo logging live
     function logDemo(L){
       if(!LOG_WEBHOOK)return;
       try{
