@@ -35,6 +35,18 @@ if ($raw !== false) {
 }
 usort($jobs, fn($a,$b) => ($b['fit_score'] ?? 0) <=> ($a['fit_score'] ?? 0));
 
+// --------------------------------------------------------------------------
+// Load persisted application statuses (id => "New|Applied|Interviewing|
+// Passed|Rejected"). Written at runtime by status.php; survives FTP deploys
+// because it isn't part of the repo tree.
+// --------------------------------------------------------------------------
+$statusMap = [];
+$rawStatus = @file_get_contents(__DIR__ . '/status.json');
+if ($rawStatus !== false) {
+    $ds = json_decode($rawStatus, true);
+    if (is_array($ds)) $statusMap = $ds;
+}
+
 // Header freshness note.
 $count = count($jobs);
 $dates = array_filter(array_map(fn($j)=>$j['posted_date'] ?? '', $jobs));
@@ -137,13 +149,30 @@ function ago($d){
   .ai-model{font-size:11.5px; color:var(--muted); margin-left:auto}
   .err{background:#fff2ea; border:1px solid #ffd4bd; color:#a8400f; padding:10px 13px; border-radius:10px; font-size:13px; margin-top:8px}
   .hint{font-size:11.5px; color:var(--muted)}
+  /* Application status */
+  .status-pill{
+    font-size:11px; padding:1.5px 8px; border-radius:20px; font-weight:600;
+    white-space:nowrap; border:1px solid transparent;
+  }
+  .status-Applied{background:var(--teal); color:#fff}
+  .status-Interviewing{background:var(--accent); color:#fff}
+  .status-Passed{background:#e7e2d9; color:#8a8a8a}
+  .status-Rejected{background:#f6d9cd; color:#a8400f}
+  .status-wrap{display:flex; align-items:center; gap:8px; margin-left:auto}
+  .status-wrap .lbl{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
+  .status-select{
+    font-family:inherit; font-size:13px; font-weight:600; border:1px solid var(--line);
+    border-radius:10px; padding:10px 12px; background:#fff; color:var(--ink); cursor:pointer;
+  }
   @media (max-width:820px){
     .wrap{flex-direction:column}
     .list{width:100%; max-width:none; height:auto; position:static; border-right:none; border-bottom:1px solid var(--line); max-height:44vh}
     .detail{height:auto}
     header .fresh{margin-left:0; width:100%}
+    .status-wrap{margin-left:0; width:100%}
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 </head>
 <body>
 <header>
@@ -163,6 +192,9 @@ function ago($d){
 <script>
 const JOBS = <?= json_encode($jobs, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) ?>;
 const PROFILE = <?= json_encode($PROFILE, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) ?>;
+const STATUS = <?= json_encode((object)$statusMap, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) ?>;
+const STATUS_STATES = ['New','Applied','Interviewing','Passed','Rejected'];
+function statusOf(id){ return STATUS[id] || 'New'; }
 
 function fitColor(n){
   n = +n || 0;
@@ -205,6 +237,7 @@ function renderList(){
           ${j.apply_type?`<span class="pill type">${esc(j.apply_type)}</span>`:''}
           ${j.remote?`<span>${esc(j.remote)}</span>`:(j.location?`<span>${esc(j.location)}</span>`:'')}
           ${j.posted_date?`<span>${ago(j.posted_date)}</span>`:''}
+          ${statusOf(j.id)!=='New'?`<span class="status-pill status-${statusOf(j.id)}" data-statuspill="${esc(j.id)}">${statusOf(j.id)}</span>`:''}
         </div>
         ${j.why_fit?`<div class="snip">${esc(j.why_fit)}</div>`:''}
       </div>
@@ -238,6 +271,12 @@ function selectJob(i){
       ${j.url?`<a class="btn apply" href="${esc(j.url)}" target="_blank" rel="noopener">Apply / View posting ↗</a>`:''}
       <button class="btn smart" id="btnCover" onclick="genCover(${i})">✦ Draft Cover Letter</button>
       <button class="btn smart" id="btnResume" onclick="genResume(${i})">✦ Tailor Resume</button>
+      <div class="status-wrap">
+        <span class="lbl">Status</span>
+        <select class="status-select" id="statusSelect" onchange="setStatus('${esc(j.id)}', this.value)">
+          ${STATUS_STATES.map(s=>`<option value="${s}"${statusOf(j.id)===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
     </div>
 
     ${j.fit_summary?`<div class="block"><h4>Fit summary</h4><p>${esc(j.fit_summary)}</p></div>`:''}
@@ -258,21 +297,46 @@ async function callProxy(task, job){
   return res.json();
 }
 
-function aiPanel(containerId, label, withPdf){
+function aiPanel(containerId, label, withPdf, job, suffix){
   const c = document.getElementById(containerId);
+  const base = job ? fileBase(job) : sanitizeName(label);
+  const fnBase = suffix ? base + '_' + suffix : base;
   const pdfBtn = withPdf
-    ? `<button class="btn ghost" onclick="downloadPdf('${containerId}_ta')">Download PDF</button>`
+    ? `<button class="btn ghost" onclick="downloadPdf('${containerId}_ta','${fnBase}')">Download PDF</button>`
     : '';
   c.innerHTML = `<div class="block">
     <h4>${label}</h4>
     <textarea id="${containerId}_ta"></textarea>
     <div class="ai-tools">
       <button class="btn ghost" onclick="copyTa('${containerId}_ta')">Copy</button>
-      <button class="btn ghost" onclick="downloadTa('${containerId}_ta','${label}')">Download .txt</button>
+      <button class="btn ghost" onclick="downloadTa('${containerId}_ta','${fnBase}')">Download .txt</button>
       ${pdfBtn}
       <span class="ai-model" id="${containerId}_model"></span>
     </div>
   </div>`;
+}
+
+// --- Filename helpers --------------------------------------------------------
+// Sanitize any string to a safe filename token: non-alphanumerics -> "_",
+// collapse repeats, trim leading/trailing underscores.
+function sanitizeName(s){
+  return String(s||'')
+    .replace(/[^A-Za-z0-9]+/g,'_')
+    .replace(/_+/g,'_')
+    .replace(/^_+|_+$/g,'');
+}
+// Build "Nicholas_Pertuset_<Company>_<Role>" from a job, with graceful
+// fallback to "Nicholas_Pertuset_Resume" when company/role are missing.
+function fileBase(job){
+  const parts = ['Nicholas','Pertuset'];
+  const co = sanitizeName(job && job.company);
+  const role = sanitizeName(job && job.title);
+  if (co)   parts.push(co);
+  if (role) parts.push(role);
+  // If the row had no usable company/role, the caller's type suffix
+  // (Resume / CoverLetter) still yields a clean, non-empty filename.
+  // Keep filenames sane if a role title is very long.
+  return parts.join('_').slice(0, 120).replace(/_+$/,'');
 }
 
 async function genCover(i){
@@ -284,7 +348,7 @@ async function genCover(i){
     const r = await callProxy('cover_letter', JOBS[i]);
     if(!r.ok){ c.innerHTML = `<div class="err">${esc(r.error||'AI temporarily busy — try again in a moment')}</div>`; }
     else{
-      aiPanel('aiCover','Cover Letter', false);
+      aiPanel('aiCover','Cover Letter', false, JOBS[i], 'CoverLetter');
       document.getElementById('aiCover_ta').value = r.content;
       document.getElementById('aiCover_model').textContent = `via ${r.provider} · ${r.model_used}`;
     }
@@ -301,7 +365,7 @@ async function genResume(i){
     const r = await callProxy('tailor_resume', JOBS[i]);
     if(!r.ok){ c.innerHTML = `<div class="err">${esc(r.error||'AI temporarily busy — try again in a moment')}</div>`; }
     else{
-      aiPanel('aiResume','Tailored Resume', true);
+      aiPanel('aiResume','Tailored Resume', true, JOBS[i], 'Resume');
       const ta = document.getElementById('aiResume_ta');
       ta.value = r.content;
       ta.style.minHeight = '520px';
@@ -315,63 +379,101 @@ function copyTa(id){
   const ta = document.getElementById(id); if(!ta) return;
   ta.select(); navigator.clipboard.writeText(ta.value);
 }
-function downloadTa(id,label){
+
+// Persist application status for a job (same-origin, behind the auth gate).
+async function setStatus(id, value){
+  STATUS[id] = value;                       // optimistic local update
+  // Refresh the list pills, then restore the active-row highlight.
+  renderList();
+  document.querySelectorAll('.job').forEach(n=>n.classList.toggle('active', +n.dataset.i===activeIdx));
+  try{
+    await fetch('status.php', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ id, status: value })
+    });
+  }catch(e){ /* optimistic UI already applied; next load reconciles from server */ }
+}
+function downloadTa(id, fnBase){
   const ta = document.getElementById(id); if(!ta) return;
   const blob = new Blob([ta.value], {type:'text/plain'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = label.replace(/\s+/g,'_')+'.txt';
+  a.download = (fnBase || 'Nicholas_Pertuset_Resume') + '.txt';
+  document.body.appendChild(a);
   a.click();
+  a.remove();
 }
 
-// Render the resume text into a clean, ATS-friendly print window and invoke
-// the browser's native "Save as PDF". No external libraries.
-function downloadPdf(id){
+// Generate a REAL downloadable PDF (jsPDF) from the resume text, with a proper
+// auto-generated filename so nothing has to be renamed by hand. Keeps the same
+// ATS-clean structure the print view used. Falls back to print only if the
+// jsPDF library somehow didn't load.
+function downloadPdf(id, fnBase){
   const ta = document.getElementById(id); if(!ta) return;
   const text = ta.value || '';
-  const lines = text.split('\n');
+  const fileName = (fnBase || 'Nicholas_Pertuset_Resume') + '.pdf';
+
+  const jsPDFctor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : null;
+  if(!jsPDFctor){ printFallback(text, fnBase); return; }
+
+  const doc = new jsPDFctor({ unit:'pt', format:'letter' });   // 612 x 792pt
+  const MARGIN = 54;                 // ~0.75in
+  const PAGE_W = 612, PAGE_H = 792;
+  const MAX_W  = PAGE_W - MARGIN*2;
+  let y = MARGIN;
+
   const SECTIONS = ['PROFESSIONAL SUMMARY','CORE SKILLS','PROFESSIONAL EXPERIENCE','EDUCATION','CERTIFICATIONS'];
-  let html = '';
-  let i = 0;
-  // Line 0 = name, then contact line, then title (uppercase).
-  const name = esc(lines[i++]||'');
-  const contact = esc(lines[i++]||'');
-  const title = esc(lines[i++]||'');
-  html += `<h1>${name}</h1>`;
-  if(contact) html += `<div class="contact">${contact}</div>`;
-  if(title) html += `<div class="title">${title}</div>`;
-  for(; i<lines.length; i++){
-    const ln = lines[i];
-    const t = ln.trim();
-    if(t==='') { continue; }
-    if(SECTIONS.includes(t)){ html += `<h2>${esc(t)}</h2>`; continue; }
-    if(t.startsWith('- ')){ html += `<div class="bullet">${esc(t.slice(2))}</div>`; continue; }
-    // Job title lines vs meta lines: meta lines contain " | " and a year.
-    if(/\|/.test(t) && /(19|20)\d{2}|Present/.test(t)){ html += `<div class="meta">${esc(t)}</div>`; continue; }
-    if(t.startsWith('Key Skills:')){ html += `<div class="keyskills">${esc(t)}</div>`; continue; }
-    if(/^[A-Za-z &]+:/.test(t) && t.length<60){ html += `<div class="skillgrp">${esc(t)}</div>`; continue; }
-    html += `<div class="role">${esc(t)}</div>`;
+  const lines = text.split('\n');
+
+  function ensure(space){ if(y + space > PAGE_H - MARGIN){ doc.addPage(); y = MARGIN; } }
+  function write(str, {size=11, style='normal', color=[17,17,17], indent=0, gap=3, font='times'}={}){
+    doc.setFont(font, style); doc.setFontSize(size); doc.setTextColor(color[0],color[1],color[2]);
+    const wrapped = doc.splitTextToSize(str, MAX_W - indent);
+    const lh = size * 1.32;
+    wrapped.forEach(w=>{ ensure(lh); doc.text(w, MARGIN + indent, y); y += lh; });
+    y += gap;
   }
-  const doc = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Nicholas_Pertuset_Resume</title>
-  <style>
-    @page{margin:0.6in}
-    *{box-sizing:border-box}
-    body{font-family:Georgia,'Times New Roman',serif; color:#111; line-height:1.4; font-size:11pt; margin:0}
-    h1{font-size:20pt; margin:0 0 2px; letter-spacing:.5px}
-    .contact{font-size:9.5pt; color:#333; margin-bottom:2px}
-    .title{font-size:11pt; font-weight:bold; text-transform:uppercase; letter-spacing:1px; color:#444; margin-bottom:10px}
-    h2{font-size:11pt; text-transform:uppercase; letter-spacing:1px; border-bottom:1.5px solid #111; padding-bottom:2px; margin:14px 0 6px}
-    .role{font-weight:bold; font-size:11pt; margin-top:8px}
-    .meta{font-style:italic; font-size:10pt; color:#333; margin-bottom:3px}
-    .bullet{margin:0 0 2px 16px; text-indent:-10px}
-    .bullet:before{content:"• "; }
-    .keyskills{font-weight:bold; margin-bottom:4px}
-    .skillgrp{margin-bottom:2px; font-size:10.5pt}
-  </style></head><body>${html}
-  <script>window.onload=function(){window.print();}<\/script>
-  </body></html>`;
+
+  let i = 0;
+  // Header: name, contact, title (same convention as the assembled resume).
+  const name    = (lines[i++]||'').trim();
+  const contact = (lines[i++]||'').trim();
+  const title   = (lines[i++]||'').trim();
+  if(name)    write(name,    {size:20, style:'bold', gap:1});
+  if(contact) write(contact, {size:9.5, color:[60,60,60], gap:1});
+  if(title)   write(title,   {size:11, style:'bold', color:[68,68,68], gap:8});
+
+  for(; i<lines.length; i++){
+    const t = (lines[i]||'').trim();
+    if(t==='') continue;
+    if(SECTIONS.includes(t)){
+      ensure(26); y += 6;
+      write(t, {size:11, style:'bold', gap:2});
+      // underline rule under the section heading
+      ensure(2); doc.setDrawColor(17,17,17); doc.setLineWidth(1);
+      doc.line(MARGIN, y-4, PAGE_W-MARGIN, y-4); y += 4;
+      continue;
+    }
+    if(t.startsWith('- ')){ write('\u2022  ' + t.slice(2), {size:10.5, indent:14, gap:2}); continue; }
+    if(/\|/.test(t) && /(19|20)\d{2}|Present/.test(t)){ write(t, {size:10, style:'italic', color:[51,51,51], gap:2}); continue; }
+    if(t.startsWith('Key Skills:')){ write(t, {size:10.5, style:'bold', gap:3}); continue; }
+    if(/^[A-Za-z &]+:/.test(t) && t.length<60){ write(t, {size:10.5, gap:2}); continue; }
+    write(t, {size:11, style:'bold', gap:2});   // role/job-title line
+  }
+
+  doc.save(fileName);
+}
+
+// If jsPDF is unavailable, keep the user unblocked with the old print path.
+function printFallback(text, fnBase){
   const w = window.open('', '_blank');
   if(!w){ alert('Allow pop-ups to save the PDF.'); return; }
+  const safe = (s)=>{ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; };
+  const body = safe(text).replace(/\n/g,'<br>');
+  const doc = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${safe(fnBase||'Nicholas_Pertuset_Resume')}</title>
+  <style>@page{margin:0.75in}body{font-family:Georgia,serif;color:#111;font-size:11pt;line-height:1.4;white-space:normal}</style>
+  </head><body>${body}<script>window.onload=function(){window.print();}<\/script></body></html>`;
   w.document.open(); w.document.write(doc); w.document.close();
 }
 
