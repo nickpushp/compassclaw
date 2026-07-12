@@ -97,7 +97,7 @@ function ago($d){
   /* list */
   .list{
     width:42%; max-width:560px; border-right:1px solid var(--line);
-    overflow-y:auto; height:calc(100vh - 61px); position:sticky; top:61px;
+    overflow-y:auto; height:calc(100vh - 108px); position:sticky; top:108px;
   }
   .job{
     padding:13px 18px; border-bottom:1px solid var(--line); cursor:pointer;
@@ -119,7 +119,7 @@ function ago($d){
   .pill.type{background:#efe9df; color:#5a5348}
   .snip{font-size:12.5px; color:#555; margin-top:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
   /* detail */
-  .detail{flex:1; padding:26px 30px; overflow-y:auto; height:calc(100vh - 61px)}
+  .detail{flex:1; padding:26px 30px; overflow-y:auto; height:calc(100vh - 108px)}
   .detail .empty{color:var(--muted); font-size:14px; margin-top:40px; text-align:center}
   .d-head{display:flex; gap:14px; align-items:flex-start; margin-bottom:6px}
   .d-head .fit{width:52px; height:52px; font-size:18px; flex:none}
@@ -156,9 +156,51 @@ function ago($d){
   }
   .status-Applied{background:var(--teal); color:#fff}
   .status-Interviewing{background:var(--accent); color:#fff}
-  .status-Passed{background:#e7e2d9; color:#8a8a8a}
+  .status-Offer{background:#1f7a1f; color:#fff}
+  .status-NotInterested{background:#e7e2d9; color:#8a8a8a}
   .status-Rejected{background:#f6d9cd; color:#a8400f}
   .status-wrap{display:flex; align-items:center; gap:8px; margin-left:auto}
+  /* Tabs */
+  .tabs{
+    display:flex; gap:2px; padding:0 22px; border-bottom:1px solid var(--line);
+    background:var(--paper); position:sticky; top:61px; z-index:19;
+  }
+  .tab{
+    border:none; background:none; font-family:inherit; font-size:13.5px; font-weight:600;
+    color:var(--muted); padding:12px 16px; cursor:pointer; border-bottom:2px solid transparent;
+    display:flex; align-items:center; gap:7px;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink); border-bottom-color:var(--accent)}
+  .tab .cnt{
+    font-size:11px; font-weight:700; background:#efe9df; color:#5a5348;
+    border-radius:20px; padding:1px 8px; min-width:20px; text-align:center;
+  }
+  .tab.active .cnt{background:var(--accent); color:#fff}
+  .list .empty-tab{padding:40px 22px; color:var(--muted); font-size:13.5px; text-align:center}
+  /* Dashboard */
+  .dash{padding:26px 30px; overflow-y:auto; height:calc(100vh - 108px)}
+  .dash h2{font-size:20px; margin:0 0 18px; letter-spacing:-0.02em}
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:26px}
+  .kpi{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px}
+  .kpi .n{font-size:30px; font-weight:700; letter-spacing:-0.03em; line-height:1}
+  .kpi .l{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:7px}
+  .kpi.accent .n{color:var(--accent)}
+  .kpi.teal .n{color:var(--teal)}
+  .dash-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .dash-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px}
+  .dash-card h4{margin:0 0 14px; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+  .bar-row{display:grid; grid-template-columns:112px 1fr 34px; gap:10px; align-items:center; margin-bottom:9px; font-size:13px}
+  .bar-track{background:#efe9df; border-radius:20px; height:12px; overflow:hidden}
+  .bar-fill{height:100%; border-radius:20px}
+  .bar-row .bn{text-align:right; font-weight:700; font-size:12.5px}
+  .funnel-row{display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13.5px}
+  .funnel-row .fl{width:120px; color:var(--muted)}
+  .funnel-row .fn{font-weight:700; font-size:16px}
+  .src-row{display:flex; justify-content:space-between; font-size:13px; padding:6px 0; border-bottom:1px solid var(--line)}
+  .src-row:last-child{border-bottom:none}
+  .src-row .sn{font-weight:700}
+  @media (max-width:820px){ .dash-grid{grid-template-columns:1fr} .dash{height:auto} }
   .status-wrap .lbl{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
   .status-select{
     font-family:inherit; font-size:13px; font-weight:600; border:1px solid var(--line);
@@ -170,6 +212,7 @@ function ago($d){
     .detail{height:auto}
     header .fresh{margin-left:0; width:100%}
     .status-wrap{margin-left:0; width:100%}
+    .tabs{position:static; overflow-x:auto}
   }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -182,19 +225,40 @@ function ago($d){
   </span>
 </header>
 
-<div class="wrap">
+<div class="tabs" id="tabs">
+  <button class="tab active" data-tab="Hunt" onclick="switchTab('Hunt')">The Hunt <span class="cnt" id="cnt-Hunt">0</span></button>
+  <button class="tab" data-tab="Applied" onclick="switchTab('Applied')">Applied <span class="cnt" id="cnt-Applied">0</span></button>
+  <button class="tab" data-tab="NotInterested" onclick="switchTab('NotInterested')">Not Interested <span class="cnt" id="cnt-NotInterested">0</span></button>
+  <button class="tab" data-tab="Dashboard" onclick="switchTab('Dashboard')">Dashboard</button>
+</div>
+
+<div class="wrap" id="wrap">
   <div class="list" id="list"></div>
   <div class="detail" id="detail">
     <div class="empty">Select a role on the left to see the fit breakdown and generate tailored materials.</div>
   </div>
 </div>
 
+<div class="dash" id="dash" style="display:none"></div>
+
 <script>
 const JOBS = <?= json_encode($jobs, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) ?>;
 const PROFILE = <?= json_encode($PROFILE, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) ?>;
 const STATUS = <?= json_encode((object)$statusMap, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) ?>;
-const STATUS_STATES = ['New','Applied','Interviewing','Passed','Rejected'];
-function statusOf(id){ return STATUS[id] || 'New'; }
+const STATUS_STATES = ['New','Applied','Not Interested','Interviewing','Offer','Rejected'];
+function statusOf(id){
+  const s = STATUS[id] || 'New';
+  return s === 'Passed' ? 'Not Interested' : s;   // migrate legacy label
+}
+// CSS class token (strip spaces): "Not Interested" -> "NotInterested"
+function statusClass(s){ return 'status-' + String(s||'New').replace(/\s+/g,''); }
+// Which tab a job belongs to, based on its status.
+function tabOf(status){
+  if(status === 'New') return 'Hunt';
+  if(status === 'Not Interested') return 'NotInterested';
+  return 'Applied'; // Applied, Interviewing, Offer, Rejected
+}
+let activeTab = 'Hunt';
 
 function fitColor(n){
   n = +n || 0;
@@ -225,8 +289,19 @@ let activeIdx = -1;
 
 function renderList(){
   const el = document.getElementById('list');
-  el.innerHTML = JOBS.map((j,i)=>{
+  const idxs = JOBS.map((j,i)=>i).filter(i => tabOf(statusOf(JOBS[i].id)) === activeTab);
+  // counts for tab badges
+  document.getElementById('cnt-Hunt').textContent = JOBS.filter(j=>tabOf(statusOf(j.id))==='Hunt').length;
+  document.getElementById('cnt-Applied').textContent = JOBS.filter(j=>tabOf(statusOf(j.id))==='Applied').length;
+  document.getElementById('cnt-NotInterested').textContent = JOBS.filter(j=>tabOf(statusOf(j.id))==='NotInterested').length;
+  if(!idxs.length){
+    el.innerHTML = `<div class="empty-tab">Nothing here yet.${activeTab==='Hunt'?'':' Set a job\'s status to move it here.'}</div>`;
+    return;
+  }
+  el.innerHTML = idxs.map(i=>{
+    const j = JOBS[i];
     const fc = fitColor(j.fit_score);
+    const st = statusOf(j.id);
     return `<div class="job" data-i="${i}" onclick="selectJob(${i})">
       <div class="fit" style="background:${fc}">${(+j.fit_score||0)}</div>
       <div>
@@ -237,12 +312,33 @@ function renderList(){
           ${j.apply_type?`<span class="pill type">${esc(j.apply_type)}</span>`:''}
           ${j.remote?`<span>${esc(j.remote)}</span>`:(j.location?`<span>${esc(j.location)}</span>`:'')}
           ${j.posted_date?`<span>${ago(j.posted_date)}</span>`:''}
-          ${statusOf(j.id)!=='New'?`<span class="status-pill status-${statusOf(j.id)}" data-statuspill="${esc(j.id)}">${statusOf(j.id)}</span>`:''}
+          ${st!=='New'?`<span class="status-pill ${statusClass(st)}" data-statuspill="${esc(j.id)}">${esc(st)}</span>`:''}
         </div>
         ${j.why_fit?`<div class="snip">${esc(j.why_fit)}</div>`:''}
       </div>
     </div>`;
   }).join('');
+}
+
+function switchTab(tab){
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+  const wrap = document.getElementById('wrap');
+  const dash = document.getElementById('dash');
+  if(tab==='Dashboard'){
+    wrap.style.display='none'; dash.style.display='block';
+    renderDashboard();
+    return;
+  }
+  wrap.style.display='flex'; dash.style.display='none';
+  renderList();
+  // auto-select first job in this tab, else show empty detail
+  const first = JOBS.findIndex(j=>tabOf(statusOf(j.id))===activeTab);
+  if(first>=0){ selectJob(first); }
+  else{
+    activeIdx=-1;
+    document.getElementById('detail').innerHTML = '<div class="empty">No roles in this tab yet.</div>';
+  }
 }
 
 function selectJob(i){
@@ -382,10 +478,18 @@ function copyTa(id){
 
 // Persist application status for a job (same-origin, behind the auth gate).
 async function setStatus(id, value){
+  const prevTab = tabOf(statusOf(id));
   STATUS[id] = value;                       // optimistic local update
-  // Refresh the list pills, then restore the active-row highlight.
-  renderList();
-  document.querySelectorAll('.job').forEach(n=>n.classList.toggle('active', +n.dataset.i===activeIdx));
+  const newTab = tabOf(value);
+  renderList();                             // refresh counts + current list
+  if(newTab !== activeTab){
+    // Job just left this tab — drop the detail pane to the next available role.
+    const next = JOBS.findIndex(j=>tabOf(statusOf(j.id))===activeTab);
+    if(next>=0){ selectJob(next); }
+    else{ activeIdx=-1; document.getElementById('detail').innerHTML='<div class="empty">No roles left in this tab.</div>'; }
+  }else{
+    document.querySelectorAll('.job').forEach(n=>n.classList.toggle('active', +n.dataset.i===activeIdx));
+  }
   try{
     await fetch('status.php', {
       method:'POST',
@@ -477,8 +581,84 @@ function printFallback(text, fnBase){
   w.document.open(); w.document.write(doc); w.document.close();
 }
 
+function renderDashboard(){
+  const dash = document.getElementById('dash');
+  const counts = {New:0,Applied:0,'Not Interested':0,Interviewing:0,Offer:0,Rejected:0};
+  JOBS.forEach(j=>{ counts[statusOf(j.id)] = (counts[statusOf(j.id)]||0)+1; });
+  const total = JOBS.length;
+  // Pipeline = anything you've acted on positively (Applied onward, excl. Not Interested)
+  const inPipeline = counts.Applied + counts.Interviewing + counts.Offer + counts.Rejected;
+  const worked = inPipeline + counts['Not Interested'];   // total triaged out of Hunt
+  const activeApps = counts.Applied + counts.Interviewing + counts.Offer; // still alive
+  const decidedApps = inPipeline;                          // apps with any outcome/step
+  const interviewRate = decidedApps ? Math.round(((counts.Interviewing+counts.Offer)/decidedApps)*100) : 0;
+
+  // Source split
+  const bySource = {};
+  JOBS.forEach(j=>{ const s=(j.source||'—'); bySource[s]=(bySource[s]||0)+1; });
+  const srcRows = Object.entries(bySource).sort((a,b)=>b[1]-a[1])
+    .map(([s,n])=>`<div class="src-row"><span>${esc(s)}</span><span class="sn">${n}</span></div>`).join('');
+
+  // Status bar chart (exclude New from the "activity" bars; show the worked ones)
+  const barDefs = [
+    ['Applied', counts.Applied, 'var(--teal)'],
+    ['Interviewing', counts.Interviewing, 'var(--accent)'],
+    ['Offer', counts.Offer, '#1f7a1f'],
+    ['Rejected', counts.Rejected, '#d98a6a'],
+    ['Not Interested', counts['Not Interested'], '#c9c2b5'],
+  ];
+  const barMax = Math.max(1, ...barDefs.map(b=>b[1]));
+  const bars = barDefs.map(([label,n,color])=>`
+    <div class="bar-row">
+      <span>${label}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${Math.round((n/barMax)*100)}%;background:${color}"></span></span>
+      <span class="bn">${n}</span>
+    </div>`).join('');
+
+  dash.innerHTML = `
+    <h2>Activity Overview</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="n">${counts.New}</div><div class="l">In the Hunt</div></div>
+      <div class="kpi teal"><div class="n">${activeApps}</div><div class="l">Active Applications</div></div>
+      <div class="kpi accent"><div class="n">${counts.Interviewing}</div><div class="l">Interviewing</div></div>
+      <div class="kpi"><div class="n" style="color:#1f7a1f">${counts.Offer}</div><div class="l">Offers</div></div>
+      <div class="kpi"><div class="n">${worked}</div><div class="l">Worked / Triaged</div></div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h4>Pipeline funnel</h4>
+        <div class="funnel-row"><span class="fl">Total ranked</span><span class="fn">${total}</span></div>
+        <div class="funnel-row"><span class="fl">Applied+</span><span class="fn">${inPipeline}</span></div>
+        <div class="funnel-row"><span class="fl">Interviewing</span><span class="fn">${counts.Interviewing}</span></div>
+        <div class="funnel-row"><span class="fl">Offers</span><span class="fn">${counts.Offer}</span></div>
+        <div class="funnel-row"><span class="fl">Interview rate</span><span class="fn">${interviewRate}%</span></div>
+        <div class="hint" style="margin-top:8px">Interview rate = (interviewing + offers) ÷ applications with any outcome.</div>
+      </div>
+      <div class="dash-card">
+        <h4>By status</h4>
+        ${bars}
+      </div>
+      <div class="dash-card">
+        <h4>By source</h4>
+        ${srcRows || '<div class="hint">No source data.</div>'}
+      </div>
+      <div class="dash-card">
+        <h4>Where to focus</h4>
+        <p style="font-size:13.5px;margin:0 0 10px">${
+          counts.Offer>0 ? '🎉 You have '+counts.Offer+' offer'+(counts.Offer>1?'s':'')+' on the table — close it out.' :
+          counts.Interviewing>0 ? 'You\'re interviewing for '+counts.Interviewing+' role'+(counts.Interviewing>1?'s':'')+'. Prep hard, keep applying.' :
+          activeApps>0 ? activeApps+' application'+(activeApps>1?'s':'')+' out and waiting. Keep the top of funnel full.' :
+          counts.New>0 ? 'No applications out yet. '+counts.New+' fresh roles in the Hunt — start applying.' :
+          'Hunt is empty. Time to pull a fresh batch of roles.'
+        }</p>
+        <div class="hint">Goal cadence: ≥1 interview/week. ${counts.New} roles ready to work in the Hunt.</div>
+      </div>
+    </div>
+  `;
+}
+
 renderList();
-if(JOBS.length) selectJob(0);
+if(JOBS.length) selectJob(JOBS.findIndex(j=>tabOf(statusOf(j.id))==='Hunt')>=0 ? JOBS.findIndex(j=>tabOf(statusOf(j.id))==='Hunt') : 0);
 </script>
 </body>
 </html>
