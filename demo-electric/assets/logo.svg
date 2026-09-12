@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+<defs><filter id="g"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<circle cx="250" cy="250" r="235" fill="#061421" stroke="#18bfff" stroke-width="8"/>
+<circle cx="250" cy="250" r="205" fill="none" stroke="#087de8" stroke-width="3"/>
+<circle cx="250" cy="250" r="145" fill="#02070d" stroke="#29475f" stroke-width="9"/>
+<circle cx="250" cy="250" r="122" fill="none" stroke="#18bfff" stroke-width="3"/>
+<g fill="#f4f8fc" font-family="Arial,sans-serif" font-weight="800" text-anchor="middle"><text x="250" y="85" font-size="42" letter-spacing="5">KEETONS</text><text x="250" y="450" font-size="34" letter-spacing="4">SOLUTIONS</text><text x="250" y="130" font-size="20" letter-spacing="3">ELECTRICAL</text></g>
+<g fill="none" stroke="#63d5ff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" filter="url(#g)"><path d="M182 298c28-74 102-102 150-53"/><path d="M318 202c-28 74-102 102-150 53"/></g>
+<path d="M260 175l-62 82h42l-12 68 74-96h-45z" fill="#18bfff" filter="url(#g)"/>
+<text x="250" y="282" font-family="Arial,sans-serif" font-size="34" font-weight="900" fill="#fff" text-anchor="middle" letter-spacing="2">KES</text>
+</svg>
