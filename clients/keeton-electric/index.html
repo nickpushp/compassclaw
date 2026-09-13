@@ -1,22 +1,16 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Keeton Electric</title></head><body style="margin:0;background:#020a11;color:#fff;font-family:system-ui,sans-serif"><script>
-(async()=>{
- const templateUrl='../../templates/service-business/index.html';
- const response=await fetch(templateUrl,{cache:'no-store'}); if(!response.ok)throw new Error('Could not load master template: '+response.status);
- let html=await response.text();
- const CONFIG={
-  bizName:'Keeton Electric',short:'Keeton',trade:'electrical',city:'Tacoma, WA',phone:'(253) 448-3210',estYear:'2013',license:'Licensed & Insured',
-  heroKicker:'FAST / RELIABLE / LICENSED / INSURED',headMain1:'POWERING A SAFER,',headAccent:'BRIGHTER TOMORROW',heroSub:'Professional electrical service for homes and businesses — from repairs and panel upgrades to EV chargers and new installations.',
-  img:{hero:'https://pikwizard.com/pw/medium/834b29f0a72096129d59235ad7766ce2.jpg',team:'https://pikwizard.com/pw/medium/6e38937a8fc28da731e15772109f8003.png'},
-  trust:[{big:'Licensed',label:'Professional electrical service'},{big:'Residential',label:'Home electrical solutions'},{big:'Commercial',label:'Business electrical solutions'},{big:'Emergency',label:'Urgent electrical service'}],
-  services:[{name:'Home Electrical',desc:'Repairs, outlets, lighting, panel upgrades and more.'},{name:'Commercial Electrical',desc:'Keep your business powered, safe and running.'},{name:'Panel Upgrades',desc:'More capacity, better safety and dependable performance.'},{name:'EV Charger Installation',desc:'Professional EV charging installation for home or business.'},{name:'Lighting Solutions',desc:'Indoor, outdoor and energy-conscious lighting options.'},{name:'Repairs & Troubleshooting',desc:'Fast, accurate diagnosis and professional electrical service.'}],
-  teamHeadline:'Professional electrical service, done right.',teamBlurb:'Keeton Electric provides professional residential and commercial electrical service with clear communication, dependable workmanship and practical solutions.',
-  reviews:[{name:'Customer Review',loc:'Verified review needed',text:'Add a real verified customer review here before publishing.'},{name:'Customer Review',loc:'Verified review needed',text:'Add a real verified customer review here before publishing.'},{name:'Customer Review',loc:'Verified review needed',text:'Add a real verified customer review here before publishing.'}],
-  areas:['Tacoma','Federal Way','University Place','Lakewood','Puyallup','Gig Harbor','Fife','Fircrest','Milton','Auburn','Sumner','South Puget Sound'],
-  faq:[{q:'Do you offer emergency electrical service?',a:'Keeton Electric provides emergency electrical service for urgent problems. Call and explain what is happening so we can help determine the next step.'},{q:'Can you upgrade my electrical panel?',a:'Yes. Panel upgrades can improve capacity, safety and reliability. We can assess your existing setup and explain your options.'},{q:'Can you install an EV charger?',a:'Yes. We install EV charging equipment and can assess your electrical capacity before installation.'},{q:'Do you work on homes and businesses?',a:'Yes. Keeton Electric provides residential and commercial electrical services.'},{q:'What areas do you serve?',a:'Keeton Electric serves Tacoma and surrounding South Puget Sound communities. Call if you are unsure whether your location is covered.'},{q:'Can you troubleshoot older wiring?',a:'Yes. We can diagnose electrical problems and recommend practical repairs or upgrades.'}],
-  stripeLink:'https://buy.stripe.com/14AdR87dseXmbsK3GHgjC00'
- };
- const literal='const CONFIG='+JSON.stringify(CONFIG,null,2)+';';
- const replaced=html.replace(/const CONFIG=\{[\s\S]*?\};/,literal); if(replaced===html)throw new Error('Master CONFIG block was not found; refusing to alter the template.');
- document.open();document.write(replaced);document.close();
-})().catch(err=>{document.body.innerHTML='<div style="padding:40px;color:#fff"><h2>Demo load error</h2><pre style="white-space:pre-wrap">'+String(err)+'</pre></div>'});
-</script></body></html>
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keetons Electrical Solutions | 24/7 Electrician in Indianapolis, IN</title>
+    <meta name="description" content="Licensed Master Electrician in Indianapolis, IN. 24/7 emergency electrical service, panel upgrades, EV chargers, rewiring & repairs. Call +1 765-543-8862." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#0b132b] text-slate-100 antialiased selection:bg-cyan-500 selection:text-slate-950">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
