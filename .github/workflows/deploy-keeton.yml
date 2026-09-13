@@ -1,0 +1,51 @@
+name: Deploy Keeton Demo
+
+# Build the Keeton React site and publish only the production build.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'clients/keeton-electric/**'
+      - 'templates/service-business/**'
+      - '.github/workflows/deploy-keeton.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: keeton-demo-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: clients/keeton-electric/package-lock.json
+
+      - name: Install dependencies
+        working-directory: clients/keeton-electric
+        run: npm ci
+
+      - name: Build Keeton demo
+        working-directory: clients/keeton-electric
+        run: npm run build
+
+      - name: Deploy production build via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./clients/keeton-electric/dist/
+          server-dir: ./clients/keeton-electric/
+          exclude: |
+            **/.git*
+            **/.git*/**
