@@ -1,67 +1,22 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Keeton Electric</title></head>
-<body style="margin:0;background:#08090c;color:#f3efe7;font-family:system-ui,sans-serif">
-<script>
-(async () => {
-  const templateUrl = '../../demo/index.html';
-  const response = await fetch(templateUrl, {cache:'no-store'});
-  if (!response.ok) throw new Error('Could not load master template: ' + response.status);
-  let html = await response.text();
-
-  const CONFIG = {
-    bizName:'Keeton Electric', short:'Keeton', trade:'electrical', city:'Tacoma, WA', phone:'(253) 448-3210', estYear:'2013', license:'WA Licensed Electrical Contractor',
-    heroKicker:'24/7 Emergency Electrical Service · Tacoma & South Puget Sound',
-    headMain1:'Electrical problems?', headAccent:'we’re', headMain2:'on the way.',
-    heroSub:'From emergency repairs and panel upgrades to EV chargers and new wiring, Keeton Electric brings professional electrical service to homes and businesses when you need it.',
-    respTime:'24/7', rateNum:'5.0', rateCount:'· Local service you can count on',
-    img:{hero:'https://pikwizard.com/pw/medium/834b29f0a72096129d59235ad7766ce2.jpg',team:'https://pikwizard.com/pw/medium/6e38937a8fc28da731e15772109f8003.png',face1:'../../demo/assets/f1.webp',face2:'../../demo/assets/f2.webp',face3:'../../demo/assets/f3.webp'},
-    trust:[
-      {big:'24/7',label:'Emergency electrical service'},
-      {big:'10+ yrs',label:'Serving the local community'},
-      {big:'Licensed',label:'Professional electrical work'},
-      {big:'3,000+',label:'Residential projects completed'}
-    ],
-    services:[
-      {name:'Emergency Electrical',desc:'Fast help for electrical problems, outages, unsafe wiring, and urgent repairs.'},
-      {name:'Panel Upgrades',desc:'Modernize outdated electrical panels and improve capacity, safety, and reliability.'},
-      {name:'EV Charger Installation',desc:'Professional installation for Level 2 home and commercial EV charging.'},
-      {name:'Wiring & Rewiring',desc:'New wiring, upgrades, troubleshooting, and code-conscious electrical work.'},
-      {name:'Lighting & Fixtures',desc:'Indoor and outdoor lighting, ceiling fans, fixtures, switches, and upgrades.'},
-      {name:'Generators & Backup Power',desc:'Keep critical systems running with practical emergency power solutions.'}
-    ],
-    steps:[
-      {n:'01',h:'Call us',p:'Tell us what is happening and where you need service. We will get the right electrician on it.'},
-      {n:'02',h:'We diagnose it',p:'We identify the problem, explain your options, and give you a clear path forward.'},
-      {n:'03',h:'We fix it right',p:'Professional workmanship focused on safety, reliability, and getting your electrical system working properly.'}
-    ],
-    teamHeadline:'The electrician you’re calling',
-    teamBlurb:'Keeton Electric provides professional residential and commercial electrical service with a focus on clear communication, dependable workmanship, and doing the job right.',
-    reviews:[
-      {name:'James R.',loc:'Tacoma, WA',face:'face1',stars:5,text:'Praised Keeton Electric after a Level 2 EV charger installation, highlighting professional service, clear explanations, and a smooth experience.'},
-      {name:'Teresa & Kevin K.',loc:'Tacoma, WA',face:'face2',stars:5,text:'A repeat customer who highlighted efficient work, careful attention to wiring upgrades, and a friendly, thorough electrician.'},
-      {name:'Brian C.',loc:'Tacoma, WA',face:'face3',stars:5,text:'Said the team made the process easy, answered questions quickly, and delivered efficient work at a fair price.'}
-    ],
-    areas:['Tacoma','Federal Way','University Place','Lakewood','Puyallup','Gig Harbor','Fife','Fircrest','Milton','Auburn','Sumner','South Puget Sound'],
-    faq:[
-      {q:'Do you offer emergency electrical service?',a:'Yes. Keeton Electric provides emergency electrical help for urgent problems. Call to explain what is happening and we will help determine the next step.'},
-      {q:'Can you upgrade my electrical panel?',a:'Yes. Panel upgrades are one of our core services, including modernization and capacity upgrades for homes and businesses.'},
-      {q:'Can you install an EV charger?',a:'Yes. We install Level 2 EV chargers and can assess your existing electrical capacity before installation.'},
-      {q:'Do you work on both homes and businesses?',a:'Yes. We provide residential and commercial electrical services, from repairs and upgrades to new installations.'},
-      {q:'What areas do you serve?',a:'We serve Tacoma and surrounding South Puget Sound communities. If you are unsure whether we cover your location, call and ask.'},
-      {q:'Can you help with older or outdated wiring?',a:'Yes. We can troubleshoot existing systems, identify electrical issues, and recommend practical wiring or safety upgrades.'}
-    ],
-    stripeLink:'https://buy.stripe.com/14AdR87dseXmbsK3GHgjC00'
-  };
-
-  const configLiteral = 'const CONFIG = ' + JSON.stringify(CONFIG, null, 2) + ';';
-  const replaced = html.replace(/const CONFIG = \{[\s\S]*?\n\};/, configLiteral);
-  if (replaced === html) throw new Error('Master CONFIG block was not found; refusing to alter the template.');
-  html = replaced;
-  document.open();
-  document.write(html);
-  document.close();
-})().catch(err => {
-  document.body.innerHTML = '<div style="padding:40px;color:#fff"><h2>Template load error</h2><pre style="white-space:pre-wrap">'+String(err)+'</pre></div>';
-});
-</script>
-</body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Keeton Electric</title></head><body style="margin:0;background:#020a11;color:#fff;font-family:system-ui,sans-serif"><script>
+(async()=>{
+ const templateUrl='../../templates/service-business/index.html';
+ const response=await fetch(templateUrl,{cache:'no-store'}); if(!response.ok)throw new Error('Could not load master template: '+response.status);
+ let html=await response.text();
+ const CONFIG={
+  bizName:'Keeton Electric',short:'Keeton',trade:'electrical',city:'Tacoma, WA',phone:'(253) 448-3210',estYear:'2013',license:'Licensed & Insured',
+  heroKicker:'FAST / RELIABLE / LICENSED / INSURED',headMain1:'POWERING A SAFER,',headAccent:'BRIGHTER TOMORROW',heroSub:'Professional electrical service for homes and businesses — from repairs and panel upgrades to EV chargers and new installations.',
+  img:{hero:'https://pikwizard.com/pw/medium/834b29f0a72096129d59235ad7766ce2.jpg',team:'https://pikwizard.com/pw/medium/6e38937a8fc28da731e15772109f8003.png'},
+  trust:[{big:'Licensed',label:'Professional electrical service'},{big:'Residential',label:'Home electrical solutions'},{big:'Commercial',label:'Business electrical solutions'},{big:'Emergency',label:'Urgent electrical service'}],
+  services:[{name:'Home Electrical',desc:'Repairs, outlets, lighting, panel upgrades and more.'},{name:'Commercial Electrical',desc:'Keep your business powered, safe and running.'},{name:'Panel Upgrades',desc:'More capacity, better safety and dependable performance.'},{name:'EV Charger Installation',desc:'Professional EV charging installation for home or business.'},{name:'Lighting Solutions',desc:'Indoor, outdoor and energy-conscious lighting options.'},{name:'Repairs & Troubleshooting',desc:'Fast, accurate diagnosis and professional electrical service.'}],
+  teamHeadline:'Professional electrical service, done right.',teamBlurb:'Keeton Electric provides professional residential and commercial electrical service with clear communication, dependable workmanship and practical solutions.',
+  reviews:[{name:'Customer Review',loc:'Verified review needed',text:'Add a real verified customer review here before publishing.'},{name:'Customer Review',loc:'Verified review needed',text:'Add a real verified customer review here before publishing.'},{name:'Customer Review',loc:'Verified review needed',text:'Add a real verified customer review here before publishing.'}],
+  areas:['Tacoma','Federal Way','University Place','Lakewood','Puyallup','Gig Harbor','Fife','Fircrest','Milton','Auburn','Sumner','South Puget Sound'],
+  faq:[{q:'Do you offer emergency electrical service?',a:'Keeton Electric provides emergency electrical service for urgent problems. Call and explain what is happening so we can help determine the next step.'},{q:'Can you upgrade my electrical panel?',a:'Yes. Panel upgrades can improve capacity, safety and reliability. We can assess your existing setup and explain your options.'},{q:'Can you install an EV charger?',a:'Yes. We install EV charging equipment and can assess your electrical capacity before installation.'},{q:'Do you work on homes and businesses?',a:'Yes. Keeton Electric provides residential and commercial electrical services.'},{q:'What areas do you serve?',a:'Keeton Electric serves Tacoma and surrounding South Puget Sound communities. Call if you are unsure whether your location is covered.'},{q:'Can you troubleshoot older wiring?',a:'Yes. We can diagnose electrical problems and recommend practical repairs or upgrades.'}],
+  stripeLink:'https://buy.stripe.com/14AdR87dseXmbsK3GHgjC00'
+ };
+ const literal='const CONFIG='+JSON.stringify(CONFIG,null,2)+';';
+ const replaced=html.replace(/const CONFIG=\{[\s\S]*?\};/,literal); if(replaced===html)throw new Error('Master CONFIG block was not found; refusing to alter the template.');
+ document.open();document.write(replaced);document.close();
+})().catch(err=>{document.body.innerHTML='<div style="padding:40px;color:#fff"><h2>Demo load error</h2><pre style="white-space:pre-wrap">'+String(err)+'</pre></div>'});
+</script></body></html>
