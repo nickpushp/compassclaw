@@ -60,7 +60,7 @@ function keetonRebrand() {
     name: "keeton-rebrand",
     enforce: "pre" as const,
     transform(code: string, id: string) {
-      if (!/\\.(tsx|ts|jsx|js)$/.test(id)) return null;
+      if (!/\.(tsx|ts|jsx|js)$/.test(id)) return null;
       let next = code;
       for (const [from, to] of Object.entries(replacements)) {
         next = next.split(from).join(to);
