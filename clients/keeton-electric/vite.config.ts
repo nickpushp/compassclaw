@@ -51,8 +51,16 @@ const replacements: Record<string, string> = {
   "Free on-site consultations": "Project consultations",
   "guaranteed": "planned",
   "Guarantee": "Commitment",
-  "/hero-bg.jpg": "https://pikwizard.com/pw/medium/834b29f0a72096129d59235ad7766ce2.jpg",
-  "/team-electricians.jpg": "https://pikwizard.com/pw/medium/6e38937a8fc28da731e15772109f8003.png"
+
+  // Keep every client image local to GitHub Pages. This avoids external hotlink failures.
+  "/hero-bg.jpg": "/compassclaw/clients/keeton-electric/hero-bg.jpg",
+  "/team-electricians.jpg": "/compassclaw/clients/keeton-electric/team-electricians.jpg",
+  "/panel-upgrade.jpg": "/compassclaw/clients/keeton-electric/panel-upgrade.jpg",
+  "https://images.pexels.com/photos/7359566/pexels-photo-7359566.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "/compassclaw/clients/keeton-electric/hero-bg.jpg",
+  "https://images.pexels.com/photos/7285965/pexels-photo-7285965.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "/compassclaw/clients/keeton-electric/panel-upgrade.jpg",
+  "https://images.pexels.com/photos/29491360/pexels-photo-29491360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "/compassclaw/clients/keeton-electric/team-electricians.jpg",
+  "https://images.pexels.com/photos/7647233/pexels-photo-7647233.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "/compassclaw/clients/keeton-electric/team-electricians.jpg",
+  "https://images.pexels.com/photos/28265032/pexels-photo-28265032.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "/compassclaw/clients/keeton-electric/hero-bg.jpg"
 };
 
 function keetonRebrand() {
