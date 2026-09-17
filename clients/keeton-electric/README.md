@@ -23,4 +23,4 @@ npm run dev
 npm run build
 ```
 
-Pages deployment verification trigger.
+GitHub Pages deployment verification.
