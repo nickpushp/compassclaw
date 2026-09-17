@@ -22,3 +22,5 @@ npm run dev
 ```bash
 npm run build
 ```
+
+Pages deployment verification trigger.
