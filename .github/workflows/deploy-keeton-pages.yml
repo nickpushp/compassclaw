@@ -48,8 +48,9 @@ jobs:
 
       - name: Prepare Pages artifact
         run: |
-          mkdir -p _site/clients/keeton-electric
+          mkdir -p _site/clients/keeton-electric/live
           cp -R clients/keeton-electric/dist/. _site/clients/keeton-electric/
+          cp -R clients/keeton-electric/dist/. _site/clients/keeton-electric/live/
           cp -R clients/keeton-electric/dist/. _site/
           touch _site/.nojekyll
 
