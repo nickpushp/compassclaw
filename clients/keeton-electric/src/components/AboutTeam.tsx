@@ -12,8 +12,8 @@ export const AboutTeam: React.FC = () => {
           <div className="lg:col-span-6 relative">
             <div className="relative rounded-2xl overflow-hidden border border-cyan-500/30 shadow-[0_0_30px_rgba(0,168,255,0.2)]">
               <img 
-                src="/team-electricians.jpg" 
-                alt="Keetons Electrical Solutions Team" 
+                src="/compassclaw/clients/keeton-electric/team-electricians.jpg" 
+                alt="Keeton Electric Team" 
                 className="w-full h-auto object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent opacity-80"></div>
