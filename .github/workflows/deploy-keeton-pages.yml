@@ -7,6 +7,12 @@ on:
       - 'clients/keeton-electric/**'
       - 'templates/service-business/**'
       - '.github/workflows/deploy-keeton-pages.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'clients/keeton-electric/**'
+      - 'templates/service-business/**'
+      - '.github/workflows/deploy-keeton-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -44,7 +50,6 @@ jobs:
         run: |
           mkdir -p _site/clients/keeton-electric
           cp -R clients/keeton-electric/dist/. _site/clients/keeton-electric/
-          # Also expose the same finished demo at the project root so the Pages URL is unambiguous.
           cp -R clients/keeton-electric/dist/. _site/
           touch _site/.nojekyll
 
