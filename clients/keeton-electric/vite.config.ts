@@ -49,10 +49,7 @@ const replacements: Record<string, string> = {
   "Minimal operational downtime guaranteed": "Work planned to reduce disruption",
   "free on-site consultations": "project consultations",
   "Free on-site consultations": "Project consultations",
-  "guaranteed": "planned",
-  "Guarantee": "Commitment",
 
-  // Keep every client image local to GitHub Pages. This avoids external hotlink failures.
   "/hero-bg.jpg": "/compassclaw/clients/keeton-electric/hero-bg.jpg",
   "/team-electricians.jpg": "/compassclaw/clients/keeton-electric/team-electricians.jpg",
   "/panel-upgrade.jpg": "/compassclaw/clients/keeton-electric/panel-upgrade.jpg",
