@@ -50,14 +50,11 @@ const replacements: Record<string, string> = {
   "free on-site consultations": "project consultations",
   "Free on-site consultations": "Project consultations",
 
-  "/hero-bg.jpg": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/hero-bg.jpg",
-  "/team-electricians.jpg": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/team-electricians.jpg",
-  "/panel-upgrade.jpg": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/panel-upgrade.jpg",
-  "https://images.pexels.com/photos/7359566/pexels-photo-7359566.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/hero-bg.jpg",
-  "https://images.pexels.com/photos/7285965/pexels-photo-7285965.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/panel-upgrade.jpg",
-  "https://images.pexels.com/photos/29491360/pexels-photo-29491360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/team-electricians.jpg",
-  "https://images.pexels.com/photos/7647233/pexels-photo-7647233.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/team-electricians.jpg",
-  "https://images.pexels.com/photos/28265032/pexels-photo-28265032.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/rebrand-template-for-electrician/public/hero-bg.jpg"
+  "https://images.pexels.com/photos/7359566/pexels-photo-7359566.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/clients/keeton-electric/public/hero-bg.jpg",
+  "https://images.pexels.com/photos/7285965/pexels-photo-7285965.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/clients/keeton-electric/public/panel-upgrade.jpg",
+  "https://images.pexels.com/photos/29491360/pexels-photo-29491360.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/clients/keeton-electric/public/team-electricians.jpg",
+  "https://images.pexels.com/photos/7647233/pexels-photo-7647233.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/clients/keeton-electric/public/team-electricians.jpg",
+  "https://images.pexels.com/photos/28265032/pexels-photo-28265032.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200": "https://raw.githubusercontent.com/nickpushp/compassclaw/main/clients/keeton-electric/public/hero-bg.jpg"
 };
 
 function keetonRebrand() {
