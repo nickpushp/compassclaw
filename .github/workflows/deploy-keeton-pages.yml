@@ -36,31 +36,16 @@ jobs:
         working-directory: clients/keeton-electric
         run: npm ci
 
-      - name: Restore Vite build entry
-        run: cp clients/keeton-electric/app.html clients/keeton-electric/index.html
-
       - name: Build Keeton demo
         working-directory: clients/keeton-electric
         run: npm run build
-
-      - name: Commit static fallback build
-        run: |
-          mkdir -p clients/keeton-electric/live
-          cp clients/keeton-electric/dist/index.html clients/keeton-electric/live/index.html
-          git add clients/keeton-electric/live/index.html
-          if git diff --cached --quiet; then
-            echo "Static build already current"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "Publish Keeton static demo [skip ci]"
-            git push
-          fi
 
       - name: Prepare Pages artifact
         run: |
           mkdir -p _site/clients/keeton-electric
           cp -R clients/keeton-electric/dist/. _site/clients/keeton-electric/
+          # Also expose the same finished demo at the project root so the Pages URL is unambiguous.
+          cp -R clients/keeton-electric/dist/. _site/
           touch _site/.nojekyll
 
       - name: Upload Pages artifact
