@@ -108,11 +108,13 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Trimmed from 3 families / 11 weights down to 2 families / 5 weights.
+       JetBrains Mono was dropped in favour of the system monospace stack. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="has-call-bar">
   <div class="bg-void" aria-hidden="true"></div>
   <div class="bg-grid" aria-hidden="true"></div>
 
@@ -121,37 +123,75 @@
     <div class="container header-inner">
       <a href="#top" class="brand" aria-label="Compass Claw home">
         <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <polygon points="16.2 7.8 14.1 14.1 7.8 16.2 9.9 9.9 16.2 7.8" fill="currentColor" stroke="none"></polygon>
           </svg>
         </span>
         <span class="brand-name">Compass<span class="brand-accent">Claw</span></span>
       </a>
-      <nav class="header-nav">
+      <nav class="header-nav" aria-label="Main">
         <a href="/services/">Services</a>
         <a href="/locations/">Service Areas</a>
         <a href="/resources/">Resources</a>
       </nav>
-      <nav class="header-actions">
-        <a href="tel:+17408313443" class="header-phone" aria-label="Call us">
+      <nav class="header-actions" aria-label="Contact">
+        <a href="tel:+17408313443" class="header-phone" aria-label="Call us at (740) 831-3443">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
           <span>(740) 831-3443</span>
         </a>
         <a href="#calculator" class="btn btn-primary btn-sm header-cta">Get a Free Demo</a>
+        <!-- NEW: mobile nav. The old build hid the nav below 900px and
+             shipped no toggle, leaving phones with no navigation. -->
+        <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open navigation menu">
+          <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
       </nav>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="container">
+        <ul>
+          <li><a href="/services/">Services <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="/locations/">Service Areas <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="/resources/">Resources <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="#audioDemo">Hear a Call <span aria-hidden="true">&rarr;</span></a></li>
+          <li><a href="#faq">FAQ <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+        <div class="mobile-menu-cta">
+          <a href="#calculator" class="btn btn-primary">Get a Free Demo</a>
+        </div>
+      </div>
     </div>
   </header>
 
   <main>
     <!-- ============ HERO + ROI CALCULATOR ============ -->
-    <section class="hero" id="calculator">
+    <section class="hero" id="top-hero">
       <div class="container">
         <div class="hero-head">
           <span class="eyebrow"><span class="live-dot"></span> The AI Talking Website</span>
           <h1>Never Miss Another Lead.<br /><span class="gradient-text">Your Website Answers Every Call.</span></h1>
-          <p class="hero-sub">A modern, AI-powered website that answers your phone <strong>24/7</strong>&mdash;booking jobs, answering questions, and qualifying every lead while you work.</p>
+          <p class="hero-sub">A modern, AI-powered website that answers your phone <strong>24/7</strong>&mdash;booking jobs, answering questions, and capturing every lead while you're on the tools.</p>
         </div>
+
+        <div class="hero-actions">
+          <a href="#audioDemo" class="btn btn-primary btn-lg">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            Hear it answer a real call
+          </a>
+          <a href="tel:+17408313443" class="hero-call">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            (740) 831-3443
+          </a>
+        </div>
+
+        <p class="hero-trust">Portsmouth, Ohio &middot; Free demo built for your business &middot; No long-term contract</p>
+      </div>
+    </section>
+
+    <!-- ============ ROI CALCULATOR ============ -->
+    <section class="section" id="calculator" style="padding-top:0;">
+      <div class="container">
 
         <!-- Calculator -->
         <div class="calc">
@@ -247,8 +287,17 @@
                   <div class="result-tile"><div class="v" id="lostJobs">0</div><div class="k">jobs walking away</div></div>
                   <div class="result-tile good"><div class="v" id="recovered">$0</div><div class="k">Compass Claw recovers*</div></div>
                 </div>
-                <p class="step-sub" style="margin-bottom:0;">*Conservatively assuming we recover ~70% of those missed calls, 24/7. Want the full breakdown and a live demo for your business?</p>
-                <div class="calc-nav"><button type="button" class="calc-back" data-back>← Back</button><button type="button" class="btn btn-primary" data-next>Get my custom plan →</button></div>
+                <details class="calc-assump">
+                  <summary>How we calculate this (read the assumptions)</summary>
+                  <p><strong>This is an estimate, not a quote.</strong> It uses your inputs plus two industry averages:</p>
+                  <ul>
+                    <li><strong>~25%</strong> of answered calls turn into a booked job or customer</li>
+                    <li><strong>~70%</strong> of the calls you're missing are recoverable when something answers 24/7</li>
+                  </ul>
+                  <p style="margin-bottom:0;">Your actual numbers will differ by trade, season, and market. We'll walk through the real figures with you on the demo call &mdash; and if the math doesn't work for your business, we'll tell you.</p>
+                </details>
+
+                <div class="calc-nav"><button type="button" class="calc-back" data-back>&larr; Back</button><button type="button" class="btn btn-primary" data-next>Get my custom plan &rarr;</button></div>
               </div>
 
               <!-- STEP 4: Lead capture -->
@@ -256,11 +305,42 @@
                 <h3><span class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span> Where do we send your plan?</h3>
                 <p class="step-sub">We'll send your missed-revenue breakdown plus a free AI demo built for your business.</p>
                 <div class="lead-form">
-                  <input class="text-input" type="text" name="name" placeholder="Your name" autocomplete="name" required />
-                  <input class="text-input" type="text" name="zip" placeholder="Zip / service area" autocomplete="postal-code" inputmode="numeric" />
-                  <input class="text-input full" type="email" name="email" placeholder="Your email" autocomplete="email" required />
+                  <div>
+                    <label class="field-label" for="leadName">Full name <span class="req" aria-hidden="true">*</span></label>
+                    <input class="text-input" type="text" id="leadName" name="name" placeholder="Your name" autocomplete="name" required />
+                  </div>
+                  <div>
+                    <label class="field-label" for="leadPhone">Phone number <span class="req" aria-hidden="true">*</span></label>
+                    <input class="text-input" type="tel" id="leadPhone" name="phone" placeholder="(740) 555-0123" autocomplete="tel" inputmode="tel" required />
+                  </div>
+                  <div>
+                    <label class="field-label" for="leadEmail">Email address <span class="req" aria-hidden="true">*</span></label>
+                    <input class="text-input" type="email" id="leadEmail" name="email" placeholder="you@yourbusiness.com" autocomplete="email" required />
+                  </div>
+                  <div>
+                    <label class="field-label" for="leadZip">Zip / service area</label>
+                    <input class="text-input" type="text" id="leadZip" name="zip" placeholder="45662" autocomplete="postal-code" inputmode="numeric" />
+                  </div>
+
+                  <div class="full">
+                    <!-- SMS OPT-IN — REQUIRED FOR 10DLC / A2P COMPLIANCE.
+                         RULES THAT MUST NOT BE BROKEN:
+                         1. The `checked` attribute must NEVER be added here.
+                         2. Consent must NOT be required to submit the form.
+                         3. Both links must resolve to live pages.
+                         4. This wording must match the registered campaign. -->
+                    <div class="consent">
+                      <input type="checkbox" id="smsConsent" name="sms_consent" value="yes" />
+                      <label for="smsConsent">By checking this box, I consent to receive transactional and appointment-related SMS text messages from <strong>Compass Claw</strong> at the phone number provided. Consent is not a condition of purchase. Message &amp; data rates may apply. Message frequency varies. Unsubscribe at any time by replying <strong>STOP</strong>, or reply <strong>HELP</strong> for assistance. See our <a href="/privacy/">Privacy Policy</a> and <a href="/terms/">Terms of Service</a>.</label>
+                    </div>
+                    <p class="consent-note">We'll email your plan either way &mdash; the checkbox only controls text messages.</p>
+                  </div>
+
+                  <!-- Honeypot: hidden from humans, irresistible to bots. -->
+                  <input type="text" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 </div>
-                <div class="calc-nav"><button type="button" class="calc-back" data-back>← Back</button><button type="submit" class="btn btn-primary" id="calcSubmit">Send my free plan →</button></div>
+
+                <div class="calc-nav"><button type="button" class="calc-back" data-back>&larr; Back</button><button type="submit" class="btn btn-primary" id="calcSubmit">Send my free plan &rarr;</button></div>
                 <p class="calc-err" id="calcErr" role="alert" hidden></p>
               </div>
 
@@ -277,13 +357,18 @@
       </div>
     </section>
 
-    <!-- ============ TRUST STRIP ============ -->
+    <!-- ============ TRUST STRIP ============
+         Previously: "24/7", "<1 ring", "50+ Local businesses", "Days".
+         Three of the four weren't metrics, and "50+ clients" was
+         unsubstantiated. Everything below is a claim we can stand behind.
+         SWAP IN REAL NUMBERS once you have them (clients served, calls
+         answered, average pickup measured) — and keep them accurate. -->
     <section class="trust-strip" aria-label="At a glance">
       <div class="container trust-inner">
-        <div class="trust-item"><strong>24/7</strong><span>Always answering</span></div>
-        <div class="trust-item"><strong>&lt;1 ring</strong><span>Avg. pickup</span></div>
-        <div class="trust-item"><strong>50+</strong><span>Local businesses</span></div>
-        <div class="trust-item"><strong>Days</strong><span>To go live</span></div>
+        <div class="trust-item"><strong>24/7</strong><span>Calls answered, day or night</span></div>
+        <div class="trust-item"><strong>&lt;1 ring</strong><span>Average pickup time</span></div>
+        <div class="trust-item"><strong>$0</strong><span>Cost of your demo</span></div>
+        <div class="trust-item"><strong>Ohio</strong><span>Built and run in Portsmouth</span></div>
       </div>
     </section>
 
@@ -371,61 +456,157 @@
       </div>
     </section>
 
-    <!-- ============ LIVE AI DEMO ============ -->
-    <section class="section" id="demo">
+    <!-- ============ LIVE AUDIO DEMO ============
+         This section used to be titled "Hear what your callers would
+         hear" and contained ZERO <audio> elements — a pulsing orb and a
+         fake chat bubble. It is now a real player with seek, transcript
+         and scenario tabs.
+
+         TO GO LIVE: drop short MP3s into /audio/ (100-300 KB each,
+         15-30s) and point each tab's data-src at them. Until then the
+         player degrades to an honest "call us and hear it live" state. -->
+    <section class="section section-alt" id="audioDemo">
       <div class="container demo-grid">
         <div class="demo-copy">
-          <span class="eyebrow"><span class="live-dot"></span> Live, right now</span>
-          <h2>Hear what your callers would hear</h2>
+          <span class="eyebrow"><span class="live-dot"></span> Hear it for yourself</span>
+          <h2>Listen to your AI answer a real call</h2>
           <p>The moment a customer calls, your AI answers in a natural voice, understands what they need, and books them in&mdash;no hold music, no voicemail, no lost job.</p>
-          <p>It sounds like your best front-desk employee, working every hour of every day.</p>
-          <a href="#calculator" class="btn btn-primary">Get a free demo for your business</a>
-        </div>
-        <div class="demo-stage glass">
-          <div class="demo-phone">
-            <div class="voice-orb" aria-hidden="true">
-              <span class="ring"></span><span class="ring d2"></span><span class="ring d3"></span>
-              <span class="core"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
-            </div>
-            <div class="waveform" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-            <div class="chat">
-              <div class="bubble ai"><span class="who">AI Receptionist</span>Thanks for calling! I've got an opening Tuesday at 9am&mdash;want me to book it?</div>
-              <div class="bubble caller">Yeah, that's perfect.</div>
-              <div class="bubble ai"><span class="who">AI Receptionist</span>Done! You'll get a text confirmation. Anything else I can help with?</div>
-            </div>
-            <div class="demo-status"><span class="live-dot"></span> Lead booked &middot; 0 missed calls today</div>
+          <p>Don't take our word for it. Press play, then call us and hear it answer live.</p>
+          <div class="hero-actions" style="justify-content:flex-start;margin-top:22px;">
+            <a href="tel:+17408313443" class="btn btn-primary">Call (740) 831-3443</a>
+            <a href="#calculator" class="btn btn-glass">Get a free demo</a>
           </div>
+        </div>
+
+        <div class="audio-card" id="audioPlayer" data-audio-demo>
+          <div class="audio-tabs" role="tablist" aria-label="Sample calls">
+            <button type="button" class="audio-tab is-active" role="tab" aria-selected="true"
+                    data-src="/audio/demo-after-hours.mp3"
+                    data-label="After-hours emergency &mdash; no heat at 9:40pm">After-hours</button>
+            <button type="button" class="audio-tab" role="tab" aria-selected="false"
+                    data-src="/audio/demo-estimate.mp3"
+                    data-label="New estimate request &mdash; collision repair">Estimate call</button>
+            <button type="button" class="audio-tab" role="tab" aria-selected="false"
+                    data-src="/audio/demo-booking.mp3"
+                    data-label="Appointment booking &mdash; Tuesday 9am">Booking</button>
+          </div>
+
+          <audio id="audioEl" preload="none" src="/audio/demo-after-hours.mp3"></audio>
+
+          <div class="audio-label">
+            <span id="audioLabel">After-hours emergency &mdash; no heat at 9:40pm</span>
+            <span class="audio-tag">Sample call</span>
+          </div>
+
+          <div class="audio-main">
+            <button type="button" class="audio-btn" id="audioPlay" aria-label="Play the sample call"></button>
+            <div class="audio-body">
+              <input type="range" class="audio-seek" id="audioSeek" min="0" max="100" step="0.1" value="0" aria-label="Seek within the sample call" />
+              <div class="audio-wave" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div class="audio-time" id="audioTime" style="text-align:right;margin-top:8px;">0:00 / 0:00</div>
+
+          <div class="audio-transcript" aria-label="Call transcript">
+            <p class="is-ai"><span class="who">AI</span><span>Thanks for calling! How can I help tonight?</span></p>
+            <p><span class="who">Caller</span><span>Hi &mdash; our furnace quit and it&rsquo;s getting cold. Is anyone available tonight?</span></p>
+            <p class="is-ai"><span class="who">AI</span><span>Sorry to hear that. I can get a tech out. Are you an existing customer, or is this the first time you&rsquo;ve called us?</span></p>
+            <p><span class="who">Caller</span><span>First time.</span></p>
+            <p class="is-ai"><span class="who">AI</span><span>No problem. I have an emergency window tonight between 10 and midnight, or tomorrow 8 to 10am. Which works better?</span></p>
+            <p><span class="who">Caller</span><span>Tonight, if you can.</span></p>
+            <p class="is-ai"><span class="who">AI</span><span>You&rsquo;re booked for tonight between 10 and midnight. Can I get your address and the best number to text a confirmation to?</span></p>
+            <p><span class="who">Caller</span><span>Sure, it&rsquo;s 412 Market Street.</span></p>
+            <p class="is-ai"><span class="who">AI</span><span>Got it. You&rsquo;ll get a text confirmation in a moment, and the owner has been notified. Anything else I can help with?</span></p>
+          </div>
+
+          <!-- Shown only if the recording file can't load -->
+          <p class="audio-note" data-audio-fallback hidden>
+            The recorded sample is being added right now. In the meantime, <a href="tel:+17408313443" style="color:var(--accent-ink);font-weight:700;">call (740) 831-3443</a> and it will answer you live.
+          </p>
+          <p class="audio-note">Transcript shown for illustration. Your AI is trained on your services, hours and pricing.</p>
         </div>
       </div>
     </section>
 
-    <!-- ============ PROOF ============ -->
+    <!-- ============ COMMITMENTS ============
+         This section previously ran fabricated statistics ("25% more
+         bookings", "15 hrs saved every week") that were not measured,
+         plus four invented testimonials attributed to named people in
+         Phoenix, Dallas, Miami and Denver — cities this business does
+         not serve. That is an FTC exposure, not a design choice, so it
+         has been replaced with promises we can actually keep.
+
+         WHEN YOU HAVE REAL REVIEWS: paste them into the template at the
+         bottom of this file (see "REAL TESTIMONIALS GO HERE"). Only
+         publish quotes from real customers, with their permission. -->
     <section class="section" id="proof">
       <div class="container">
         <div class="section-head">
-          <span class="eyebrow">Real results</span>
-          <h2>The numbers our clients actually care about</h2>
+          <span class="eyebrow">What you get</span>
+          <h2>Four things we commit to on day one</h2>
+          <p class="section-lead">No vague promises. These are the things we're accountable for.</p>
         </div>
-        <div class="stats-grid">
-          <div class="stat-card glass"><div class="stat-num" data-target="25" data-suffix="%">0%</div><p>More appointment bookings in the first 60 days</p></div>
-          <div class="stat-card glass"><div class="stat-num" data-target="24" data-suffix="/7">0/7</div><p>Hours a day your AI is on the clock</p></div>
-          <div class="stat-card glass"><div class="stat-num" data-target="0" data-suffix="">0</div><p>Missed calls&mdash;every lead gets answered</p></div>
-          <div class="stat-card glass"><div class="stat-num" data-target="15" data-suffix=" hrs">0 hrs</div><p>Saved every week answering the phones</p></div>
+        <div class="who-grid">
+          <article class="who-card glass">
+            <div class="who-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <h3>Every call answered</h3>
+            <p>24/7 &mdash; nights, weekends, and holidays. Nobody who calls you ever reaches a voicemail.</p>
+          </article>
+          <article class="who-card glass">
+            <div class="who-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <h3>You get notified every time</h3>
+            <p>A summary of each call &mdash; who rang, what they wanted, and whether it was booked.</p>
+          </article>
+          <article class="who-card glass">
+            <div class="who-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <h3>No long-term contract</h3>
+            <p>Month to month. If it isn't earning its keep, you walk away. No lock-in, no exit fee.</p>
+          </article>
+          <article class="who-card glass">
+            <div class="who-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <h3>A real person, locally</h3>
+            <p>You talk to the people who built it, in Portsmouth. Not an outsourced call center.</p>
+          </article>
         </div>
+      </div>
+    </section>
 
+    <!-- ============ REAL TESTIMONIALS GO HERE ============
+         The carousel that used to sit here was removed on purpose. It
+         displayed four five-star reviews attributed to Mike R. (Phoenix
+         AZ), Dana P. (Dallas TX), Carlos M. (Miami FL) and Janet K.
+         (Denver CO) — none real, and none in a market this business
+         serves. Publishing invented testimonials is an FTC violation.
+
+         Once you have genuine, permissioned reviews, uncomment this and
+         swap in the real details. Four is plenty.
+
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Reviews</span>
+          <h2>What local owners say</h2>
+        </div>
         <div class="carousel" id="carousel">
-          <button class="carousel-arrow" data-prev aria-label="Previous testimonial"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button class="carousel-arrow" data-prev aria-label="Previous testimonial">&#8249;</button>
           <div class="carousel-track" id="carouselTrack">
-            <article class="tcard glass"><div class="stars">★★★★★</div><blockquote>&ldquo;Booked 12 extra estimates the first month. It pays for itself, easy.&rdquo;</blockquote><cite>Mike R. &middot; Auto Body, Phoenix AZ</cite></article>
-            <article class="tcard glass"><div class="stars">★★★★★</div><blockquote>&ldquo;I haven't missed an after-hours call in months. Game changer for my HVAC business.&rdquo;</blockquote><cite>Dana P. &middot; HVAC, Dallas TX</cite></article>
-            <article class="tcard glass"><div class="stars">★★★★★</div><blockquote>&ldquo;My socials finally look alive and sellers take me way more seriously now.&rdquo;</blockquote><cite>Carlos M. &middot; Real Estate, Miami FL</cite></article>
-            <article class="tcard glass"><div class="stars">★★★★★</div><blockquote>&ldquo;Feels like I hired a full-time receptionist for a fraction of the cost.&rdquo;</blockquote><cite>Janet K. &middot; Roofing, Denver CO</cite></article>
+            <article class="tcard glass">
+              <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              <blockquote>&ldquo;REAL QUOTE HERE&rdquo;</blockquote>
+              <cite>Real Name &middot; Trade, City OH</cite>
+            </article>
           </div>
-          <button class="carousel-arrow" data-next-c aria-label="Next testimonial"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <button class="carousel-arrow" data-next-c aria-label="Next testimonial">&#8250;</button>
         </div>
         <div class="carousel-dots" id="carouselDots" aria-hidden="true"></div>
       </div>
     </section>
+    ============ END TESTIMONIAL TEMPLATE ============ -->
+
 
     <!-- ============ FAQ ============ -->
     <section class="section" id="faq">
@@ -434,7 +615,7 @@
           <span class="eyebrow">Questions</span>
           <h2>The stuff busy owners ask us</h2>
         </div>
-        <div class="faq-wrap" id="faq">
+        <div class="faq-wrap" id="faqList">
           <div class="faq-item glass">
             <button class="faq-q" aria-expanded="false">Will it sound like a robot?<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
             <div class="faq-a"><div class="faq-a-inner">No. It uses a natural, friendly voice and is trained on your business, so callers get real answers&mdash;not a phone tree. Most people don't realize it's AI.</div></div>
@@ -455,20 +636,71 @@
       </div>
     </section>
 
-    <!-- ============ FOUNDER ============ -->
+    <!-- ============ WHY WE STARTED ============
+         Previously this was headed "Meet the founder" (singular) but
+         signed "— The Compass Claw Team", and the "photo" was a styled
+         div containing the letters "CC" and the words "Your photo here"
+         — a placeholder shipped to production. Now it reads as one
+         consistent voice, with no fake portrait.
+
+         TO ADD A REAL PHOTO: uncomment the block below and drop a square
+         image at /image/founder.jpg (at least 800x1000). -->
     <section class="section" id="team">
-      <div class="container founder-grid">
-        <div class="founder-photo">
-          <span class="initials" aria-hidden="true">CC</span>
-          <span class="hint">Your photo here</span>
+      <div class="container">
+        <div class="founder-copy" style="max-width:720px;margin:0 auto;text-align:center;">
+          <span class="eyebrow">Why we started</span>
+          <h2>Local businesses deserve the same tools as the big franchises.</h2>
+          <p>We grew up around small business owners who worked twice as hard for half the recognition &mdash; losing jobs to a missed call, or falling behind because there was never time to keep up online.</p>
+          <p>So we built the tools the big chains use and made them simple and affordable for the shop down the street. No jargon. No huge contracts. Just more booked jobs and more time back in your day.</p>
+          <p class="founder-sign">&mdash; The Compass Claw Team, Portsmouth, Ohio</p>
+          <div class="hero-actions" style="justify-content:center;margin-top:26px;">
+            <a href="#calculator" class="btn btn-primary">Let's grow your business</a>
+            <a href="tel:+17408313443" class="btn btn-glass">Call (740) 831-3443</a>
+          </div>
         </div>
-        <div class="founder-copy">
-          <span class="eyebrow">Meet the founder</span>
-          <h2>We started Compass Claw because local businesses deserve better.</h2>
-          <p>I grew up around small business owners who worked twice as hard for half the recognition&mdash;losing jobs to a missed call or falling behind because they didn't have time to keep up online.</p>
-          <p>So we built the tools the big franchises use and made them simple and affordable for the shop down the street. No jargon. No huge contracts. Just more booked jobs and more time back in your day.</p>
-          <p class="founder-sign">&mdash; The Compass Claw Team</p>
-          <a href="#calculator" class="btn btn-primary">Let's grow your business</a>
+
+        <!--
+        <div class="founder-grid">
+          <div class="founder-photo">
+            <img src="/image/founder.jpg" alt="Founder of Compass Claw" width="800" height="1000" loading="lazy" />
+          </div>
+          <div class="founder-copy">
+            <span class="eyebrow">Meet the founder</span>
+            <span class="founder-role">REAL NAME, Founder</span>
+            <p>Real quote about why they built this.</p>
+          </div>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS (added — previously missing) ============ -->
+    <section class="section section-alt" id="how">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">How it works</span>
+          <h2>From first call to live in three steps</h2>
+          <p class="section-lead">You don't install anything, and you don't have to learn any software.</p>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card glass">
+            <div class="step-num" aria-hidden="true">1</div>
+            <h3>We build your demo</h3>
+            <p>Tell us what you do and how you price it. We set up an AI receptionist trained on your business, and you call it and try to trip it up.</p>
+            <span class="step-time">Free &middot; no commitment</span>
+          </article>
+          <article class="step-card glass">
+            <div class="step-num" aria-hidden="true">2</div>
+            <h3>We connect your number</h3>
+            <p>Keep your existing number. We route calls so the AI answers when you can't &mdash; after hours, on a job, or already on the line.</p>
+            <span class="step-time">Days, not months</span>
+          </article>
+          <article class="step-card glass">
+            <div class="step-num" aria-hidden="true">3</div>
+            <h3>You get the calls back</h3>
+            <p>Every call answered and booked, with a summary sent to you. You keep working &mdash; you just stop losing jobs to voicemail.</p>
+            <span class="step-time">No long-term contract</span>
+          </article>
         </div>
       </div>
     </section>
@@ -525,15 +757,34 @@
       </div>
       <div class="footer-contact">
         <a href="tel:+17408313443" class="footer-phone">📞 (740) 831-3443</a>
-        <a href="mailto:hello@compassclaw.com">hello@compassclaw.com</a>
+        <a href="mailto:support@compassclaw.com">support@compassclaw.com</a>
         <a href="#calculator" class="btn btn-primary btn-sm">Get a Free Demo</a>
       </div>
+    </div>
+    <!-- Legal links — required to be reachable from every page for
+         10DLC / A2P review. The original footer contained ZERO privacy
+         or terms links, while the form collected names and emails. -->
+    <div class="container footer-legal" aria-label="Legal">
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="/terms/">Terms of Service</a>
+      <a href="mailto:support@compassclaw.com">support@compassclaw.com</a>
     </div>
     <div class="container footer-bottom">
       <span>&copy; <span id="year"></span> Compass Claw &middot; Portsmouth, OH</span>
       <span><a href="/locations/">Ohio service areas</a> &middot; Made for local businesses that mean business.</span>
     </div>
   </footer>
+
+  <!-- ============ STICKY MOBILE CALL BAR (added) ============
+       One tap to call, always reachable. Hidden at >=900px where the
+       header phone is already visible. -->
+  <div class="call-bar" role="region" aria-label="Quick contact">
+    <a href="tel:+17408313443" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Call now
+    </a>
+    <a href="#calculator" class="btn btn-glass">Free demo</a>
+  </div>
 
   <script src="script.js" defer></script>
 </body>

@@ -560,4 +560,12 @@
     <loc>https://compassclaw.com/resources/what-is-an-ai-talking-website/</loc>
     <changefreq>weekly</changefreq>
   </url>
+  <url>
+    <loc>https://compassclaw.com/privacy/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
+    <loc>https://compassclaw.com/terms/</loc>
+    <changefreq>yearly</changefreq>
+  </url>
 </urlset>

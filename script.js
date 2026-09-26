@@ -11,13 +11,172 @@
 
   /* ============================================================
      LEAD DELIVERY — emails you every calculator submission.
-     1. Go to https://web3forms.com, enter your email, copy the Access Key.
-     2. Paste it below (replace the placeholder). That's it.
-     Leads then arrive in your inbox with all the calculator details.
+
+     The Web3Forms access key is PUBLIC BY DESIGN (it ships to the
+     browser), so it is not a secret. What actually protects the
+     endpoint is a domain restriction:
+       1. Log in at web3forms.com
+       2. Restrict this key to compassclaw.com only
+     Also keep the honeypot field in the form — it silently drops
+     bot submissions.
      (To route into GoHighLevel instead, swap the fetch URL in the
      submit handler for your GHL inbound webhook URL.)
      ============================================================ */
   var WEB3FORMS_KEY = "a9f96f4d-fc74-46ba-8968-99665b5fe623";
+
+  /* Bump this whenever the SMS consent wording changes, so every
+     captured consent record points at an exact disclosure version. */
+  var SMS_DISCLOSURE_VERSION = "2026-09-27";
+
+  /* ============================================================
+     MOBILE NAV
+     The old build hid .header-nav below 900px and shipped no
+     toggle at all, so phones had literally no navigation.
+     ============================================================ */
+  (function mobileNav() {
+    var toggle = document.querySelector(".nav-toggle");
+    var menu = document.getElementById("mobileMenu");
+    if (!toggle || !menu) return;
+
+    function setOpen(open) {
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+      menu.classList.toggle("open", open);
+    }
+
+    toggle.addEventListener("click", function () {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    // Close after tapping any link inside the menu
+    menu.addEventListener("click", function (e) {
+      if (e.target.closest("a")) setOpen(false);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    // Reset when we cross into the desktop layout
+    window.addEventListener("resize", function () {
+      if (window.innerWidth >= 900) setOpen(false);
+    });
+  })();
+
+  /* ============================================================
+     AUDIO DEMO PLAYER
+     Wires the "hear a real call" section to recordings in /audio/.
+     If a recording is missing or fails to load, we fall back to an
+     honest "call us and hear it live" state rather than rendering a
+     dead player.
+
+     TO ENABLE: drop short MP3s into /audio/ and set data-src on each
+     .audio-tab. Keep them small (~100-300 KB, 15-30s each).
+     ============================================================ */
+  (function audioDemo() {
+    var root = document.getElementById("audioPlayer");
+    if (!root) return;
+
+    var audio = document.getElementById("audioEl");
+    var playBtn = document.getElementById("audioPlay");
+    var seek = document.getElementById("audioSeek");
+    var timeEl = document.getElementById("audioTime");
+    var labelEl = document.getElementById("audioLabel");
+    var tabs = Array.prototype.slice.call(root.querySelectorAll(".audio-tab"));
+    var wave = Array.prototype.slice.call(root.querySelectorAll(".audio-wave span"));
+    var lines = Array.prototype.slice.call(root.querySelectorAll(".audio-transcript p"));
+    if (!audio || !playBtn || !seek) return;
+
+    var ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    var ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+
+    function mmss(s) {
+      if (!isFinite(s) || s < 0) s = 0;
+      var m = Math.floor(s / 60), r = Math.floor(s % 60);
+      return m + ":" + (r < 10 ? "0" : "") + r;
+    }
+
+    function paint() {
+      var pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      seek.value = pct;
+      seek.style.setProperty("--p", pct + "%");
+      if (timeEl) timeEl.textContent = mmss(audio.currentTime) + " / " + mmss(audio.duration);
+
+      // Highlight whichever transcript line the playhead is nearest
+      if (audio.duration && lines.length) {
+        var idx = Math.min(lines.length - 1, Math.floor((audio.currentTime / audio.duration) * lines.length));
+        lines.forEach(function (l, i) { l.classList.toggle("is-current", i === idx); });
+      }
+
+      // Nudge the waveform bars while playing
+      wave.forEach(function (b, i) {
+        if (!audio.paused) {
+          b.style.height = (22 + Math.abs(Math.sin(audio.currentTime * 3 + i)) * 72) + "%";
+        } else {
+          b.style.height = "30%";
+        }
+      });
+    }
+
+    function setPlayingUI(playing) {
+      root.classList.toggle("is-playing", playing);
+      playBtn.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
+      playBtn.setAttribute("aria-label", playing ? "Pause the sample call" : "Play the sample call");
+    }
+
+    playBtn.addEventListener("click", function () {
+      if (audio.paused) { audio.play().catch(function () {}); } else { audio.pause(); }
+    });
+
+    audio.addEventListener("play", function () { setPlayingUI(true); });
+    audio.addEventListener("pause", function () { setPlayingUI(false); });
+    audio.addEventListener("timeupdate", paint);
+    audio.addEventListener("loadedmetadata", paint);
+    audio.addEventListener("ended", function () { setPlayingUI(false); audio.currentTime = 0; paint(); });
+
+    seek.addEventListener("input", function () {
+      if (audio.duration) { audio.currentTime = (seek.value / 100) * audio.duration; }
+    });
+
+    // Graceful degradation: if the recording isn't there yet, don't show a
+    // play button that does nothing. We probe the file up front with a
+    // cheap HEAD request, and also react if playback errors later.
+    function noAudio() {
+      root.classList.add("no-audio");
+      playBtn.disabled = true;
+      var fb = root.querySelector("[data-audio-fallback]");
+      if (fb) fb.hidden = false;
+    }
+
+    audio.addEventListener("error", noAudio);
+
+    (function probe() {
+      var src = audio.getAttribute("src");
+      if (!src) { noAudio(); return; }
+      fetch(src, { method: "HEAD" })
+        .then(function (r) { if (!r.ok) noAudio(); })
+        .catch(noAudio);
+    })();
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        tabs.forEach(function (t) { t.classList.remove("is-active"); t.setAttribute("aria-selected", "false"); });
+        tab.classList.add("is-active");
+        tab.setAttribute("aria-selected", "true");
+        audio.pause();
+        audio.currentTime = 0;
+        root.classList.remove("no-audio");
+        playBtn.disabled = false;
+        var fb = root.querySelector("[data-audio-fallback]");
+        if (fb) fb.hidden = true;
+        if (labelEl && tab.dataset.label) labelEl.innerHTML = tab.dataset.label;
+        if (tab.dataset.src) { audio.src = tab.dataset.src; audio.load(); }
+        paint();
+      });
+    });
+
+    setPlayingUI(false);
+  })();
 
   /* ============================================================
      ROI calculator + lead funnel
@@ -126,13 +285,36 @@
     }
 
     /* ----- Navigation ----- */
+    function markInvalid(el, bad) {
+      if (el) el.classList.toggle("invalid", !!bad);
+    }
+
     function validateStep() {
       if (current === 1 && !state.industry) { showError("Pick the option closest to your business."); return false; }
       if (current === 4) {
         var name = form.querySelector('input[name="name"]');
         var email = form.querySelector('input[name="email"]');
-        if (!name.value.trim()) { showError("What should we call you?"); name.focus(); return false; }
-        if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showError("Add a valid email so we can send your plan."); email.focus(); return false; }
+        var phone = form.querySelector('input[name="phone"]');
+
+        if (!name.value.trim()) {
+          showError("What should we call you?"); markInvalid(name, true); name.focus(); return false;
+        }
+        markInvalid(name, false);
+
+        // Phone is now required — it's how the AI receptionist dials back,
+        // and it's the identifier carriers expect for SMS consent.
+        var digits = phone ? phone.value.replace(/\D/g, "") : "";
+        if (digits.length < 10) {
+          showError("Add a phone number so we can call you back.");
+          markInvalid(phone, true); if (phone) phone.focus(); return false;
+        }
+        markInvalid(phone, false);
+
+        if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+          showError("Add a valid email so we can send your plan.");
+          markInvalid(email, true); email.focus(); return false;
+        }
+        markInvalid(email, false);
       }
       return true;
     }
@@ -156,9 +338,22 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!validateStep()) return;
+
       var name = form.querySelector('input[name="name"]').value.trim();
       var email = form.querySelector('input[name="email"]').value.trim();
-      var zip = form.querySelector('input[name="zip"]').value.trim();
+      var rawPhone = form.querySelector('input[name="phone"]').value.trim();
+      var phone = rawPhone.replace(/[^\d+]/g, "");
+      var zipEl = form.querySelector('input[name="zip"]');
+      var zip = zipEl ? zipEl.value.trim() : "";
+      var consentEl = form.querySelector('input[name="sms_consent"]');
+      var smsConsent = !!(consentEl && consentEl.checked);
+      var honeypot = form.querySelector('input[name="botcheck"]');
+
+      // Bot submissions: pretend everything worked, send nothing.
+      if (honeypot && honeypot.value) {
+        showSuccess(name);
+        return;
+      }
 
       // Recompute the headline numbers so they're included in the email.
       var missedCalls = state.calls * (state.missedPct / 100);
@@ -167,6 +362,7 @@
       var lead = {
         name: name,
         email: email,
+        phone: phone,
         zip_or_area: zip,
         industry: state.industry,
         monthly_calls: state.calls,
@@ -174,8 +370,19 @@
         avg_job_value: fmt(state.jobValue),
         estimated_monthly_loss: fmt(lossMonth),
         estimated_yearly_loss: fmt(lossMonth * 12),
-        source_page: window.location.pathname
+        source_page: window.location.pathname,
+        /* --- A2P / 10DLC consent audit trail ---
+           Captured so you can prove WHEN consent was given and
+           against WHICH wording, if a carrier or regulator asks. */
+        sms_consent: smsConsent ? "YES" : "NO",
+        sms_consent_timestamp: new Date().toISOString(),
+        sms_disclosure_version: SMS_DISCLOSURE_VERSION,
+        page_url: window.location.href
       };
+
+      // Show the confirmation immediately — the UI must never hang
+      // waiting on the network (the old build threw before this ran).
+      showSuccess(name);
 
       // Email the lead (no backend needed) via Web3Forms.
       if (WEB3FORMS_KEY && WEB3FORMS_KEY.indexOf("REPLACE_WITH") === -1) {
@@ -188,19 +395,20 @@
             from_name: "Compass Claw Website"
           }, lead))
         }).catch(function (err) { console.warn("Lead send failed:", err); });
-      } else {
-        console.log("Compass Claw lead (add WEB3FORMS_KEY to email these):", lead);
       }
+    });
 
+    function showSuccess(name) {
       form.querySelectorAll(".calc-step").forEach(function (s) { s.classList.remove("active"); });
-      document.querySelector(".calc-nav") && (function () {})();
-      var firstName = data.name.split(" ")[0] || "there";
+      var firstName = (name || "").split(" ")[0] || "there";
       var nameSpan = document.getElementById("successName");
       if (nameSpan) nameSpan.textContent = firstName;
-      successEl.hidden = false;
+      if (successEl) successEl.hidden = false;
+      var prog = form.parentNode.querySelector(".calc-progress");
+      if (prog) prog.style.display = "none";
       dots.forEach(function (d) { d.classList.add("active"); });
       segs.forEach(function (s) { s.classList.add("active"); });
-    });
+    }
 
     // init labels
     syncCallsLabel(); syncMissedLabel(); syncJobLabel();
