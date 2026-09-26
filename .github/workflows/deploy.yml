@@ -18,6 +18,78 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # SAFETY: this account hosts several sites (biodental.tech shares the box).
+      # Log in READ-ONLY, identify the compassclaw document root by its content,
+      # and fail the run before any upload if it can't be identified.
+      - name: "Preflight: resolve remote document root (read-only)"
+        id: preflight
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import os, sys, ftplib
+
+          host = os.environ['FTP_SERVER']
+          user = os.environ['FTP_USERNAME']
+          pw   = os.environ['FTP_PASSWORD']
+
+          f = ftplib.FTP_TLS()
+          print('connecting to %s:21 (explicit FTPS)' % host)
+          f.connect(host, 21, timeout=60)
+          f.login(user, pw)
+          f.prot_p()
+          print('login OK')
+
+          # NOTE: deliberately NOT printing directory listings. This repo is
+          # public and Actions logs are publicly readable, so we only ever
+          # report which candidate matched -- never the account's contents.
+          #
+          # compassclaw's homepage says "Compass Claw"; the other sites on
+          # this shared account (e.g. the primary domain in public_html)
+          # will not, so we identify the right folder by its content.
+          MARKER = 'Compass Claw'
+
+          def has_marker(path):
+              remote = 'index.html' if path in ('.', '') else path.rstrip('/') + '/index.html'
+              buf = []
+              try:
+                  f.retrbinary('RETR ' + remote, buf.append)
+              except Exception as e:
+                  print('  %-38s -> not readable (%s)' % (remote, e))
+                  return False
+              data = b''.join(buf).decode('utf-8', 'ignore')
+              ok = MARKER in data
+              print('  %-38s -> %s (%d bytes)' % (remote, 'MATCH' if ok else 'no marker', len(data)))
+              return ok
+
+          # Only ever consider compassclaw-specific folders. The shared roots
+          # (public_html, ".") are deliberately NOT candidates: landing there
+          # would overwrite the other site(s) hosted on this account.
+          candidates = [
+              'compassclaw.com',              # verified locally against the server
+              'public_html/compassclaw.com',  # alternate cPanel addon-domain layout
+          ]
+          found = None
+          for c in candidates:
+              if has_marker(c):
+                  found = c
+                  break
+
+          if not found:
+              print('')
+              print('ERROR: no candidate directory holds a Compass Claw index.html.')
+              print('Refusing to upload anything. Set server-dir manually.')
+              sys.exit(1)
+
+          server_dir = './' + found + '/' if found != '.' else './'
+          print('')
+          print('RESOLVED server-dir = %s' % server_dir)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              fh.write('server_dir=' + server_dir + chr(10))
+          PY
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -28,11 +100,14 @@ jobs:
           # Secure FTP over TLS. If your host rejects it, change to: protocol: ftp
           protocol: ftps
           port: 21
-          # Local files to upload. The FTP account should point at your site's
-          # document root (public_html), so we upload to "./" on the server.
+          # Upload the repo into the document root the preflight step
+          # identified BY CONTENT -- never a hard-coded guess, because this
+          # account also hosts other sites.
           local-dir: ./
-          server-dir: ./
+          server-dir: ${{ steps.preflight.outputs.server_dir }}
           # Don't ship repo/tooling files to the live site.
+          # NOTE: presets.js is deliberately NOT excluded -- /c/, /d/ and
+          # /studio/ load <script src="/presets.js">.
           exclude: |
             **/.git*
             **/.git*/**
@@ -40,6 +115,9 @@ jobs:
             **/.claude/**
             **/node_modules/**
             **/scripts/**
+            **/templates/**
+            **/clients/**
+            **/rebrand-template-for-electrician/**
             README.md
             DEPLOYMENT.md
             .gitignore
