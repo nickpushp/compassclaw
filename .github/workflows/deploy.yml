@@ -113,6 +113,7 @@ jobs:
             **/.git*/**
             **/.github/**
             **/.claude/**
+            **/_quarantine/**
             **/node_modules/**
             **/scripts/**
             **/templates/**

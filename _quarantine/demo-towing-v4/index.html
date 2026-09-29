@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- =================================================================
+     COMPASS CLAW — CLIENT WEBSITE DEMO  v4
+     This is what the PROSPECT'S CUSTOMERS see. Customer-facing copy.
+     The AI receptionist is baked in invisibly (the site answers calls);
+     the salesperson narrates that live. Reskin per prospect via CONFIG.
+     PHOTOS: drop client files into /assets and point CONFIG.img at them.
+     ================================================================= -->
+<title>Loading…</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script>
+/* ====================== CONFIG — EDIT THESE ====================== */
+const CONFIG = {
+  bizName:   "Ironclad Towing & Recovery",
+  short:     "Ironclad",                 // used in casual copy
+  trade:     "towing",
+  city:      "Columbus, OH",
+  phone:     "(740) 831-3443",
+  estYear:   "2009",
+  license:   "TX DOT #1234567",          // or state license label; shown in trust row
+
+  // hero (customer-facing)
+  heroKicker:"24/7 Emergency Towing · Columbus & Central Ohio",
+  headMain1: "Stranded? We're",
+  headAccent:"already",
+  headMain2: "on the way.",
+  heroSub:   "Blowout, breakdown, lockout, or accident — day or night, one call gets a truck rolling to you. Real local drivers, fast response, upfront pricing.",
+  respTime:  "20 min",                   // avg response headline
+  rateNum:   "5.0",                       // hero rating pill
+  rateCount: "· 120+ local reviews",      // hero rating subtext
+
+  img: {
+    hero:  "assets/hero.webp",
+    team:  "assets/driver.webp",
+    face1: "assets/f1.webp",
+    face2: "assets/f2.webp",
+    face3: "assets/f3.webp"
+  },
+
+  // trust strip (what CUSTOMERS care about)
+  trust: [
+    {big:"24/7", label:"Day, night, weekends & holidays"},
+    {big:"~20 min", label:"Average arrival time in-city"},
+    {big:"Licensed", label:"Fully licensed & insured"},
+    {big:"15+ yrs", label:"Serving Central Ohio since 2009"}
+  ],
+
+  services: [
+    {name:"Emergency Towing", desc:"Fast, damage-free flatbed towing for cars, SUVs & light trucks."},
+    {name:"Roadside Assistance", desc:"Jumpstarts, fuel delivery, and quick fixes to get you moving."},
+    {name:"Lockout Service", desc:"Locked out? We'll get you back in without damaging your vehicle."},
+    {name:"Flat Tire Change", desc:"Spare swapped roadside so you're not stuck waiting."},
+    {name:"Accident Recovery", desc:"Careful recovery and towing after a collision, any time."},
+    {name:"Winch-Outs", desc:"Stuck in mud, snow, or a ditch? We'll pull you out."}
+  ],
+
+  // customer-facing "how it works"
+  steps: [
+    {n:"01", h:"Call us", p:"One number, answered live every time — no voicemail, no hold music, even at 2am."},
+    {n:"02", h:"Tell us where you are", p:"We take your location and what's going on, and dispatch the right truck immediately."},
+    {n:"03", h:"We're there fast", p:"You get a text when your driver's rolling, plus an honest ETA. Then we get you moving."}
+  ],
+
+  teamHeadline: "The crew you're calling",
+  teamBlurb: "Family-owned and operated since 2009. When you call Ironclad, a real local driver rolls out — someone who knows these roads and treats your vehicle like their own.",
+
+  reviews: [
+    {name:"Marcus T.", loc:"Columbus, OH", face:"face1", stars:5,
+     text:"Blew a tire on I-70 at midnight. They answered on the first ring and had a truck to me in 20 minutes. Fast, friendly, and fair on price."},
+    {name:"Renee W.", loc:"Dublin, OH", face:"face2", stars:5,
+     text:"Locked my keys in the car with my toddler's stuff inside. They stayed calm, walked me through it, and the driver was there fast. Lifesavers."},
+    {name:"Gary P.", loc:"Westerville, OH", face:"face3", stars:5,
+     text:"Called three shops after a fender-bender at 9pm. Ironclad was the only one that actually picked up. Easy choice. Won't call anyone else now."}
+  ],
+
+  // service-area chips
+  areas: ["Columbus","Dublin","Westerville","Hilliard","Grove City","Gahanna","Reynoldsburg","Worthington","Upper Arlington","New Albany","Pickerington","Delaware"],
+
+  // FAQ (customer-facing)
+  faq: [
+    {q:"How fast can you get to me?", a:"In-city, our average arrival is around 20 minutes. Once you call, we dispatch the nearest truck and text you an honest ETA so you're never left guessing."},
+    {q:"Are you really open 24/7?", a:"Yes — nights, weekends, and holidays. A real person (or our instant AI dispatcher) answers every call, so you're never sent to voicemail when you're stranded."},
+    {q:"How much does a tow cost?", a:"It depends on distance and vehicle, but we quote you upfront before the truck rolls — no surprise charges when we arrive. Just ask when you call."},
+    {q:"What areas do you serve?", a:"Columbus and the surrounding Central Ohio suburbs — Dublin, Westerville, Hilliard, Grove City, Gahanna and more. Not sure if you're in range? Call and we'll tell you straight."},
+    {q:"Do you work with my insurance or roadside plan?", a:"In most cases, yes. Have your policy or membership info handy when you call and we'll let you know what's covered."},
+    {q:"What can you tow?", a:"Cars, SUVs, light trucks, and motorcycles on our flatbeds — plus accident recovery and winch-outs. Got something heavier? Call and we'll point you the right way."}
+  ],
+
+  stripeLink: "https://buy.stripe.com/14AdR87dseXmbsK3GHgjC00"
+};
+/* ================= END CONFIG (stop editing here) ================ */
+</script>
+<style>
+:root{
+  --amber:#ff7a18; --amber-soft:#ffab5e; --ink:#08090c; --ink-2:#0d0f14;
+  --paper:#f3efe7; --line:rgba(243,239,231,0.14); --line-2:rgba(243,239,231,0.08);
+  --muted:#8b8f99; --muted-2:#6b6f79; --good:#4ade80;
+  --fdisplay:"Bricolage Grotesque",system-ui,sans-serif;
+  --fserif:"Instrument Serif",Georgia,serif;
+  --fbody:"Inter",system-ui,sans-serif;
+  --maxw:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--paper);font-family:var(--fbody);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--amber);color:var(--ink)}
+.eyebrow{font-family:var(--fbody);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber-soft)}
+.ser{font-family:var(--fserif);font-weight:400;font-style:italic;color:var(--amber)}
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(8,9,12,0.74);border-bottom:1px solid var(--line-2)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:15px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:var(--fdisplay);font-weight:700;font-size:1.16rem;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px}
+.brand .mk{width:22px;height:22px;border:1.5px solid var(--amber);border-radius:6px;position:relative;flex:none}
+.brand .mk::after{content:"";position:absolute;inset:4px;background:var(--amber);border-radius:2px}
+.nav-links{display:flex;gap:26px;align-items:center;font-size:.92rem;color:var(--muted)}
+.nav-links a{transition:.15s}.nav-links a:hover{color:var(--paper)}
+.nav-call{font-family:var(--fdisplay);font-weight:700;font-size:.95rem;background:var(--amber);color:var(--ink);padding:10px 18px;border-radius:3px;transition:.16s;white-space:nowrap;display:inline-flex;align-items:center;gap:8px}
+.nav-call svg{width:15px;height:15px;fill:var(--ink)}
+.nav-call:hover{background:var(--amber-soft)}
+@media(max-width:820px){.nav-links{display:none}}
+/* hero */
+.hero{position:relative;padding:118px 0 92px;overflow:hidden;min-height:86vh;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;opacity:.62}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,12,0.34) 0%,rgba(8,9,12,0.72) 58%,var(--ink) 100%)}
+.hero-in{position:relative;z-index:1;max-width:780px;margin:0 auto;text-align:center}
+.hero-in .cta-row{justify-content:center}
+.hero-in .hero-note{justify-content:center}
+.hero-rate{display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;padding:8px 15px;border:1px solid var(--line);border-radius:999px;background:rgba(8,9,12,0.4);backdrop-filter:blur(6px)}
+.hero-rate .stars{color:var(--amber);letter-spacing:2px;font-size:.92rem}
+.hero-rate b{font-family:var(--fdisplay);font-weight:700;font-size:.9rem}
+.hero-rate span{color:var(--muted);font-size:.84rem}
+.tag{display:inline-flex;align-items:center;gap:9px;font-family:var(--fbody);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-soft);margin-bottom:24px}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--good);animation:live 2s infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(74,222,128,.6)}70%{box-shadow:0 0 0 7px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+h1{font-family:var(--fdisplay);font-weight:700;font-size:clamp(2.7rem,6.6vw,5.1rem);line-height:0.97;letter-spacing:-0.035em;margin-bottom:22px;text-shadow:0 2px 30px rgba(0,0,0,.5)}
+.hero p.lead{color:#cbced4;font-size:1.14rem;max-width:500px;margin-bottom:30px}
+.cta-row{display:flex;gap:15px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--fdisplay);font-weight:700;font-size:1.05rem;padding:16px 28px;border-radius:3px;cursor:pointer;border:none;transition:.16s;display:inline-flex;align-items:center;gap:11px}
+.btn-fill{background:var(--amber);color:var(--ink)}
+.btn-fill:hover{background:var(--amber-soft);transform:translateY(-1px)}
+.btn-fill svg{width:19px;height:19px;fill:var(--ink)}
+.btn-line{background:rgba(8,9,12,0.35);color:var(--paper);border:1px solid var(--line)}
+.btn-line:hover{border-color:var(--paper)}
+.hero-note{display:flex;align-items:center;gap:9px;margin-top:18px;font-size:.9rem;color:var(--muted)}
+.hero-note b{color:var(--paper);font-family:var(--fdisplay)}
+.hero-note svg{width:16px;height:16px;fill:var(--amber)}
+@keyframes pop{to{opacity:1;transform:none}}
+/* trust */
+.trust{border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);padding:8px 0}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.trust .cell{padding:26px 24px;text-align:center;border-right:1px solid var(--line-2)}
+.trust .cell:last-child{border-right:none}
+.trust .big{font-family:var(--fdisplay);font-weight:700;font-size:clamp(1.5rem,3vw,2rem);color:var(--amber);letter-spacing:-0.02em;line-height:1;margin-bottom:8px}
+.trust .lbl{color:var(--muted);font-size:.88rem}
+@media(max-width:760px){.trust-grid{grid-template-columns:1fr 1fr}.trust .cell:nth-child(2){border-right:none}.trust .cell:nth-child(1),.trust .cell:nth-child(2){border-bottom:1px solid var(--line-2)}}
+/* section shell */
+section.blk{padding:78px 0}
+.sec-head{margin-bottom:48px;max-width:660px}
+.sec-head .eyebrow{display:block;margin-bottom:14px}
+.sec-head h2{font-family:var(--fdisplay);font-weight:700;font-size:clamp(1.9rem,4.4vw,2.9rem);letter-spacing:-0.03em;line-height:1.04}
+.sec-head.ctr{margin-left:auto;margin-right:auto;text-align:center}
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.svc{border:1px solid var(--line-2);border-radius:14px;padding:26px 24px;transition:.18s;background:var(--ink-2)}
+.svc:hover{border-color:rgba(255,122,24,0.4);transform:translateY(-3px)}
+.svc .ic{width:42px;height:42px;border-radius:10px;background:rgba(255,122,24,0.12);display:grid;place-items:center;margin-bottom:16px}
+.svc .ic svg{width:22px;height:22px;fill:var(--amber)}
+.svc h3{font-family:var(--fdisplay);font-weight:600;font-size:1.2rem;letter-spacing:-0.01em;margin-bottom:8px}
+.svc p{color:var(--muted);font-size:.94rem}
+@media(max-width:820px){.svc-grid{grid-template-columns:1fr}}
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{border-top:1px solid var(--line);padding-top:26px}
+.step .n{font-family:var(--fdisplay);font-weight:700;font-size:.92rem;color:var(--amber);margin-bottom:16px}
+.step h3{font-family:var(--fdisplay);font-weight:600;font-size:1.4rem;letter-spacing:-0.02em;margin-bottom:10px}
+.step p{color:var(--muted);font-size:.98rem}
+@media(max-width:820px){.steps{grid-template-columns:1fr;gap:0}.step{margin-top:24px}}
+/* team */
+.team-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:0;border:1px solid var(--line-2);border-radius:16px;overflow:hidden;background:var(--ink-2)}
+.team-copy{padding:46px 46px}
+.team-copy h2{font-family:var(--fdisplay);font-weight:700;font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-0.03em;line-height:1.06;margin:14px 0 18px}
+.team-copy p{color:var(--muted);font-size:1.04rem;margin-bottom:22px}
+.team-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--fdisplay);font-weight:600;font-size:.9rem;color:var(--amber-soft);border:1px solid rgba(255,122,24,.3);padding:8px 15px;border-radius:999px}
+.team-badge svg{width:15px;height:15px;fill:var(--amber)}
+.team-photo{position:relative;min-height:100%;background-size:cover;background-position:center}
+.team-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ink-2) 0%,transparent 34%)}
+@media(max-width:820px){.team-grid{grid-template-columns:1fr}.team-photo{min-height:250px;order:-1}.team-photo::after{background:linear-gradient(0deg,var(--ink-2) 0%,transparent 55%)}.team-copy{padding:34px 30px}}
+/* reviews */
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.rev{border:1px solid var(--line-2);border-radius:14px;padding:28px 26px;background:var(--ink-2);display:flex;flex-direction:column}
+.rev .stars{color:var(--amber);letter-spacing:2px;font-size:.95rem;margin-bottom:16px}
+.rev .txt{font-family:var(--fserif);font-style:italic;font-size:1.15rem;line-height:1.42;margin-bottom:22px;flex:1}
+.rev .who{display:flex;align-items:center;gap:13px}
+.rev .who img,.rev .who .av{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:none}
+.rev .who .av{background:linear-gradient(135deg,var(--amber),var(--amber-soft));display:grid;place-items:center;font-family:var(--fdisplay);font-weight:700;color:var(--ink)}
+.rev .who b{font-family:var(--fdisplay);font-weight:600;display:block;font-size:.96rem}
+.rev .who span{color:var(--muted);font-size:.84rem}
+.rev .gsrc{margin-left:auto;font-size:.7rem;color:var(--muted-2);display:flex;align-items:center;gap:5px}
+.rev .gsrc b{color:var(--muted);font-weight:600}
+@media(max-width:820px){.rev-grid{grid-template-columns:1fr}}
+/* areas */
+.areas-wrap{border:1px solid var(--line-2);border-radius:16px;padding:40px 38px;background:var(--ink-2);display:grid;grid-template-columns:0.8fr 1.2fr;gap:36px;align-items:center}
+.areas-wrap h2{font-family:var(--fdisplay);font-weight:700;font-size:clamp(1.6rem,3.4vw,2.2rem);letter-spacing:-0.03em;line-height:1.08;margin-bottom:12px}
+.areas-wrap p{color:var(--muted);font-size:.98rem}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:.92rem;color:var(--paper);display:inline-flex;align-items:center;gap:8px;transition:.15s}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber)}
+.chip:hover{border-color:var(--amber);background:rgba(255,122,24,0.06)}
+@media(max-width:760px){.areas-wrap{grid-template-columns:1fr;gap:24px}}
+/* faq */
+.faq-list{max-width:820px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--line-2)}
+.faq-q{width:100%;background:none;border:none;color:var(--paper);text-align:left;font-family:var(--fdisplay);font-weight:600;font-size:1.15rem;letter-spacing:-0.01em;padding:24px 44px 24px 0;cursor:pointer;position:relative;transition:.15s}
+.faq-q:hover{color:var(--amber-soft)}
+.faq-q .pm{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:22px;height:22px;flex:none}
+.faq-q .pm::before,.faq-q .pm::after{content:"";position:absolute;background:var(--amber);border-radius:2px;transition:.25s}
+.faq-q .pm::before{top:10px;left:2px;right:2px;height:2px}
+.faq-q .pm::after{left:10px;top:2px;bottom:2px;width:2px}
+.faq-item.open .pm::after{transform:rotate(90deg);opacity:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted)}
+.faq-a p{padding:0 44px 24px 0;font-size:1rem;line-height:1.6}
+.faq-item.open .faq-a{max-height:320px}
+/* final */
+.final{position:relative;padding:88px 0 96px;text-align:center;overflow:hidden}
+.final::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(255,122,24,0.08),transparent 70%)}
+.final .in{position:relative;z-index:1}
+.final h2{font-family:var(--fdisplay);font-weight:700;font-size:clamp(2.2rem,5.6vw,4rem);letter-spacing:-0.035em;line-height:1;margin-bottom:18px}
+.final p{color:var(--muted);font-size:1.14rem;max-width:460px;margin:0 auto 32px}
+.final .phone-big{font-family:var(--fdisplay);font-weight:800;font-size:clamp(1.8rem,4.4vw,2.6rem);color:var(--amber);letter-spacing:-0.02em;margin-top:22px;display:inline-flex;align-items:center;gap:12px}
+.final .phone-big svg{width:30px;height:30px;fill:var(--amber)}
+/* footer */
+footer{border-top:1px solid var(--line-2);padding:40px 0}
+.foot-in{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.foot-in .biz{font-family:var(--fdisplay);font-weight:600}
+.foot-in .biz span{color:var(--muted-2);font-weight:400;font-family:var(--fbody);font-size:.9rem}
+.powered{font-size:.84rem;color:var(--muted-2)}
+.powered a{color:var(--amber-soft)}
+/* fab */
+.fab{position:fixed;right:20px;bottom:20px;z-index:60;display:inline-flex;align-items:center;background:var(--amber);color:var(--ink);border:none;border-radius:999px;cursor:pointer;box-shadow:0 14px 40px -8px rgba(255,122,24,0.7);font-family:var(--fdisplay);font-weight:700;overflow:hidden}
+.fab .ic{width:58px;height:58px;display:grid;place-items:center;flex:none}
+.fab .ic svg{width:24px;height:24px;fill:var(--ink);animation:shake 3s infinite}
+@keyframes shake{0%,90%,100%{transform:rotate(0)}92%{transform:rotate(-13deg)}96%{transform:rotate(13deg)}}
+.fab .lbl{max-width:0;white-space:nowrap;font-size:.98rem;opacity:0;transition:.3s}
+.fab:hover .lbl{max-width:200px;opacity:1;padding-right:22px}
+/* modal */
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(4,5,8,0.8);backdrop-filter:blur(6px);padding:20px}
+.modal.show{display:flex}
+.modal-card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:40px 34px;max-width:380px;width:100%;text-align:center;position:relative;animation:pop .35s ease}
+.modal-card .x{position:absolute;top:12px;right:16px;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
+.modal-card .ic{width:64px;height:64px;border-radius:50%;background:rgba(255,122,24,0.12);border:1.5px solid var(--amber);display:grid;place-items:center;margin:0 auto 18px}
+.modal-card .ic svg{width:28px;height:28px;fill:var(--amber)}
+.modal-card h3{font-family:var(--fdisplay);font-weight:700;font-size:1.3rem;margin-bottom:6px}
+.modal-card p{color:var(--muted);font-size:.94rem;margin-bottom:16px}
+.modal-num{font-family:var(--fdisplay);font-weight:800;font-size:1.9rem;color:var(--amber);margin-bottom:22px}
+.modal-card .btn-fill{width:100%;justify-content:center}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="brand"><span class="mk"></span> <span id="brandName">Business</span></div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#how">How it works</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="nav-call" id="navCall" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="navPhone">Call</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="wrap">
+    <div class="hero-in">
+      <div class="hero-rate"><span class="stars">★★★★★</span> <b id="rateNum">5.0</b> <span id="rateCount">· 120+ local reviews</span></div>
+      <span class="tag"><span class="dot"></span> <span id="heroKicker">24/7 Emergency Towing</span></span>
+      <h1 id="heroH1">Headline</h1>
+      <p class="lead" id="heroSub">Sub</p>
+      <div class="cta-row">
+        <button class="btn btn-fill" id="heroCall"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="heroCallLbl">Call now</span></button>
+        <a class="btn btn-line" href="#services">Our services</a>
+      </div>
+      <div class="hero-note"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v6l5 3-.75 1.23L11 14V7z"/></svg> Average arrival <b id="respTime">20 min</b> · answered live, 24/7</div>
+    </div>
+  </div>
+</header>
+
+<div class="trust"><div class="wrap"><div class="trust-grid" id="trustGrid"></div></div></div>
+
+<section class="blk" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">What we do</span>
+      <h2>Whatever's got you stuck, <span class="ser">we handle it.</span></h2>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<section class="blk" id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Help is <span class="ser">three steps</span> away.</h2>
+    </div>
+    <div class="steps" id="stepsGrid"></div>
+  </div>
+</section>
+
+<section class="blk" style="padding-top:0">
+  <div class="wrap">
+    <div class="team-grid">
+      <div class="team-copy">
+        <span class="eyebrow">Who you're calling</span>
+        <h2 id="teamH">Team</h2>
+        <p id="teamP">Blurb</p>
+        <span class="team-badge"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21 8 14 2 9.4h7.6z"/></svg> Locally owned &amp; operated</span>
+      </div>
+      <div class="team-photo" id="teamPhoto"></div>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="reviews" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">What neighbors say</span>
+      <h2>Real calls. Real trucks. <span class="ser">Real people.</span></h2>
+    </div>
+    <div class="rev-grid" id="revGrid"></div>
+  </div>
+</section>
+
+<section class="blk" style="padding-top:0">
+  <div class="wrap">
+    <div class="areas-wrap">
+      <div>
+        <h2>Serving <span class="ser">your</span> corner of Central Ohio.</h2>
+        <p id="areasNote">If you're stranded anywhere in the area, we're close by.</p>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head ctr">
+      <span class="eyebrow">Good to know</span>
+      <h2>Questions, <span class="ser">answered.</span></h2>
+    </div>
+    <div class="faq-list" id="faqList"></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap in">
+    <h2>Stuck right now? <span class="ser">Don't wait.</span></h2>
+    <p id="finalP">One call and a truck is on the way. We answer 24/7 — day, night, weekends, holidays.</p>
+    <button class="btn btn-fill" id="finalCall"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="finalCallLbl">Call now</span></button>
+    <div><a class="phone-big" id="phoneBig" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg><span id="phoneBigNum">(000) 000-0000</span></a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="biz" id="footBiz">Business <span>· City</span></div>
+    <div class="powered">Site by <a href="https://compassclaw.com" target="_blank" rel="noopener">Compass Claw</a></div>
+  </div>
+</footer>
+
+<button class="fab" id="fab" aria-label="Call now">
+  <span class="lbl" id="fabLbl">Call for a tow</span>
+  <span class="ic"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg></span>
+</button>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <span class="x" id="modalX">×</span>
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg></div>
+    <h3 id="modalBiz">Call us</h3>
+    <p>We answer 24/7 — a truck can be on the way in minutes.</p>
+    <div class="modal-num" id="modalNum">(000) 000-0000</div>
+    <a class="btn btn-fill" id="modalCall" href="#"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg> Call now</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const C=CONFIG;
+  const tel="tel:"+C.phone.replace(/[^0-9+]/g,'');
+  const $=id=>document.getElementById(id);
+  const set=(id,t)=>{const e=$(id);if(e)e.textContent=t;};
+
+  document.title=C.bizName+" — 24/7 "+C.trade.charAt(0).toUpperCase()+C.trade.slice(1)+" in "+C.city;
+  set('brandName',C.bizName); set('navPhone',C.phone);
+  set('heroKicker',C.heroKicker);
+  $('heroH1').innerHTML=C.headMain1+' <span class="ser">'+C.headAccent+'</span> '+C.headMain2;
+  set('heroSub',C.heroSub);
+  set('respTime',C.respTime);
+  set('rateNum',C.rateNum||'5.0'); set('rateCount',C.rateCount||'· Trusted locally');
+  set('heroCallLbl','Call '+C.phone); set('finalCallLbl','Call '+C.phone);
+  set('teamH',C.teamHeadline); set('teamP',C.teamBlurb);
+  $('footBiz').innerHTML=C.bizName+' <span>· '+C.city+' · '+C.license+'</span>';
+  set('modalNum',C.phone); set('modalBiz','Call '+C.bizName); set('phoneBigNum',C.phone);
+  set('fabLbl','Call for a '+(C.trade==='towing'?'tow':'quote'));
+
+  if(C.img.hero) $('heroBg').style.backgroundImage="url('"+C.img.hero+"')";
+  if(C.img.team) $('teamPhoto').style.backgroundImage="url('"+C.img.team+"')";
+
+  // trust
+  C.trust.forEach(t=>{const d=document.createElement('div');d.className='cell';d.innerHTML='<div class="big">'+t.big+'</div><div class="lbl">'+t.label+'</div>';$('trustGrid').appendChild(d);});
+  // services
+  const svcIcon='<svg viewBox="0 0 24 24"><path d="M3 13l2-5a2 2 0 011.9-1.3h6.2a2 2 0 011.7 1l2.2 3.3H20a1 1 0 011 1V17h-2a2 2 0 11-4 0H9a2 2 0 11-4 0H3z"/></svg>';
+  C.services.forEach(s=>{const d=document.createElement('div');d.className='svc';d.innerHTML='<div class="ic">'+svcIcon+'</div><h3>'+s.name+'</h3><p>'+s.desc+'</p>';$('svcGrid').appendChild(d);});
+  // steps
+  C.steps.forEach(s=>{const d=document.createElement('div');d.className='step';d.innerHTML='<div class="n">'+s.n+'</div><h3>'+s.h+'</h3><p>'+s.p+'</p>';$('stepsGrid').appendChild(d);});
+  // reviews
+  C.reviews.forEach(r=>{
+    const faceSrc=r.face&&C.img[r.face]?C.img[r.face]:null;
+    const av=faceSrc?'<img src="'+faceSrc+'" alt="'+r.name+'">':'<div class="av">'+r.name.charAt(0)+'</div>';
+    const d=document.createElement('div');d.className='rev';
+    d.innerHTML='<div class="stars">'+'★'.repeat(r.stars||5)+'</div><div class="txt">“'+r.text+'”</div>'+
+      '<div class="who">'+av+'<div><b>'+r.name+'</b><span>'+r.loc+'</span></div>'+
+      '<div class="gsrc"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.9a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-2 3.2-4.9 3.2-7.8z"/><path fill="#34A853" d="M12 23c2.9 0 5.4-1 7.2-2.6l-3.6-2.7c-1 .7-2.3 1.1-3.6 1.1-2.8 0-5.1-1.9-6-4.4H2.3v2.8A10.9 10.9 0 0 0 12 23z"/><path fill="#FBBC05" d="M6 14.3a6.5 6.5 0 0 1 0-4.2V7.3H2.3a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.5c1.6 0 3 .5 4.1 1.6l3.1-3.1A10.9 10.9 0 0 0 12 1a10.9 10.9 0 0 0-9.7 6l3.7 2.8c.9-2.6 3.2-4.4 6-4.4z"/></svg><b>Google</b></div></div>';
+    $('revGrid').appendChild(d);
+  });
+  // areas
+  C.areas.forEach(a=>{const s=document.createElement('span');s.className='chip';s.textContent=a;$('chips').appendChild(s);});
+  // faq
+  C.faq.forEach((f,idx)=>{
+    const d=document.createElement('div');d.className='faq-item';
+    d.innerHTML='<button class="faq-q">'+f.q+'<span class="pm"></span></button><div class="faq-a"><p>'+f.a+'</p></div>';
+    $('faqList').appendChild(d);
+    d.querySelector('.faq-q').addEventListener('click',()=>{
+      const wasOpen=d.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));
+      if(!wasOpen)d.classList.add('open');
+    });
+  });
+  document.querySelector('.faq-item') && document.querySelector('.faq-item').classList.add('open');
+
+  // call behavior
+  const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  function callAction(e){if(isMobile){window.location.href=tel;}else{e&&e.preventDefault();$('modal').classList.add('show');}}
+  ['navCall','heroCall','finalCall','fab','phoneBig'].forEach(id=>{const el=$(id);if(!el)return;if(el.tagName==='A')el.setAttribute('href',tel);el.addEventListener('click',callAction);});
+  $('modalCall').setAttribute('href',tel);
+  $('modalX').addEventListener('click',()=>$('modal').classList.remove('show'));
+  $('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').classList.remove('show');});
+})();
+</script>
+</body>
+</html>
