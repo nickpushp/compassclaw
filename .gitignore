@@ -1,3 +1,9 @@
+# Server-only secret files — created by hand on the server via cPanel
+# Terminal, never committed (public repo, public Actions logs). The live
+# copies survive FTP deploys (deploy action syncs local→server, never deletes).
+ai/secrets.php
+api/stripe-config.php
+
 # Local Claude Code tooling (not needed on the live site or in the repo)
 .claude/
 

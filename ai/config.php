@@ -8,11 +8,31 @@ if (!defined('CC_APP')) {
     die('forbidden');
 }
 
-// Groq (primary) — free tier chat models. Fast, higher free limits.
-define('GROQ_KEY', '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');
+// Secrets are NEVER committed (public repo, public logs). Load order:
+//   1) getenv() — cPanel env / server config when available
+//   2) ai/secrets.php — created by hand on the server via cPanel Terminal,
+//      same folder, never in git (see .gitignore + deploy.yml excludes).
+//   3) empty string — proxy.php fails safe to "AI temporarily busy".
+// Server-only file template (create on server, NOT in repo):
+//   <?php define('CC_APP', true);
+//   define('GROQ_KEY', 'PASTE-NEW-GROQ-KEY-HERE');
+//   define('OPENROUTER_KEY', 'PASTE-NEW-OPENROUTER-KEY-HERE');
+$__secrets_file = __DIR__ . '/secrets.php';
+if (is_readable($__secrets_file)) {
+    include_once $__secrets_file;
+}
+unset($__secrets_file);
 
-// OpenRouter (fallback) — FREE models only. The tiny balance must not be spent.
-define('OPENROUTER_KEY', '<redacted>');
+if (!defined('GROQ_KEY')) {
+    $__v = getenv('GROQ_KEY');
+    define('GROQ_KEY', ($__v === false || $__v === '') ? '' : $__v);
+    unset($__v);
+}
+if (!defined('OPENROUTER_KEY')) {
+    $__v = getenv('OPENROUTER_KEY');
+    define('OPENROUTER_KEY', ($__v === false || $__v === '') ? '' : $__v);
+    unset($__v);
+}
 
 // --------------------------------------------------------------------------
 // CANONICAL MASTER RESUME (server-side, authoritative).

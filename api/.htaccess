@@ -1,0 +1,9 @@
+# Block direct web access to secrets. LiteSpeed honors this.
+<Files "stripe-config.php">
+    Require all denied
+</Files>
+
+<FilesMatch "stripe-config\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

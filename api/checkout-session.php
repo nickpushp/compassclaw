@@ -34,6 +34,19 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
 $secret = getenv('STRIPE_SECRET_KEY') ?: '';
 $price  = getenv('STRIPE_PRICE_ID') ?: '';
 if ($secret === '' || $price === '') {
+  /* Server-only fallback: api/stripe-config.php, created by hand on the
+     server via cPanel Terminal — never in git (see .gitignore + deploy
+     excludes). Template:
+       <?php define('CC_APP', true);
+       define('STRIPE_SECRET_KEY', 'sk_test_… / sk_live_…');
+       define('STRIPE_PRICE_ID', 'price_…');  // recurring price */
+  $__cfg = __DIR__ . '/stripe-config.php';
+  if (is_readable($__cfg)) { include_once $__cfg; }
+  unset($__cfg);
+  if ($secret === '' && defined('STRIPE_SECRET_KEY')) $secret = STRIPE_SECRET_KEY;
+  if ($price === '' && defined('STRIPE_PRICE_ID')) $price = STRIPE_PRICE_ID;
+}
+if ($secret === '' || $price === '') {
   /* Same 501 contract as serve.mjs: the funnel falls back to the Payment Link. */
   send(501, ['error' => 'embedded checkout is off: set STRIPE_SECRET_KEY and STRIPE_PRICE_ID']);
 }
