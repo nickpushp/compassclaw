@@ -26,8 +26,8 @@ window.COMPASS = {
       form:  "https://tally.so/r/obPvzb"
     },
 
-    /* The product demo, shown unmodified. The funnel now lives at /demo/ itself, so the demo step uses the universal renderer (/d/) - no 143 MB bundle to ship. */
-    demo: "/d/?mode=web&t=towing&b=Ironclad+Towing&c=Columbus%2C+OH&p=(740)+831-3443"
+    /* The product demo: the Swayze Towing front page (site/swayze/), staged from sales flow/example website (index + overlays + assets only). */
+    demo: "/swayze/"
   },
 
   /* --------------------------------------------------- checkout behaviour */

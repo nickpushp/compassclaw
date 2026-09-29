@@ -1,0 +1,114 @@
+/* Persistent mobile/desktop quick-action footer for this client copy. */
+.mg-constant-footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(255, 255, 255, .15);
+  color: #e2e8f0;
+  background: rgba(7, 17, 31, .96);
+  box-shadow: 0 -10px 24px rgba(0, 0, 0, .35);
+  backdrop-filter: blur(24px);
+}
+
+.mg-constant-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(1152px, 100%);
+  margin: 0 auto;
+}
+
+.mg-constant-footer__identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mg-constant-footer__identity::before {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, .12);
+  content: "";
+}
+
+.mg-constant-footer__address {
+  overflow: hidden;
+  color: #94a3b8;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mg-constant-footer__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.mg-constant-footer__button,
+.mg-constant-footer__phone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .2s ease, background-color .2s ease;
+}
+
+.mg-constant-footer__button {
+  border: 1px solid rgba(255, 255, 255, .15);
+  color: #fde68a;
+  background: rgba(255, 255, 255, .05);
+  cursor: pointer;
+}
+
+.mg-constant-footer__button:hover {
+  background: rgba(255, 255, 255, .09);
+}
+
+.mg-constant-footer__phone {
+  gap: 8px;
+  color: #0f172a;
+  background: #fbbf24;
+}
+
+.mg-constant-footer__phone:hover {
+  background: #fcd34d;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+  .mg-constant-footer__identity {
+    display: none;
+  }
+
+  .mg-constant-footer__inner,
+  .mg-constant-footer__actions {
+    width: 100%;
+  }
+
+  .mg-constant-footer__actions {
+    justify-content: space-between;
+  }
+
+  .mg-constant-footer__button,
+  .mg-constant-footer__phone {
+    flex: 1 1 0;
+  }
+}

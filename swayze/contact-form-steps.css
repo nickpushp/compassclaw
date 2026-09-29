@@ -1,0 +1,50 @@
+.swayze-contact-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.swayze-contact-progress span {
+  width: 32px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .24);
+  transition: background-color .2s ease, width .2s ease;
+}
+
+.swayze-contact-progress span.is-active,
+.swayze-contact-progress span.is-complete {
+  width: 44px;
+  background: #fbbf24;
+}
+
+.swayze-contact-progress strong {
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.swayze-contact-step-note {
+  margin: -8px 0 18px;
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+/* The imported template declares .form__fields as flex; keep inactive steps hidden. */
+.form__fields[data-contact-step][hidden] {
+  display: none !important;
+}
+
+.swayze-contact-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 14px;
+  color: #cbd5e1;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.swayze-contact-consent input {
+  margin-top: 2px;
+}

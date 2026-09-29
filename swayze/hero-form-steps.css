@@ -1,0 +1,75 @@
+/* Three-step hero form additions. Existing hero__* styles remain the source of truth. */
+.hero__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.hero__progress-step {
+  width: 28px;
+  height: 4px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: var(--color-sand);
+  transition: background-color .2s ease, width .2s ease;
+}
+
+.hero__progress-step.is-active,
+.hero__progress-step.is-complete {
+  width: 40px;
+  background: var(--color-orange);
+}
+
+.hero__progress-label {
+  margin-left: 4px;
+  color: #4c4c4c;
+  font-size: .875rem;
+}
+
+.hero__step-note {
+  margin: -8px 0 0;
+  color: #4c4c4c;
+  font-size: .875rem;
+  line-height: 1.4;
+}
+
+.hero__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #4c4c4c;
+  font-size: .75rem;
+  line-height: 1.4;
+}
+
+.hero__consent input {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.hero__step .hero__field--wide {
+  flex-basis: 100%;
+}
+
+.hero__field-textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.hero__form-status:not([hidden]) {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .hero__progress-step {
+    flex: 1;
+    width: auto;
+  }
+
+  .hero__progress-step.is-active,
+  .hero__progress-step.is-complete {
+    width: auto;
+  }
+}

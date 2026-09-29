@@ -1,0 +1,249 @@
+.swayze-site-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(245, 158, 11, .2);
+  padding: 64px 16px 96px;
+  color: #94a3b8;
+  background: #020617;
+  font-size: 12px;
+}
+
+.swayze-site-footer__inner {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+}
+
+.swayze-site-footer__grid {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr;
+  gap: 32px;
+}
+
+.swayze-site-footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.swayze-site-footer__mark {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 2px solid #2563eb;
+  border-radius: 50%;
+  color: #fff;
+  background: radial-gradient(circle, rgba(59, 130, 246, .25), #0b132b 68%);
+  box-shadow: 0 0 15px rgba(59, 130, 246, .4);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.swayze-site-footer__brand-name {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+
+.swayze-site-footer__brand-name span {
+  color: #f97316;
+}
+
+.swayze-site-footer__brand-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.swayze-site-footer__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f97316;
+}
+
+.swayze-site-footer__description {
+  max-width: 390px;
+  margin: 18px 0 0;
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.swayze-site-footer__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.swayze-site-footer__badge {
+  border: 1px solid #1e293b;
+  border-radius: 4px;
+  padding: 5px 9px;
+  color: #fbbf24;
+  background: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.swayze-site-footer__badge--green {
+  color: #34d399;
+}
+
+.swayze-site-footer__heading {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.swayze-site-footer__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.45;
+}
+
+.swayze-site-footer__list li {
+  color: #94a3b8;
+}
+
+.swayze-site-footer__list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.swayze-site-footer__list a:hover {
+  color: #fbbf24;
+}
+
+.swayze-site-footer__label {
+  display: block;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.swayze-site-footer__value {
+  display: block;
+  color: #cbd5e1;
+}
+
+.swayze-site-footer__phone {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.swayze-site-footer__phone:hover {
+  color: #fbbf24;
+}
+
+.swayze-site-footer__hours {
+  color: #fbbf24;
+  font-weight: 800;
+}
+
+.swayze-site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 48px;
+  border-top: 1px solid #0f172a;
+  padding-top: 28px;
+}
+
+.swayze-site-footer__bottom p {
+  margin: 0;
+}
+
+.swayze-site-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.swayze-site-footer__social {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.swayze-site-footer__social-link {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid #334155;
+  border-radius: 50%;
+  color: #cbd5e1;
+  background: #0f172a;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.swayze-site-footer__social-link svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.swayze-site-footer__social-link svg rect,
+.swayze-site-footer__social-link svg circle {
+  fill: none;
+}
+
+.swayze-site-footer__social-link svg .swayze-icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.swayze-site-footer__social-link svg .swayze-icon-cutout {
+  fill: #0f172a;
+  stroke: none;
+}
+
+.swayze-site-footer__social-link:hover {
+  border-color: #fbbf24;
+  color: #0f172a;
+  background: #fbbf24;
+}
+
+@media (max-width: 900px) {
+  .swayze-site-footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .swayze-site-footer {
+    padding: 48px 16px 88px;
+  }
+
+  .swayze-site-footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .swayze-site-footer__bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
