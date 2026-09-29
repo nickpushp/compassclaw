@@ -1,5 +1,5 @@
-/* ==========================================================================
-   COMPASS CLAW FUNNEL ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â CONTENT LAYER
+﻿/* ==========================================================================
+   COMPASS CLAW FUNNEL — CONTENT LAYER
    Every word the funnel speaks lives in this file. No logic, no markup.
    Default copy is intentionally minimal: the five graphics carry the message,
    this file only adds connective tissue + UI labels.
@@ -16,10 +16,10 @@ window.COMPASS = {
 
   /* ---------------------------------------------------------------- links */
   links: {
-    /* Stripe Payment Link ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â from assets/stripe link.txt */
+    /* Stripe Payment Link — from assets/stripe link.txt */
     stripe: "https://buy.stripe.com/aFa8wO55kg1q9kC7WXgjC06",
 
-    /* Tally onboarding intake ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â from assets/tally link.txt.
+    /* Tally onboarding intake — from assets/tally link.txt.
        `embed` renders inline, `form` is the share link used as fallback. */
     tally: {
       embed: "https://tally.so/embed/obPvzb?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1",
@@ -35,7 +35,7 @@ window.COMPASS = {
     /* Two ways to take payment; the rest of the funnel is identical either way.
 
        "popup"   (default) Stripe's own page opens as a centred window sized like
-                 a modal, so this screen never navigates away ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â the numbers stay
+                 a modal, so this screen never navigates away — the numbers stay
                  on screen and the call keeps its rhythm. When the payment window
                  comes back (or a second window of this page reports success
                  through localStorage) the funnel unlocks itself. Works with a
@@ -52,11 +52,12 @@ window.COMPASS = {
     mode: "embed",
     popup: { width: 540, height: 820 },
     embed: {
-      publishableKey: "pk_test_...",  /* real pk_test key at go-live */
-      endpoint: "/api/checkout-session.php",  /* POST -> { client_secret } */
+      publishableKey: "pk_test_...",                   /* "pk_live_…" or "pk_test_…" */
+      endpoint: "/api/checkout-session.php",                         /* POST → { client_secret } */
       container: "checkout-form"
     },
-    /* Stripe dashboard: this payment link -> After payment -> Redirect to: <host>/demo/?paid=1 */
+    /* Stripe dashboard → this payment link → After payment → Redirect to:
+       <host>/demo/?paid=1   (see README). Landing here unlocks onboarding. */
     paidQueryFlag: "paid"
   },
 
@@ -77,7 +78,7 @@ window.COMPASS = {
     backToCheckout: "Back to checkout",
     tallyFallback: "If the form does not appear, open it in a new tab.",
     tallyOpen: "Open the intake form",
-    tallyWaiting: "Loading your intake formÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦",
+    tallyWaiting: "Loading your intake form…",
     recapCopy: "Copy recap",
     recapCopied: "Copied",
     demoOpen: "Open the demo full size",
@@ -88,7 +89,7 @@ window.COMPASS = {
     scopeLabel: "Scope",
     summaryTitle: "This call, in numbers",
     recapTitle: "call recap",
-    copyFail: "Copy failed ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â select the text manually",
+    copyFail: "Copy failed — select the text manually",
 
     /* payment: popup mode (no server) + embedded mode (see checkout.embed) */
     paymentTitle: "Payment",
@@ -158,7 +159,7 @@ window.COMPASS = {
     {
       id: "onboarding",
       label: "Onboarding",
-      line: "Now the intake ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â this is what starts your build.",
+      line: "Now the intake — this is what starts your build.",
       cta: ""
     }
   ],

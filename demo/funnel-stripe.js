@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    COMPASS CLAW FUNNEL — STRIPE GLUE
    The only file in this funnel that knows Stripe exists. funnel.js asks for a
    card form and this file supplies one, so every Stripe-specific name — the

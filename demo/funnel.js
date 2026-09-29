@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    COMPASS CLAW FUNNEL — ENGINE
    Step machine + calculators + Stripe handoff + Tally onboarding gate.
    No dependencies, no build step.
