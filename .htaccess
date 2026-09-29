@@ -1,3 +1,8 @@
+# Serve index.html for directory URLs (e.g. /swayze/ -> /swayze/index.html).
+<IfModule mod_dir.c>
+  DirectoryIndex index.html index.php
+</IfModule>
+
 # ---------------------------------------------------------------------------
 # Cache policy for compassclaw.com
 #

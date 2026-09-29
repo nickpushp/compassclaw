@@ -26,8 +26,8 @@ window.COMPASS = {
       form:  "https://tally.so/r/obPvzb"
     },
 
-    /* The product demo: the Swayze Towing front page (site/swayze/), staged from sales flow/example website (index + overlays + assets only). */
-    demo: "/swayze/"
+    /* The product demo: the Swayze Towing front page (site/swayze/), staged from sales flow/example website (index + overlays + assets only). DirectoryIndexes is off on the host, so point at the exact file. */
+    demo: "/swayze/index.html"
   },
 
   /* --------------------------------------------------- checkout behaviour */
