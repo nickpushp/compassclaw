@@ -56,6 +56,7 @@
             <p class="result-label" id="js-leak-label"></p>
             <p class="result-num" id="js-leak-num">$0</p>
             <p class="result-derived" id="js-leak-derived"></p>
+            <p class="result-break" id="js-leak-break"></p>
             <p class="qualifier" id="js-leak-qualifier"></p>
           </aside>
         </div>
@@ -70,7 +71,7 @@
           <img src="assets/goals.jpg" alt="The four goals a Compass Claw build is measured against">
           <div class="hotspots" data-hotspots="goals"></div>
         </figure>
-        <p class="hint" data-bind="zoomHint"></p>
+        <p class="hint" data-bind="artHint"></p>
       </section>
 
       <!-- ------------------------------------------------ 4 · system -->
@@ -82,7 +83,7 @@
           <img src="assets/system.jpg" alt="The Compass Claw system, from first call to compounding loop">
           <div class="hotspots" data-hotspots="system"></div>
         </figure>
-        <p class="hint" data-bind="zoomHint"></p>
+        <p class="hint" data-bind="artHint"></p>
       </section>
 
       <!-- -------------------------------------------------- 5 · demo -->
@@ -100,6 +101,7 @@
               <button type="button" class="seg-btn" data-device="mobile">Mobile</button>
             </div>
             <a class="btn ghost sm" id="js-demo-open" target="_blank" rel="noopener">Open the demo full size</a>
+            <button type="button" class="btn ghost sm" id="js-demo-wide">Fill the screen</button>
           </div>
           <div class="device" data-device="desktop" id="js-device">
             <iframe id="js-demo-frame" title="Live Compass Claw product demo" src="about:blank"></iframe>
@@ -135,6 +137,7 @@
             </div>
           </div>
         </div>
+        <p class="hint" data-bind="artHint"></p>
       </section>
 
       <!-- ------------------------------------------------- 7 · offer -->

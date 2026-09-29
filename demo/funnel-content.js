@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    COMPASS CLAW FUNNEL — CONTENT LAYER
    Every word the funnel speaks lives in this file. No logic, no markup.
    Default copy is intentionally minimal: the five graphics carry the message,
@@ -26,7 +26,12 @@ window.COMPASS = {
       form:  "https://tally.so/r/obPvzb"
     },
 
-    /* The product demo: the Swayze Towing front page (site/swayze/), staged from sales flow/example website (index + overlays + assets only). DirectoryIndexes is off on the host, so point at the exact file. */
+    /* The product demo: the Swayze Towing front page.
+       Local (sales flow/funnel/): the source bundle one folder up, with the
+       space URL-encoded.
+       Live (site/demo/): the staged copy on the same host, addressed by file so
+       it never depends on a directory index existing. Two files, each right
+       for where it runs. */
     demo: "/swayze/index.html"
   },
 
@@ -52,12 +57,12 @@ window.COMPASS = {
     mode: "embed",
     popup: { width: 540, height: 820 },
     embed: {
-      publishableKey: "pk_test_...",                   /* "pk_live_…" or "pk_test_…" */
-      endpoint: "/api/checkout-session.php",                         /* POST → { client_secret } */
+      publishableKey: "",                   /* "pk_live_…" or "pk_test_…" */
+      endpoint: "",                         /* POST → { client_secret } */
       container: "checkout-form"
     },
     /* Stripe dashboard → this payment link → After payment → Redirect to:
-       <host>/demo/?paid=1   (see README). Landing here unlocks onboarding. */
+       <host>/funnel/?paid=1   (see README). Landing here unlocks onboarding. */
     paidQueryFlag: "paid"
   },
 
@@ -70,7 +75,7 @@ window.COMPASS = {
     cancel: "Cancel",
     confirmRestart: "Restart",
     chapterAria: "Go to {label}",
-    zoomHint: "Click the graphic to enlarge",
+    artHint: "Click a dot to see what it does \u00b7 click the graphic to enlarge",
     close: "Close",
     locked: "Onboarding unlocks as soon as payment is confirmed.",
     waitingTitle: "Waiting on payment",
@@ -82,6 +87,8 @@ window.COMPASS = {
     recapCopy: "Copy recap",
     recapCopied: "Copied",
     demoOpen: "Open the demo full size",
+    demoWide: "Fill the screen",
+    demoWideOn: "Back to the funnel",
     secureNote: "You'll finish on Stripe's secure page, then come straight back here.",
     paymentConfirmed: "Payment confirmed",
     through: "You're through.",
@@ -122,7 +129,7 @@ window.COMPASS = {
     {
       id: "leak",
       label: "The leak",
-      line: "Two numbers from you. The rest is the industry average."
+      line: "Four questions, then the number nobody likes."
     },
     {
       id: "goals",
@@ -165,53 +172,99 @@ window.COMPASS = {
   ],
 
   /* ------------------------------------------ step 2: leak (their numbers)
-     Two questions, and nothing else. Anything the buyer cannot answer is taken
-     from the benchmark below, so the step never stalls on a question they would
-     have to guess at. Tune the averages here; this is the only place they live.
+     Five asked, nothing guessed: team size for context, monthly jobs and
+     ticket for the missed-business part, CRM + past-client count for the
+     dormant-list part. missedRate/reactRate are industry averages until the
+     buyer adjusts them behind "Put your own in".
 
-     The arithmetic is self-consistent, which is what makes it defensible on a
-     call: if `callsPerJob` calls come in for every booked job, a missed call
-     was worth 1/callsPerJob of a job, so the missed-call rate lands directly on
-     booked jobs and `callsPerJob` only drives the "calls you are not reaching"
-     line. Defaults (6 jobs, $450, 40%) give about 7 missed calls a week and
-     $4,644 a month. */
+     The arithmetic is additive and stated on screen: missed new business
+     plus dormant-list reactivation (halved when a CRM already works half
+     the list). Defaults (120 jobs/mo, $450, 500 past clients, no CRM) give
+     about 42 missed jobs and $22,233 a month. */
   leak: {
     fields: [
-      { key: "jobs",   label: "Jobs you book a week", min: 1,  max: 60,    step: 1,  value: 6 },
-      { key: "ticket", label: "Average job value",    min: 50, max: 20000, step: 25, value: 450, prefix: "$" }
+      { key: "employees", label: "Employees", min: 1, max: 60, step: 1, value: 5 },
+      { key: "jobsMonth", label: "Jobs per month", min: 5, max: 2000, step: 5, value: 120 },
+      { key: "ticket", label: "Average job revenue", min: 25, max: 25000, step: 25, value: 450, prefix: "$" },
+      { key: "hasCrm", label: "Using a CRM?", type: "toggle", value: false, offLabel: "No", onLabel: "Yes" },
+      { key: "pastClients", label: "Past clients on the list", min: 0, max: 20000, step: 10, value: 500 },
+      { key: "crmCount", label: "How many past clients in it?", min: 0, max: 20000, step: 10, value: 500, showIf: "hasCrm" }
     ],
     /* Industry averages: shown as read-only figures, editable behind "adjust".
        `short` is what the summary line under the sliders is built from. */
     benchmarks: [
-      { key: "missedRate",  short: "of calls go unanswered",
-        label: "Calls that go unanswered",     min: 5, max: 90, step: 1, value: 40, suffix: "%" },
-      { key: "callsPerJob", short: "calls per booked job",
-        label: "Calls it takes to book a job", min: 1, max: 12, step: 1, value: 3 }
+      { key: "missedRate", short: "of jobs go unanswered",
+        label: "Jobs going unanswered", min: 5, max: 90, step: 1, value: 35, suffix: "%" },
+      { key: "reactRate", short: "of the list reactivates yearly",
+        label: "List reactivating yearly", min: 1, max: 30, step: 0.5, value: 8, suffix: "%" }
     ],
     benchmarkNote: "Not asked. The averages for a local service business, shown so you can see where the total comes from.",
     adjust: "These are averages. Put your own in.",
     adjustDone: "Back to the averages",
-    derivedLabel: "Calls a week you are not reaching",
-    result: "Monthly revenue sitting in calls that went unanswered",
-    qualifier: "Your two numbers, the industry's average. Not a projection.",
-    weeksPerMonth: 4.3
+    derivedLabel: "Missed jobs a month",
+    result: "Monthly revenue left on the table",
+    qualifier: "Your numbers, the industry's average. Not a projection.",
+    crmHalves: 0.5,
+    breakdownMissed: "Missed new business",
+    breakdownDormant: "Dormant list",
+    perHead: "Unrealised per employee"
   },
 
-  /* ----------------------------- steps 3/4/6: optional graphic overlays
-     Shipped empty on purpose: the graphic is authoritative. Add a label and a
-     hotspot appears. x/y are percentages of the image box (top-left origin). */
+  /* ----------------------------- steps 3/4/6: clickable graphic objects
+     Each hotspot is a pulsing dot that opens a card: title + what it does +
+     why it matters. x/y are percentages of the image box (top-left origin).
+     Nudge coordinates here after seeing the dots on the live graphics. */
   overlays: {
+    /* The goals graphic is a vertical list, not a 2x2 grid: the icon column sits
+       at about 16% and the four rows run 46 / 60 / 71 / 85% down. */
     goals: [
-      { x: 26, y: 26, label: "" }, { x: 74, y: 26, label: "" },
-      { x: 26, y: 74, label: "" }, { x: 74, y: 74, label: "" }
+      { x: 16, y: 46, title: "Booked appointments",
+        what: "Every call, chat, and form answered fast enough to win the booking.",
+        why: "Speed-to-lead wins the job before a competitor calls back." },
+      { x: 16, y: 60, title: "Google ranking",
+        what: "More completed jobs feeding more reviews into the profile.",
+        why: "Reviews compound into map-pack position that paid ads cannot rent." },
+      { x: 16, y: 71, title: "Repeat customers",
+        what: "Follow-up on every finished job, so the next one comes back.",
+        why: "A past customer costs nothing to reach and books at a higher rate." },
+      { x: 16, y: 85, title: "Simplify operations",
+        what: "One system for calls, booking, reviews, and follow-up.",
+        why: "Fewer tools to feed means fewer leads fall between them." }
     ],
+    /* The system diagram: four outer cards around the hub, one below. Dots sit
+       on each card's centre, which is what makes the pairing obvious. */
     system: [
-      { x: 18, y: 50, label: "" }, { x: 39, y: 50, label: "" },
-      { x: 60, y: 50, label: "" }, { x: 81, y: 50, label: "" }
+      { x: 17, y: 18, title: "Website",
+        what: "The site you will click through in the demo: quote flow, proof, and call paths.",
+        why: "It turns lookers into booked jobs instead of bounces." },
+      { x: 83, y: 18, title: "Reputation",
+        what: "Review capture on the back of every completed job.",
+        why: "Fresh reviews lift ranking, and ranking lifts every future lead." },
+      { x: 17, y: 51, title: "Instant lead follow-up",
+        what: "Every new lead answered in seconds, automatically.",
+        why: "The first business to respond wins most booked jobs." },
+      { x: 83, y: 51, title: "Auto call, text, and email AI",
+        what: "AI works the missed calls and cold leads a crew never has time for.",
+        why: "Unanswered lines stop being lost revenue and start booking." },
+      { x: 50, y: 88, title: "Keep growing",
+        what: "Referral memory and monthly numbers, so the loop has somewhere to live.",
+        why: "Every finished job feeds the next month's pipeline." }
     ],
+    /* The loop's four nodes sit around the circle: AI badge and phone down the
+       left, stars and chart down the right. */
     loop: [
-      { x: 50, y: 12, label: "" }, { x: 88, y: 50, label: "" },
-      { x: 50, y: 88, label: "" }, { x: 12, y: 50, label: "" }
+      { x: 17, y: 49, title: "AI captured jobs",
+        what: "Missed calls and cold leads worked until they book.",
+        why: "Recovered jobs are the cheapest revenue in the business." },
+      { x: 82, y: 49, title: "More reviews",
+        what: "Each finished job asks for a review while the work is fresh.",
+        why: "Review velocity is what moves a profile up the map." },
+      { x: 82, y: 77, title: "Higher ranking",
+        what: "Reviews and completed jobs compound into map-pack position.",
+        why: "Ranking brings leads that cost nothing per click." },
+      { x: 18, y: 80, title: "More calls and leads",
+        what: "Ranking and reputation send the next wave of inbound work.",
+        why: "That wave feeds the loop again, which is the compounding part." }
     ]
   },
 
@@ -269,7 +322,7 @@ window.COMPASS = {
   /* ------------------------------------------------------------ behaviour */
   behaviour: {
     /* The buyer's progress through this call. */
-    storageKey: "compass-claw-funnel-v2",
+    storageKey: "compass-claw-funnel-v3",
     /* The seller's own settings (demo viewport). Kept apart so R clears the
        call without switching them off. */
     prefsKey: "compass-claw-prefs",

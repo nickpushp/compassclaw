@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    COMPASS CLAW FUNNEL — ENGINE
    Step machine + calculators + Stripe handoff + Tally onboarding gate.
    No dependencies, no build step.
@@ -25,8 +25,8 @@
   function blank() {
     return {
       step: 0,
-      leak: {},          /* the two numbers asked: jobs, ticket */
-      leakBench: {},     /* industry averages: missedRate, callsPerJob (+ open) */
+      leak: {},          /* what they answered: employees, jobsMonth, ticket, hasCrm, list size */
+      leakBench: {},     /* industry averages: missedRate, reactRate (+ open) */
       loop: {},
       loopSeeded: false,
       demo: { device: "desktop", checks: {} },
@@ -166,6 +166,10 @@
     if (s.id === "checkout") renderCheckout();
     if (s.id === "onboarding") renderOnboarding();
 
+    /* Land on the system diagram and start the demo download underneath it, so
+       the bundle is already warm by the time the demo step is opened. */
+    if (s.id === "system") ensureDemoLoaded();
+
     $("stage").scrollTop = 0;
     save();
   }
@@ -243,9 +247,45 @@
     return Number(Math.min(f.max, Math.max(f.min, stepped)).toFixed(2));
   }
 
-  function buildSliders(host, defs, store, onInput) {
+  /* Each field is a slider by default; `type: "toggle"` renders a No/Yes pair
+     instead, and `showIf` hides a field until the named toggle is switched on. */
+  function fieldVisible(f, store) {
+    if (!f.showIf) return true;
+    return !!store[f.showIf];
+  }
+
+  function buildSliders(host, defs, store, onInput, rerender) {
     clear(host);
     defs.forEach(function (f) {
+      if (f.type === "toggle") {
+        /* Seeded explicitly, not left undefined: the CRM flag is read by the
+           leak maths, the summary, and the recap, and a key that only ever
+           appears once the buyer touches it is a trap to debug later. */
+        if (store[f.key] == null) store[f.key] = !!f.value;
+        store[f.key] = !!store[f.key];
+        var tbox = el("div", "slider toggle-row");
+        tbox.appendChild(el("span", "toggle-label", f.label));
+        var pair = el("div", "toggle-pair");
+        pair.setAttribute("role", "group");
+        pair.setAttribute("aria-label", f.label);
+        [[false, f.offLabel || "No"], [true, f.onLabel || "Yes"]].forEach(function (pairDef) {
+          var b = el("button", "toggle-opt", pairDef[1]);
+          b.type = "button";
+          b.dataset.on = pairDef[0] ? "1" : "";
+          b.classList.toggle("on", !!store[f.key] === pairDef[0]);
+          b.addEventListener("click", function () {
+            store[f.key] = pairDef[0];
+            if (rerender) rerender(); else onInput();
+          });
+          pair.appendChild(b);
+        });
+        tbox.appendChild(pair);
+        host.appendChild(tbox);
+        return;
+      }
+
+      if (!fieldVisible(f, store)) return;
+
       if (store[f.key] == null) store[f.key] = f.value;
       store[f.key] = snap(Number(store[f.key]), f);
 
@@ -287,12 +327,19 @@
      total that moves as they drag. Nothing on this screen asks a buyer for a
      statistic they would have to guess at. */
   function buildLeak() {
-    $("js-leak-label").textContent = C.leak.result;
-    $("js-leak-qualifier").textContent = C.leak.qualifier;
-    buildSliders($("js-leak-fields"), C.leak.fields, state.leak, function () {
+    var onInput = function () {
       paintLeak();
       save();
-    });
+    };
+    /* A toggle can reveal or hide a follow-up slider, so the field list is
+       rebuilt around it — the values themselves are kept in state.leak. */
+    var rerender = function () {
+      buildLeak();
+      save();
+    };
+    $("js-leak-label").textContent = C.leak.result;
+    $("js-leak-qualifier").textContent = C.leak.qualifier;
+    buildSliders($("js-leak-fields"), C.leak.fields, state.leak, onInput, rerender);
     renderBench();
     paintLeak();
   }
@@ -311,24 +358,54 @@
     return 0;
   }
 
-  /* Missed calls are a rate on booked work. `callsPerJob` therefore moves the
-     call-volume line, not the money — see the note beside C.leak. */
-  function leakMonthly() {
-    var jobs = Number(state.leak.jobs || 0);
+  /* The leak is two separate pools, added up on screen so the buyer can see
+     which one their answers moved:
+       missed new business — a rate on the jobs they said they book, priced
+                            at their own average job revenue;
+       dormant list       — the past clients nobody has called, reactivated at
+                            the industry yearly rate and spread over 12 months.
+     A CRM is only half the answer, never the whole one: crmHalves scales the
+     dormant pool down instead of zeroing it, so answering "yes" still leaves
+     something to win. */
+  function leakParts() {
+    var jobs = Number(state.leak.jobsMonth || 0);
     var ticket = Number(state.leak.ticket || 0);
-    return jobs * (bench("missedRate") / 100) *
-      (C.leak.weeksPerMonth || 4.3) * ticket;
+    var missedJobs = jobs * (bench("missedRate") / 100);
+    var missed = missedJobs * ticket;
+
+    var listSize = state.leak.hasCrm
+      ? Number(state.leak.crmCount || 0)
+      : Number(state.leak.pastClients || 0);
+    var dormant = listSize * (bench("reactRate") / 100) / 12 * ticket *
+      (state.leak.hasCrm ? (C.leak.crmHalves == null ? 0.5 : C.leak.crmHalves) : 1);
+
+    return { missedJobs: missedJobs, missed: missed, dormant: dormant };
   }
 
-  function missedCallsPerWeek() {
-    return Number(state.leak.jobs || 0) * bench("callsPerJob") *
-      (bench("missedRate") / 100);
+  function leakMonthly() {
+    var p = leakParts();
+    return p.missed + p.dormant;
+  }
+
+  function missedJobsPerMonth() {
+    return leakParts().missedJobs;
   }
 
   function paintLeak() {
-    $("js-leak-num").textContent = money(leakMonthly());
+    var p = leakParts();
+    $("js-leak-num").textContent = money(p.missed + p.dormant);
     $("js-leak-derived").textContent = C.leak.derivedLabel + ": " +
-      Math.round(missedCallsPerWeek() || 0).toLocaleString("en-US") + " a week";
+      Math.round(p.missedJobs).toLocaleString("en-US");
+    var host = $("js-leak-break");
+    if (!host) return;
+    clear(host);
+    host.appendChild(el("span", "part", C.leak.breakdownMissed + " " + money(p.missed)));
+    host.appendChild(el("span", "part", C.leak.breakdownDormant + " " + money(p.dormant)));
+    var heads = Number(state.leak.employees || 0);
+    if (heads > 0) {
+      host.appendChild(el("span", "part dim",
+        C.leak.perHead + " " + money((p.missed + p.dormant) / heads)));
+    }
   }
 
   /* The benchmark strip: plain figures, with the averages opened on request so
@@ -386,7 +463,7 @@
   function seedLoop() {
     if (state.loopSeeded) return;
     state.loopSeeded = true;
-    var jobs = Number(state.leak.jobs || 0);
+    var jobs = Number(state.leak.jobsMonth || 0);
     var ticket = Number(state.leak.ticket || 0);
     if (ticket) state.loop.ticket = ticket;
     if (jobs) {
@@ -395,7 +472,7 @@
          the compounding scale, so the curve always opens on a real point. */
       var close = 35;
       C.compounding.fields.forEach(function (f) { if (f.key === "close") close = f.value; });
-      state.loop.leads = Math.round((jobs * (C.leak.weeksPerMonth || 4.3)) / (close / 100));
+      state.loop.leads = Math.round(jobs / (close / 100));
     }
     buildLoop();
     save();
@@ -497,26 +574,73 @@
     ctx.fillText(endLabel, padL + w - ctx.measureText(endLabel).width, cssH - 6);
   }
 
-  /* --------------------------------------------------- graphic overlays */
+  /* --------------------------------------------------- graphic overlays
+     Each hotspot is a pulsing dot that opens a card: what the part does, and
+     why it matters. One card at a time, Esc or a click outside closes it, and
+     a click on a dot never reaches the figure's own zoom handler. Cards flip
+     toward the middle when the dot sits near an edge. */
+  var openHot = null;
+
+  function closeHot() {
+    if (!openHot) return;
+    openHot.card.hidden = true;
+    openHot.dot.classList.remove("on");
+    openHot.dot.setAttribute("aria-expanded", "false");
+    openHot = null;
+  }
+
+  function openHotCard(dot, card) {
+    var wasOpen = openHot && openHot.dot === dot;
+    closeHot();
+    if (wasOpen) return;
+    openHot = { dot: dot, card: card };
+    card.hidden = false;
+    dot.classList.add("on");
+    dot.setAttribute("aria-expanded", "true");
+  }
+
   function buildOverlays() {
+    closeHot();
     $$("[data-hotspots]").forEach(function (host) {
       clear(host);
       var list = C.overlays[host.dataset.hotspots] || [];
       list.forEach(function (h) {
-        if (!h.label) return;                 /* empty label = no overlay */
+        if (!h.title) return;                  /* no title = no overlay */
         var dot = el("button", "hot");
         dot.type = "button";
         dot.style.left = h.x + "%";
         dot.style.top = h.y + "%";
-        dot.dataset.label = h.label;
-        dot.setAttribute("aria-label", h.label);
-        dot.addEventListener("click", function (ev) { ev.stopPropagation(); });
+        dot.setAttribute("aria-label", h.title);
+        dot.setAttribute("aria-expanded", "false");
+
+        var card = el("div", "hot-card");
+        card.hidden = true;
+        card.style.left = h.x + "%";
+        card.style.top = h.y + "%";
+        if (h.x > 60) card.classList.add("left");
+        card.appendChild(el("b", null, h.title));
+        if (h.what) card.appendChild(el("span", "what", h.what));
+        if (h.why) card.appendChild(el("span", "why", h.why));
+
+        dot.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          ev.preventDefault();
+          openHotCard(dot, card);
+        });
         host.appendChild(dot);
+        /* The card is a sibling of the dot, not a child: the dot is transformed
+           to centre itself, and a transform turns the element into the
+           containing block for its own absolutely positioned children, which
+           would pin the card to a 26px circle instead of the figure. */
+        host.appendChild(card);
       });
     });
   }
 
-  /* ----------------------------------------------------------- step 5   */
+  /* ----------------------------------------------------------- step 5
+     The demo bundle is a few megabytes, so it is loaded on intent rather than
+     at boot: the moment the step before it is on screen the frame starts
+     fetching, which buys the whole download time back on the step itself. */
   var demoLoaded = false;
 
   function ensureDemoLoaded() {
@@ -662,8 +786,11 @@
     window.COMPASS_STRIPE.mount({
       slot: slot,
       meta: {
-        jobs: state.leak.jobs,
+        employees: state.leak.employees,
+        jobsMonth: state.leak.jobsMonth,
         ticket: state.leak.ticket,
+        hasCrm: state.leak.hasCrm ? 1 : 0,
+        pastClients: state.leak.hasCrm ? state.leak.crmCount : state.leak.pastClients,
         leakMonthly: Math.round(leakMonthly()),
         step: steps[state.step].id
       },
@@ -686,15 +813,39 @@
     return out;
   }
 
+  /* A field's own wording for a value it can only take two of — the CRM toggle
+     is the only one today, but the pair is read from the content file so the
+     labels can be reworded without touching this. */
+  function fieldWord(defs, key, on) {
+    var out = on ? "Yes" : "No";
+    (defs || []).forEach(function (f) {
+      if (f.key !== key) return;
+      if (on && f.onLabel) out = f.onLabel;
+      if (!on && f.offLabel) out = f.offLabel;
+    });
+    return out;
+  }
+
   function renderSummary() {
     var host = $("js-summary");
     clear(host);
+    var p = leakParts();
+    var listSize = state.leak.hasCrm
+      ? Number(state.leak.crmCount || 0)
+      : Number(state.leak.pastClients || 0);
     var rows = [
-      [fieldLabel(C.leak.fields, "jobs"),
-        (Number(state.leak.jobs) || 0).toLocaleString("en-US") + " / week"],
+      [fieldLabel(C.leak.fields, "employees"),
+        (Number(state.leak.employees) || 0).toLocaleString("en-US")],
+      [fieldLabel(C.leak.fields, "jobsMonth"),
+        (Number(state.leak.jobsMonth) || 0).toLocaleString("en-US") + " / month"],
       [fieldLabel(C.leak.fields, "ticket"), money(state.leak.ticket)],
+      [fieldLabel(C.leak.fields, "hasCrm"), fieldWord(C.leak.fields, "hasCrm", state.leak.hasCrm)],
+      [state.leak.hasCrm ? fieldLabel(C.leak.fields, "crmCount") : fieldLabel(C.leak.fields, "pastClients"),
+        listSize.toLocaleString("en-US")],
       [C.leak.derivedLabel,
-        Math.round(missedCallsPerWeek() || 0).toLocaleString("en-US") + " / week"],
+        Math.round(p.missedJobs).toLocaleString("en-US") + " / month"],
+      [C.leak.breakdownMissed, money(p.missed) + " / month"],
+      [C.leak.breakdownDormant, money(p.dormant) + " / month"],
       ["Unrealised", money(leakMonthly()) + " / month"],
       [C.ui.scopeLabel, C.offer.scopeNote.replace("{n}", String(C.offer.included.length))]
     ];
@@ -922,13 +1073,21 @@
     lines.push("Their name, business and email are on the intake form below. The");
     lines.push("funnel asks for nothing before payment, so nothing is half-typed here.");
 
-    if (state.leak.jobs != null) {
+    if (state.leak.jobsMonth != null) {
+      var lp = leakParts();
       lines.push("");
-      lines.push("Asked: " + state.leak.jobs + " jobs/week, " +
+      lines.push("Asked: " + state.leak.employees + " employees, " +
+        state.leak.jobsMonth + " jobs/month, " +
         money(state.leak.ticket) + " average job");
-      lines.push("Averages used: " + bench("missedRate") + "% of calls unanswered, " +
-        bench("callsPerJob") + " calls per booked job");
-      lines.push("Calls not reached: " + Math.round(missedCallsPerWeek() || 0) + "/week");
+      lines.push("CRM: " + fieldWord(C.leak.fields, "hasCrm", state.leak.hasCrm) +
+        (state.leak.hasCrm
+          ? " (" + state.leak.crmCount + " past clients in it)"
+          : " (" + state.leak.pastClients + " past clients on the list)"));
+      lines.push("Averages used: " + bench("missedRate") + "% of jobs going unanswered, " +
+        bench("reactRate") + "% of the list reactivating yearly");
+      lines.push("Missed jobs: " + Math.round(lp.missedJobs) + "/month");
+      lines.push("Missed new business: " + money(lp.missed) + " / month");
+      lines.push("Dormant list: " + money(lp.dormant) + " / month");
       lines.push("Unrealised now: " + money(leakMonthly()) + " / month");
     }
     if (state.loop.leads != null) {
@@ -988,6 +1147,7 @@
     tallyPhase = "idle";
     demoLoaded = false;
     $("js-demo-frame").src = "about:blank";
+    closeHot();
     buildLeak();
     buildLoop();
     buildChecklist();
@@ -1024,6 +1184,7 @@
     if (ev.key === "Escape") {
       if (!$("js-modal").hidden) closeModal();
       else if (!$("js-lightbox").hidden) closeLightbox();
+      else if (openHot) closeHot();
       return;
     }
     if (typing || ev.metaKey || ev.ctrlKey || ev.altKey) return;
@@ -1095,12 +1256,34 @@
     });
     $("js-demo-open").href = C.links.demo;
     $("js-demo-open").textContent = C.ui.demoOpen;
+    $("js-demo-wide").textContent = C.ui.demoWide;
+    $("js-demo-wide").addEventListener("click", function () {
+      /* The demo is a whole site, not a widget: on a call the seller wants it to
+         fill the window, so the funnel's own chrome gets out of the way and one
+         press brings it back. */
+      document.body.classList.toggle("wide-demo");
+      var on = document.body.classList.contains("wide-demo");
+      $("js-demo-wide").textContent = on ? C.ui.demoWideOn : C.ui.demoWide;
+    });
+
+    /* A click anywhere that is not a dot closes whichever card is open. */
+    document.addEventListener("click", function (ev) {
+      if (!openHot) return;
+      if (ev.target.closest && ev.target.closest(".hot")) return;
+      closeHot();
+    });
 
     $$("[data-zoom]").forEach(function (fig) {
       var img = fig.querySelector("img");
       function open() { openLightbox(fig.dataset.zoom, img ? img.alt : ""); }
-      fig.addEventListener("click", open);
+      fig.addEventListener("click", function (ev) {
+        /* A hotspot dot is a control of its own: activating it opens its card,
+           never the lightbox, for mouse and keyboard alike. */
+        if (ev.target.closest && ev.target.closest(".hot")) return;
+        open();
+      });
       fig.addEventListener("keydown", function (ev) {
+        if (ev.target.closest && ev.target.closest(".hot")) return;
         if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); open(); }
       });
     });
